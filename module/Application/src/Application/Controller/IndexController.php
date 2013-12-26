@@ -11,11 +11,19 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Db\TableGateway\Feature;
 
 class IndexController extends AbstractActionController
 {
+	public $adapter;
+
     public function indexAction()
     {
+	$feature = new Feature\GlobalAdapterFeature();
+        $this->adapter = $feature->getStaticAdapter();
+        $courseListByUser =\Application\Models\UsersModel::model()->findByAttributes(array('id' =>1));
+        print_r($courseListByUser);
+        exit();
         return new ViewModel();
     }
 }
