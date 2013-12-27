@@ -19,9 +19,9 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-	$feature = new Feature\GlobalAdapterFeature();
+	    $feature = new Feature\GlobalAdapterFeature();
         $this->adapter = $feature->getStaticAdapter();
-        $courseListByUser =\Application\Models\UsersModel::model()->findByAttributes(array('id' =>1));
+        $courseListByUser =\Application\Models\CategoryPagesModel::model(array('asArray'=>true))->findByAttributes(array('id' =>1));
         print_r($courseListByUser);
         exit();
         return new ViewModel();

@@ -8,6 +8,28 @@
  */
 
 return array(
+
+
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+                'generateModel' => array(
+                    //'type'    => 'segment',
+                    'options' => array(
+                        // add [ and ] if optional ( ex : [<doname>] )
+                        'route' => 'console [--generate] <name> <password>',
+                        'defaults' => array(
+                            '__NAMESPACE__' => 'Application\Controller\console',
+                            'controller' => 'console',
+                            'action' => 'generateModel'
+                        ),
+                    ),
+                ),
+            ),
+
+
+        )
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(
@@ -73,7 +95,8 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\console\console' => 'Application\Controller\console\consoleController',
         ),
     ),
     'view_manager' => array(
@@ -93,10 +116,5 @@ return array(
         ),
     ),
     // Placeholder for console routes
-    'console' => array(
-        'router' => array(
-            'routes' => array(
-            ),
-        ),
-    ),
+
 );

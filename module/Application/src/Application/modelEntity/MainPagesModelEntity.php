@@ -11,7 +11,7 @@ namespace Application\modelEntity;
 
 use ActiveRecord\ActiveRecordModel;
 
-class UsersModelEntity extends ActiveRecordModel {
+class MainPagesModelEntity extends ActiveRecordModel {
 
     
 
@@ -22,28 +22,16 @@ class UsersModelEntity extends ActiveRecordModel {
 
     public function getTableName()
     {
-        return "users";
+        return "main_pages";
     }
 
     public function attributeNames()
     {
         return array(
             "id",
-"id_prev",
-"email",
-"username",
-"surname",
-"image",
-"phone",
-"isq",
-"skype",
-"password",
-"status",
-"deleted",
-"registration_date",
-"authorized_date",
-"send_email",
-"role",
+"id_category_pages",
+"decription",
+"content",
 
         );
     }

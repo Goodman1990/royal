@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Training\Form;
+namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\Form\Element;
