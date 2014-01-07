@@ -1,0 +1,144 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<!-- <link href="css/js-image-slider.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <script src="js/js-image-slider.js" type="text/javascript"></script> -->
+    <script src="js/jquery.min.js" type="text/javascript"></script>  
+    <script type="text/javascript" src="js/coin-slider.js"></script>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+	<div class='wrapper'>
+		<header>
+			<img class="logo" src='image/logo.png'></img>
+			<div class='header-menu-top'>
+				<ul>
+					<li class='active-top'><a href="#">ГЛАВНАЯ</a></li>
+					<li>О НАС</li>
+					<li>ПОРТФОЛИО</li>
+					<li>УСЛУГИ</li>
+					<li>КОНТАКТЫ</li>
+				</ul>
+			</div>
+			<div class="border-slyder">
+		        <div class="wrapper-slider">	
+		        	<div class="container">
+					    <div id="slides">
+                              <img src="image/image-slider-3.jpg" />
+			           		  <img src="image/image-slider-3.jpg" />
+			                  <img src="image/image-slider-4.jpg" />
+			                  <img src="image/image-slider-5.jpg" /> 
+					    </div>
+  					</div>
+		       </div>
+			</div>
+			<div class="menu-content ">
+				<div class='header-menu-bottom'>
+					<ul>
+						<li class='active-bottom'><a href="#">покрытие для стен</a></li> 
+						<li>покрытие для пола</li>
+						<li>двери</li>
+						<li>меьель</li>
+						<li>системы для дома</li>
+					</ul>
+				</div>
+			</div>
+		</header>
+			<div class="papirus">
+				<div class="warpper-uzor-top"><div class="uzor-top"></div></div>
+				<div class="content">
+				<div class="warpper-content">
+					<div class="left-content"> 
+						<p><span class='alegreto-font'>В</span> XXIвеке, когда самые выдающиеся открытия, инновации и изобретения остались в далеком прошлом, казалось бы, уже нет места чему-то новому, чему-то, что может удивить и добавить ярких красок в нашу жизнь. Но, из года в год, на рынке появляется что-то, без чего мы уже не представляем нашу с Вами жизнь, будь то очередной девайс от Apple или другой новомодный гаджет.</p>
+						<br />
+						<p><span class='alegreto-font'>Т</span>ак происходит и в области дизайна интерьеров. Чтобы реализовать даже самый неординарный замысел дизайнера или удовлетворить взыскательного покупателя производителям приходится идти в ногу со временем и выводить на рынок новые материалы, которые позволят подчеркнуть Вашу индивидуальность и создать неповторимый интерьер.</p>
+						<br />
+						<p><span class='alegreto-font'>М</span>ы тщательно следим за интерьерной модой и представляем Вашему вниманию не только декоративные материалы, которые остаются популярными на протяжении десятков лет, но и новинки, которые только набирают свою популярность и выводят на новый качественный уровень  дизайн интерьеров.</p>
+						<br />
+						<p><span class='alegreto-font'>В</span>месте с нами Вы воплотите свои самые  смелые  творческие идеи. </p> 
+						<br />
+						<p><span class='alegreto-font'>М</span>ы работаем для Вас! </p>
+						<br />
+						<br />
+						<p><span class='alegreto-font'>С</span> уважением,  коммерческий директор RoyalBuildingGroup</p>
+						<p>Тимошенко Анна <img class='podpis' src="image/podpis.png"></p>
+					</div>
+					<div class="right-content">
+						<img class="pero" src='image/pero.png'></img>
+						<ul class="contact">
+							<li class='contact-header'>Контакты</li>
+							<li class='tel'>(099) 127 35 35</li>
+							<li class='tel'>(067) 485 09 22</li>
+							<li class='email'>royal_ua@mail.ru</li>
+							<li class='city'>г. Донецк</li>
+							<li class='adres'>пр-т Ильича 103Д</li>
+						</ul>
+						<div class="portfolio-blok">
+							<img class="uzor" src='image/uzor.jpg'></img>
+							<span class="work">Наши Работы</span>
+							<img class="portfollio" src='image/venzel.png'></img>
+							<a class="buttot-show" href='#'>
+								посмотреть
+							</a>	
+						</div>
+					</div>	
+				</div>
+				<div class="uzor-down"></div>
+			</div>
+		</div>
+		<div class="footer"></div>	
+	</div>
+</body>
+</html>
+
+<script src="js/jquery.slides.min.js"></script>
+<script type="text/javascript">
+
+	$(function() {
+      $('#slides').slidesjs({
+      	width: 700,
+        height: 260,
+        navigation: false,
+        pagination: false,
+        autoHeight: true,
+        
+        effect: {
+          fade: {
+            speed: 400
+          }
+        },
+
+      	play: {
+	      	active: false,
+	      	effect: "fade",
+	      	interval: 5000,
+	      	auto: true,
+	      	swap: true,
+	      	pauseOnHover: false,
+	      	restartDelay: 2500
+    	}
+        
+      });
+    })
+	function checkSkrin() {
+
+		cuurentScreen  = document.body.clientWidth;
+
+		if(cuurentScreen<=1200){
+
+			var	height = (385-(1200-cuurentScreen)/3.12);//619
+			$('.border-slyder').css( "height", height+"px");
+
+		}else{
+
+			$('.border-slyder').css( "height", "385px" );
+
+		}
+		setTimeout(function(){
+			checkSkrin();
+		}, 500)	
+
+	}
+	checkSkrin();
+</script>
