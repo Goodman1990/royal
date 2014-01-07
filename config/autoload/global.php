@@ -16,15 +16,7 @@ return array(
         'factories' => array(
             'Zend\Db\Adapter\Adapter'
             => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'reCaptchaService' => function(\Zend\ServiceManager\ServiceManager $sm) {
-                $config = $sm->get('Config');
-//               print_r();//new \Zend\Captcha\ReCaptcha($config['recaptcha']));
-//                   exit;
-                return new \Zend\Captcha\ReCaptcha(array('name' => 'recaptcha',
-                    'privKey' => '6LdhNukSAAAAAPBIZ690griyTEkR1uQPc__bTDOF',
-                    'pubKey' => '6LdhNukSAAAAAO8mfrbCfw4lz_PQi6kXIFy7k135'
-                ) );
-            },
+            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
         ),
     ),
 );

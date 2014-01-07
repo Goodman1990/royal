@@ -199,11 +199,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 
     /**
      * Processing form
-     * @param \Application\Form\formGenerate $form
+     * @param \Royal\Form\formGenerate $form
      * @param \Zend\Stdlib\RequestInterface $request
-     * @return bool|\Application\Form\formGenerate
+     * @return bool|\Royal\Form\formGenerate
      */
-    public function formProceed(\Application\Form\formGenerate $form, \Zend\Stdlib\RequestInterface $request)
+    public function formProceed(\Royal\Form\formGenerate $form, \Zend\Stdlib\RequestInterface $request)
     {
         if($request->isPost()){
             $form->setData($request->getPost());

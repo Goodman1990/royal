@@ -368,4 +368,23 @@ abstract class ActiveRecord extends AbstractTableGateway
         return $this;
 
     }
+
+    public function getAll(){
+//        echo $this->table;
+//        exit;
+        $this->getSql();
+        $select =$this->sql->select();
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+
+        $results = $statement->execute();
+
+        $data = array();
+        foreach ($results as $result){
+
+            $data[] =$result;
+        }
+
+        return $data;
+    }
+
 }
