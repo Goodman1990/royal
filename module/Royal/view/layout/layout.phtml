@@ -1,8 +1,8 @@
-<?php echo $this->doctype(); echo 123; exit; ?>
+<?php echo $this->doctype();?>
+<meta charset="utf-8">
 
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <?php echo $this->headTitle('royal')->setSeparator(' - ')->setAutoEscape(false) ?>
         <?php echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -10,40 +10,73 @@
         ?>
 
         <!-- Le styles -->
-        <?php echo $this->heaadLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                        ->prependStylesheet($this->basePath() . '/css/style.css')
-                        ->prependStylesheet($this->basePath() . '/css/main.css')
-                        ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
-                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
 
+                        ->prependStylesheet($this->basePath() . '/css/main.css');
+                         ?>
         <!-- Scripts -->
         <?php echo $this->headScript()
-            ->prependFile($this->basePath() . '/js/bootstrap.min.js')
-            ->prependFile($this->basePath() . '/js/jquery.min.js')
-            ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
-            ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
-            ->prependFile($this->basePath() . '/js/coin-slider.js',   'text/javascript')
-        ; ?>
+
+            ->prependFile($this->basePath() . '/js/jquery.slides.js',   'text/javascript')
+            ->prependFile($this->basePath() . '/js/jquery.min.js'); ?>
+
     </head>
         <body>
              <div class='wrapper'>
+                 <script type="text/javascript">
+                     $(function() {
+                         $('#slides').slidesjs({
+                             width: 700,
+                             height: 260,
+                             navigation: false,
+                             pagination: false,
+                             autoHeight: true,
+                             effect: {
+                                 fade: {
+                                     speed: 400
+                                 }
+                             },
+                             play: {
+                                 active: false,
+                                 effect: "fade",
+                                 interval: 5000,
+                                 auto: true,
+                                 swap: true,
+                                 pauseOnHover: false,
+                                 restartDelay: 2500
+                             }
+
+                         });
+                     })
+                     function checkSkrin() {
+
+                         cuurentScreen  = document.body.clientWidth;
+
+                         if(cuurentScreen<=1200){
+
+                             var	height = (385-(1200-cuurentScreen)/3.12);//619
+                             $('.border-slyder').css( "height", height+"px");
+
+                         }else{
+
+                             $('.border-slyder').css( "height", "385px" );
+
+                         }
+                         setTimeout(function(){
+                             checkSkrin();
+                         }, 500)
+
+                     }
+                     checkSkrin();
+                 </script>
                 <nav>
                     <header>
                         <img class="logo" src='image/logo.png'>
                         <div class='header-menu-top'>
-
-                           <!--  <?php echo $this->navigation($this->getNavigation());
-                                ->menu()
-                                ->setMinDepth(0)
-                                ->setMaxDepth(0)
-                                ->render(); ?> -->
-                            <!-- <ul>
-                                <li class='active-top'><a href="#">ГЛАВНАЯ</a></li>
-                                <li>О НАС</li>
-                                <li>ПОРТФОЛИО</li>
-                                <li>УСЛУГИ</li>
-                                <li>КОНТАКТЫ</li>
-                            </ul> -->
+                            <?php
+                            $this->navigation($this->GetNavigationHelper())->findOneByResource('1')->setActive(true);
+                            echo $this->navigation()->menu()->setPartial('navigation_top')->render();
+                            ?>
                         </div>
                         <div class="border-slyder">
                             <div class="wrapper-slider">
@@ -59,30 +92,18 @@
                         </div>
                         <div class="menu-content ">
                             <div class='header-menu-bottom'>
-                                <?php echo $this->navigation($navigationBottom)
-                                    ->menu()
-                                    ->setMinDepth(0)
-                                    ->setMaxDepth(0)
-                                    ->render(); ?>
-                                <ul>
-                                    <li class='active-bottom'><a href="#">покрытие для стен</a></li>
-                                    <li>покрытие для пола</li>
-                                    <li>двери</li>
-                                    <li>меьель</li>
-                                    <li>системы для дома</li>
-                                </ul>
+                                    <?php  $this->navigation($this->GetNavigationHelper())->findOneByResource('1')->setActive(true);
+                                    echo $this->navigation()->menu()->setPartial('navigation_top')->render(); ?>
                             </div>
                         </div>
                     </header>
                 </nav>
-                <div class="container">
+
                     <?php echo $this->content; ?>
-                    <hr>
-                    <footer>
-                        <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
-                    </footer>
-                </div> <!-- /container -->
-                <?php echo $this->inlineScript() ?>
+
+                 <div class="footer"></div>
+                 <!-- /container -->
+              <?php echo $this->inlineScript() ?>
                 <div>
         </body>
 </html>

@@ -15,6 +15,7 @@ use Zend\Db\TableGateway\Feature;
 use Zend\Navigation\Navigation;
 use Royal\helpers\generalHelper;
 
+
 class IndexController extends AbstractActionController
 {
 	public $adapter;
@@ -22,8 +23,8 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
 
-            echo 123;
-            exit;
+//            echo 123;
+//            exit;
 
         $generalHelper = new generalHelper();
         $navigationInfo = \Royal\Models\CategoryPagesModel::model()->getAll();
@@ -32,15 +33,15 @@ class IndexController extends AbstractActionController
         foreach ($navigationInfo as $key ) {
         
             $navigation['navigation']['default'][] =  array(
-                        'label' => $navigationInfo['title'],
+                        'label' => $key['title'],
                         'route' => 'Royal',
                         'action' => 'index',
-                        'param'=>array('id_page'=>$navigationInfo['id'].'_'.$generalHelper->transliteration($navigationInfo['title']));
-                    )
+                        'param'=>array('id_page'=>$key['id'].'_'.$generalHelper->transliteration($key['title']))
+                    );
         }
 
-        print($navigationInfo);
-        exit;
+//        print_r ($navigation);
+//        exit;
 //	    $feature = new Feature\GlobalAdapterFeature();
 //        $this->adapter = $feature->getStaticAdapter();
         // $courseListByUser =\Royal\Models\CategoryPagesModel::model(array('asArray'=>true))->findByAttributes(array('id' =>1));

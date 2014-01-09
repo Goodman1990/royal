@@ -12,18 +12,36 @@ namespace Royal;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Page\Model\Page;
 use Zend\Db\TableGateway\Feature;
 use Zend\Db\ResultSet\ResultSet;
+use Royal\view\Helper\GetNavigation;
+use Royal\helpers\generalHelper;
 
 
-class Module implements ServiceProviderInterface
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface,
+    Zend\ModuleManager\Feature\ConfigProviderInterface,
+    Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+
+
+class Module implements ServiceProviderInterface,
+                        AutoloaderProviderInterface,
+                        ConfigProviderInterface,
+                        ViewHelperProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
+        $eventManager = $e->getApplication()->getEventManager();
         $serviceManager = $e->getApplication()->getServiceManager();
+//       $gggg =  $serviceManager->getServiceLocator()->get('nav');
+//        print_r($gggg);
+//        exit;
 
+
+
+
+//        $serviceManager->get('router');
+//        print_r($serviceManager->get('router'));
+//        exit;
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
@@ -44,19 +62,81 @@ class Module implements ServiceProviderInterface
 
     public function getAutoloaderConfig()
     {
+
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-			  'ActiveRecord' =>  __DIR__ . '/../../vendor/ActiveRecord/lib/ActiveRecord',
+                  'ActiveRecord' =>  __DIR__ . '/../../vendor/ActiveRecord/lib/ActiveRecord',
+                  'Helper' => __DIR__ . '/view/Helper/',
+                  'Navigation' => __DIR__ . '/Navigation',
                 ),
             ),
         );
     }
+    public function getViewHelperConfig()
+    {
 
+        //$some = new \ActiveRecord\ActiveRecord();
+        //var_dump(array_filter(get_declared_classes(), function($className){ return $className == 'ActiveRecord'; }));die;
+        return array(
+            'factories' => array(
+                'GetNavigationHelper' => function($sm) {
+                        $helper =new \Helper\GetNavigationHelper();
+//                        $helper->sm = $sm;
+//                         var_dump($sm->get('router'));
+//                        exit;
+
+                        return $helper;
+                    }
+            )
+        );
+    }
 
     public function getServiceConfig() {
-        return array();       
+//        echo 123;
+//        exit;
+        return array(
+//            'factories' => array(
+//                'GetNavigationHelper' => function($sm) {
+//                        $this->getServiceConfig();
+//                        $helper =new \Helper\GetNavigationHelper();
+////                        $helper->sm = $sm;
+////                         var_dump($sm->get('router'));
+////                        exit;
+//
+//                        return $helper;
+//                    },
+//
+//            ),
+            'factories' => array(
+                'nav' => 'Navigation\MyNavigationFactory',
+//                'nav1' => function($sm) {
+//                        $helper =new \Navigation\MyNavigation($sm);
+//                        return $helper;
+//                    },
+            )
+//            'navigation' => array(
+//                    'default' => array(
+//                        array(
+//                            'label' => 'Home',
+//                            'route' => 'home',
+//                        ),
+//                        array(
+//                            'label' => 'Album',
+//                            'route' => 'Royal',
+//                            'pages' => array(
+//                                array(
+//                                    'label' => 'Add',
+//                                    'route' => 'Royal',
+//                                    'action' => 'Index',
+//                                ),
+//
+//                            ),
+//                        ),
+//                    ),
+//                ),
+        );
     }
 
 }

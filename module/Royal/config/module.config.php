@@ -8,6 +8,53 @@
  */
 
 return array(
+
+//'navigation' => array(
+//    'default' => array(
+//        array(
+//            'label' => 'Home',
+//            'route' => 'home',
+//        ),
+//        array(
+//            'label' => 'Album',
+//            'route' => 'Royal',
+//            'pages' => array(
+//                array(
+//                    'label' => 'Add',
+//                    'route' => 'Royal',
+//                    'action' => 'Index',
+//                ),
+//
+//            ),
+//        ),
+//    ),
+//),
+//    'navigation' => array(
+//        'default' => array(
+//            array(
+//                'label' => 'Home',
+//                'route' => 'home',
+//            ),
+//            array(
+//                'label' => 'Album',
+//                'route' => 'Royal',
+//                'pages' => array(
+//                    array(
+//                        'label' => 'Add',
+//                        'route' => 'Royal',
+//                        'action' => 'Index',
+//                    ),
+//
+//                ),
+//            ),
+//        ),
+//    ),
+
+
+
+
+
+
     'console' => array(
         'router' => array(
             'routes' => array(
@@ -104,6 +151,11 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+    ),
+    'view_helpers' => array(
+//        'invokables'=> array(
+//            'test_helper' => 'Test\View\Helper\getNavigation'
+//        )
     ),
     // Placeholder for console routes
 

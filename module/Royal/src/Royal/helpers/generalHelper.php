@@ -11,7 +11,7 @@ namespace Royal\helpers;
 
 use Zend\Crypt\BlockCipher;
 
-class generalFunction {
+class generalHelper {
 
 
     public function encodeUtf8($str) {
