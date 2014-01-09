@@ -1,0 +1,7 @@
+<ul>
+    <?php foreach($this->container as $this->pages){?>
+        <li <?php if($this->pages->isActive())echo 'class = "active-top"'?> >
+            <a href="<?php echo  $this->pages->uri ?>" ><?php echo $this->pages->label  ?></a>
+        </li>
+    <?php } ?>
+</ul>

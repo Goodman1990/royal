@@ -137,7 +137,7 @@ ul,li,p,span{
 			cursor: pointer;
 			text-decoration:none;
 		}*/
-		.header-menu-top ul li:hover,.active-top{
+		.header-menu-top ul li:hover, .active-top{
 			cursor: pointer;
 			background-image: url(../image/hover-header-menu.png);
 			background-repeat:no-repeat;

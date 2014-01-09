@@ -35,7 +35,7 @@ ul,li,p,span{
     font-style: normal;
 }
 @font-face {
-	 font-family: "alegreto";
+	font-family: "alegreto";
     src: url(../fonts/iJeEfi8n.eot);
     src: url(../fonts/iJeEfi8n) format("embedded-opentype"),
          url(../fonts/iJeEfi8n.woff) format("woff"),
@@ -138,11 +138,13 @@ ul,li,p,span{
 			text-decoration:none;
 		}*/
 		.header-menu-top ul li:hover,.active-top{
+
 			cursor: pointer;
 			background-image: url(../image/hover-header-menu.png);
 			background-repeat:no-repeat;
 			background-position: center;
 			background-size: 100%;
+
 		}
 	.papirus{
 		height: auto;
@@ -289,7 +291,8 @@ ul,li,p,span{
 		margin: 0 auto;
 		width: 65%;
 	}
-/* All Smartphones in portrait and landscape ----------- */
+
+
 @media only 
 screen 
 and (min-width :380px ) 
