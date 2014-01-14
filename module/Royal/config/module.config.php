@@ -49,12 +49,6 @@ return array(
 //            ),
 //        ),
 //    ),
-
-
-
-
-
-
     'console' => array(
         'router' => array(
             'routes' => array(
@@ -92,7 +86,7 @@ return array(
             'Royal' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '[:controller][/:action][/:id_page]',
+                    'route'    => '[/:controller][/:action][/:id_page]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -134,6 +128,7 @@ return array(
         'invokables' => array(
             'Royal\Controller\Index' => 'Royal\Controller\IndexController',
             'Royal\Controller\console\console' => 'Royal\Controller\console\consoleController',
+            'Royal\Controller\admin' => 'Royal\Controller\adminController',
         ),
     ),
     'view_manager' => array(

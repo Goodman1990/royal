@@ -12,19 +12,20 @@ namespace Royal\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\TableGateway\Feature;
-use Zend\Navigation\Navigation;
+use Royal\Form\formGenerate;
 use Royal\helpers\generalHelper;
 
 
-class IndexController extends AbstractActionController
+class adminController extends AbstractActionController
 {
 	public $adapter;
 
     public function indexAction()
     {
 
+        $form = new formGenerate('auth','auth',array(
 
-
+        ));
 
         return new ViewModel(array(
 

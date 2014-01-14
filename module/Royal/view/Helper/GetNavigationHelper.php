@@ -21,11 +21,9 @@ class GetNavigationHelper extends AbstractHelper {
         foreach ($navigationInfo as $key ) {
         
         	$navigation[] =  array(
-
                 'label' => $key['title'],
-                'uri'=>'/index/'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
+                'uri'=>'    /'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
                 'resource'=>$key['id'],
-
             );
         }
         $container = new \Zend\Navigation\Navigation($navigation);
