@@ -18,8 +18,8 @@ class GetNavigationHelper extends AbstractHelper {
         $navigation = array();
     	$generalHelper = new generalHelper();
         $navigationInfo = \Royal\Models\CategoryPagesModel::model()->getAll();
+
         foreach ($navigationInfo as $key ) {
-        
         	$navigation[] =  array(
                 'label' => $key['title'],
                 'uri'=>'    /'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),

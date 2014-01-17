@@ -30,12 +30,34 @@ class formGenerate extends Form
     protected $translatorForm;
     protected $captcha;
 
-    public function __construct($name,$classForm,$dataForm,$typeLabel = null) {
-       // $this->value = array('typeInput'=>'');
+    public function __construct($name,$classForm,$dataForm=null,$typeLabel = null) {
+
         parent::__construct($name);
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
         $this->setAttribute('class', $classForm);
+
+        if($dataForm){
+            $this->setDataForm($dataForm,$typeLabel);
+        }
+//        $translator = new Translator();
+//        $this->translatorForm = $translator->addTranslationFile(
+//            'phpArray',
+//            __DIR__.'/../../../../../vendor/zendframework/zendframework/resources/languages/ru/Zend_Validate.php'
+//        );
+//
+////        print_r(__DIR__);
+//       // exit;
+////
+//        AbstractValidator::setDefaultTranslator($translator);
+     //   \Locale::setDefault('ru_RU');
+
+
+    }
+
+
+    public function setDataForm($dataForm,$typeLabel=null){
+
         $this->inputFilter = new InputFilter();
         $this->factorys = new InputFactory();
         $this->inData = $dataForm;
@@ -46,22 +68,13 @@ class formGenerate extends Form
         }
 
         foreach ($this->inData as $key => $value) {
+
             $this->key = $key;
             $this->value = $value;
             $this->setForm();
             $this->add($this->element);
-        }
-        $translator = new Translator();
-        $this->translatorForm = $translator->addTranslationFile(
-            'phpArray',
-            __DIR__.'/../../../../../vendor/zendframework/zendframework/resources/languages/ru/Zend_Validate.php'
-        );
 
-//        print_r(__DIR__);
-       // exit;
-//
-        AbstractValidator::setDefaultTranslator($translator);
-     //   \Locale::setDefault('ru_RU');
+        }
 
         $this->setInputFilter($this->inputFilter);
     }
@@ -96,6 +109,7 @@ class formGenerate extends Form
     }
 
     protected function setForm() {
+
         if(isset($this->value['validators']['regex'])) {
             $this->getRegexParam();
         }
@@ -287,7 +301,8 @@ class formGenerate extends Form
                 'phone' => 'Разрешенные cимволы: цифры',
                 'date'=>'Разрешенные cимволы: цифры и знак "/"',
                 'script'=>'Скрипты запрещены',
-                'numbers_letters'=>'Разрешенные cимволы: латинского алфавитов и цифры'
+                'numbers_letters'=>'Разрешенные cимволы: латинского алфавитов и цифры',
+                'numbers'=>'Разрешенные cимволы: цифры'
             ),
             'pattern' => array(
                 'phone' => '/^[0-9\-)(+ ]+$/u',
@@ -295,7 +310,8 @@ class formGenerate extends Form
                 'name' => '/^[а-яА-ЯёЁa-zA-Z \-]+$/u',
                 'isq' => '/^[0-9]+$/u',
                 'date' => '/^[0-9\/: ]+$/u',
-                'numbers_letters'=>'/^[a-zA-Z-0-9 \-]+$/u'
+                'numbers_letters'=>'/^[a-zA-Z-0-9-а-я-А-ЯЁё \-]+$/u',
+                'numbers'=>'/^[0-9]+$/u'
 
             )
         );

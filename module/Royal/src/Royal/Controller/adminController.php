@@ -19,21 +19,53 @@ use Royal\helpers\generalHelper;
 class adminController extends AbstractActionController
 {
 	public $adapter;
+    public $request;
+    public $validData;
 
-    public function indexAction()
+    public function editAction()
     {
+       $categoryDataW = \Royal\Models\CategoryPagesModel::model()->getAll();
 
-        $form = new formGenerate('auth','auth',array(
+        $form = new formGenerate('editCategory','standart grouped');
+        $i = 0;
+        foreach($categoryDataW as $key=>$value){
+            $i++;
+            $form->setDataForm(array(
+                        'title_'.$i=>
+                            array('required'=>true,'validators'=>array('regex'=>'numbers_letters',),'setLabel'=>'название категории'),
+//                        'id_'.$value['id']=>array(,'required'=>true,'validators'=>array('regex'=>'numbers_letters')),
+                        'id_'.$i=>
+                            array('required'=>true,'typeInput'=>'hidden','validators'=>array('regex'=>'numbers'),'filters'=>array('trim','int','tag'))
 
-        ));
 
+            ));
+
+        }
+        $this->request = $this->getRequest();
+
+        if($this->request->isPost()){
+
+            $form->setData($this->request->getPost());
+            if($form->isValid()){
+
+                $this->validData = $form->getData();
+                $i=0;
+                foreach($this->validData as $key=>$value){
+                    $i++;
+                    \Royal\Models\CategoryPagesModel::model()
+                        ->setAttributes(array('title'=>$value['title_'.$i],
+                            'id'=>$value['id_'.$i]))
+                        ->save();
+                }
+            }
+        }else{
+
+//            $form->setData($categoryDataW);
+
+        }
         return new ViewModel(array(
-
-            )
-        );
+            'form'=>$form,
+            'categoryDataW'=>$categoryDataW
+        ));
     }
-
-    private function renderMenuTop(){}
-    private function renderMenuBottom(){}
-    private function renderMenuRight(){}
 }

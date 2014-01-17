@@ -1,0 +1,29 @@
+<?php
+    $i=0;
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    foreach($categoryDataW as $key=>$value) {
+        $i++;
+?>
+
+<!--    --><?php //$element = $form->get('title_'.$value['id']); ?>
+<!--    --><?php //echo $this->formText($element); ?>
+<!--    --><?php //if ($this->formElementErrors($element)): ?>
+<!--        <div class="error-message">-->
+<!--            --><?php //echo $this->formElementErrors($element); ?>
+<!--        </div>-->
+<!--    --><?php //endif; ?>
+<!--    --><?php //$element = $form->get('id_'.$value['id']); ?>
+<!--    --><?php //echo $this->formText($element); ?>
+<!--    --><?php //if ($this->formElementErrors($element)): ?>
+<!--        <div class="error-message">-->
+<!--            --><?php //echo $this->formElementErrors($element); ?>
+<!--        </div>-->
+<!--    --><?php //endif; ?>
+        <?php echo $this->formRow($form->get('title_'.$i)->setValue($value['title'])); ?>
+        <?php echo $this->formRow($form->get('id_'.$i)->setValue($value['id']));   ?>
+
+
+    <?php } ?>
+<button>сохранить</button>
+<?php echo $this->form()->closeTag(); ?>
