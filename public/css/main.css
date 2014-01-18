@@ -1,19 +1,15 @@
 body{
-
 	margin: 0;
 	padding: 0;
 	background-image: url(../image/fon.png);
 	background-repeat: repeat-y repeat-x;
 	list-style: none;
 	height: auto;
-
 }
-
 ul,li,p,span{
 	padding: 0;
 	margin: 0;
 }
-
 @font-face {
     font-family: "agbengaly";
     src: url(../fonts/agbengaly-roman_[allfont.ru]/agbengaly-roman__allfont.ru_.eot);
@@ -51,10 +47,8 @@ ul,li,p,span{
 }
 	.alegreto-font{
 		font-family: 'alegreto';
-
 		font-size: 24px;
 	}
-
 	header{
 		width: 100%;
 		margin:0 auto;
@@ -206,7 +200,6 @@ ul,li,p,span{
 				}
 
 			.right-content{
-
 				float: left;
 				line-height: 1.2;
 				width: 23%;
