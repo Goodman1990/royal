@@ -18,6 +18,8 @@ class GetNavigationHelper extends AbstractHelper {
         $navigation = array();
     	$generalHelper = new generalHelper();
         $navigationInfo = \Royal\Models\CategoryPagesModel::model()->getAll();
+//        print_r($navigationInfo);
+//        exit;
 
         foreach ($navigationInfo as $key ) {
         	$navigation[] =  array(

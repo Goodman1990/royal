@@ -204,7 +204,7 @@ abstract class ActiveFormModel
      * @param \Zend\Stdlib\RequestInterface $request
      * @return bool|\Training\Form\formGenerate
      */
-    public function formProceed(\Application\Form\formGenerate $form, \Zend\Stdlib\RequestInterface $request)
+    public function formProceed(\Royal\Form\formGenerate $form, \Zend\Stdlib\RequestInterface $request)
     {
         if($request->isPost()){
             $form->setData($request->getPost());

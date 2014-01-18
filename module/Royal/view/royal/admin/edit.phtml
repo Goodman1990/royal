@@ -1,29 +1,24 @@
 <?php
-    $i=0;
-    $form->prepare();
-    echo $this->form()->openTag($form);
+    $i=1;
+    $formEdit->prepare();
+    echo $this->form()->openTag($formEdit);
     foreach($categoryDataW as $key=>$value) {
         $i++;
-?>
 
-<!--    --><?php //$element = $form->get('title_'.$value['id']); ?>
-<!--    --><?php //echo $this->formText($element); ?>
-<!--    --><?php //if ($this->formElementErrors($element)): ?>
-<!--        <div class="error-message">-->
-<!--            --><?php //echo $this->formElementErrors($element); ?>
-<!--        </div>-->
-<!--    --><?php //endif; ?>
-<!--    --><?php //$element = $form->get('id_'.$value['id']); ?>
-<!--    --><?php //echo $this->formText($element); ?>
-<!--    --><?php //if ($this->formElementErrors($element)): ?>
-<!--        <div class="error-message">-->
-<!--            --><?php //echo $this->formElementErrors($element); ?>
-<!--        </div>-->
-<!--    --><?php //endif; ?>
-        <?php echo $this->formRow($form->get('title_'.$i)->setValue($value['title'])); ?>
-        <?php echo $this->formRow($form->get('id_'.$i)->setValue($value['id']));   ?>
+?>
+        <?php echo $this->formRow($formEdit->get('title_'.$i)); ?>
+        <?php echo $this->formRow($formEdit->get('id_'.$i));   ?>
 
 
     <?php } ?>
-<button>сохранить</button>
-<?php echo $this->form()->closeTag(); ?>
+<button name="edit">сохранить</button>
+
+<br />
+<?php
+
+$formEdit->prepare();
+echo $this->form()->openTag($formAdd);?>
+
+<?php echo $this->formRow($formAdd->get('title')); ?>
+<button name="add">сохранить</button>
+<?php echo $this->form()->closeTag();?>

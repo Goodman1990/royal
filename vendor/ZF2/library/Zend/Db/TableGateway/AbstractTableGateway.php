@@ -315,6 +315,8 @@ abstract class AbstractTableGateway implements TableGatewayInterface
         if ($where !== null) {
             $update->where($where);
         }
+//        print_r($update);
+//        exit;
         return $this->executeUpdate($update);
     }
 
@@ -348,6 +350,9 @@ abstract class AbstractTableGateway implements TableGatewayInterface
         $this->featureSet->apply('preUpdate', array($update));
 
         $statement = $this->sql->prepareStatementForSqlObject($update);
+//        echo '<pre>';
+//        print_r($statement);
+//        exit;
         $result = $statement->execute();
 
         // apply postUpdate features

@@ -29,7 +29,7 @@
                         <img class="logo" src='image/logo.png'>
                         <div class='header-menu-top'>
                             <?php
-                                $this->navigation($this->GetNavigationHelper())->findOneByResource('1')->setActive(true);
+                                $this->navigation($this->GetNavigationHelper())->findOneByResource('2')->setActive(true);
                                 echo $this->navigation()->menu()->setPartial('template/navigation_top')->render();
                             ?>
                         </div>
@@ -48,7 +48,7 @@
                         <div class="menu-content ">
                             <div class='header-menu-bottom'>
                                     <?php
-                                        $this->navigation($this->GetNavigationHelper())->findOneByResource('1')->setActive(true);
+                                        $this->navigation($this->GetNavigationHelper())->findOneByResource('2')->setActive(true);
                                         echo $this->navigation()->menu()->setPartial('template/navigation_bottom')->render();
                                     ?>
                             </div>

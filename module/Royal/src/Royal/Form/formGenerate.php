@@ -29,6 +29,7 @@ class formGenerate extends Form
     protected $typeLabel;
     protected $translatorForm;
     protected $captcha;
+    public $iteratorss;
 
     public function __construct($name,$classForm,$dataForm=null,$typeLabel = null) {
 
@@ -36,10 +37,12 @@ class formGenerate extends Form
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
         $this->setAttribute('class', $classForm);
-
+        $this->inputFilter = new InputFilter();
+        $this->factorys = new InputFactory();
         if($dataForm){
             $this->setDataForm($dataForm,$typeLabel);
         }
+
 //        $translator = new Translator();
 //        $this->translatorForm = $translator->addTranslationFile(
 //            'phpArray',
@@ -56,10 +59,9 @@ class formGenerate extends Form
     }
 
 
-    public function setDataForm($dataForm,$typeLabel=null){
+    public function setDataForm($dataForm,$typeLabel=null,$i =null){
 
-        $this->inputFilter = new InputFilter();
-        $this->factorys = new InputFactory();
+
         $this->inData = $dataForm;
 
         if($typeLabel){
@@ -75,8 +77,9 @@ class formGenerate extends Form
             $this->add($this->element);
 
         }
-
+        $this->iteratorss = $i;
         $this->setInputFilter($this->inputFilter);
+
     }
 
     public function __get($name) {
@@ -133,15 +136,15 @@ class formGenerate extends Form
             )
         );
 
-        //echo '<pre>';
-            //print_r(array(
-                        //'name' => $this->key,
-                        //'required' => isset($this->value['required']) ? $this->value['required'] : false,
-                        //'filters'=>$dataFilters,
-                        //'validators' => $dataValidators
-                    //));
-            //echo '</pre>';
-            //exit;
+//        echo '<pre>';
+//            print_r(array(
+//                        'name' => $this->key,
+//                        'required' => isset($this->value['required']) ? $this->value['required'] : false,
+//                        'filters'=>$dataFilters,
+//                        'validators' => $dataValidators
+//                    ));
+//            echo '</pre>';
+//
     }
 
     protected function collectionValidators()

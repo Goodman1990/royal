@@ -199,9 +199,9 @@ abstract class ActiveRecordModel extends ActiveRecord
 
     /**
      * Processing form
-     * @param \Royal\Form\formGenerate $form
+     * @param \Training\Form\formGenerate $form
      * @param \Zend\Stdlib\RequestInterface $request
-     * @return bool|\Royal\Form\formGenerate
+     * @return bool|\Training\Form\formGenerate
      */
     public function formProceed(\Royal\Form\formGenerate $form, \Zend\Stdlib\RequestInterface $request)
     {
@@ -219,5 +219,17 @@ abstract class ActiveRecordModel extends ActiveRecord
         }
 
         return true;
+    }
+
+    public function getAll(){
+
+
+        $statement = $this->getSql()->prepareStatementForSqlObject($this->sql->select());
+        $result = $statement->execute();
+        $resultSet = clone $this->resultSetPrototype;
+        $resultSet->initialize($result);
+        return $resultSet->toArray();
+
+
     }
 }
