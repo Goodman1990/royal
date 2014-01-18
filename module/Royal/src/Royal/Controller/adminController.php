@@ -22,72 +22,68 @@ class adminController extends AbstractActionController
     public $request;
     public $validData;
 
-    public function editAction()
+    public function editCategoryAction()
     {
         $this->request = $this->getRequest();
+        $CategoryPagesModel = \Royal\Models\CategoryPagesModel::model();
+        $categoryPageData = $CategoryPagesModel->getAll();
+        $formEdit = new formGenerate('editCategory', 'standart grouped');
+        $formEdit->setMultiFormEdit($CategoryPagesModel, $categoryPageData);
+        $formAdd = new formGenerate('addCategory', 'standart grouped', $CategoryPagesModel);
 
-            $categoryDataW = \Royal\Models\CategoryPagesModel::model()->getAll();
-            $formEdit = new formGenerate('editCategory', 'standart grouped');
-            $i = 1;
-            foreach ($categoryDataW as $key => $value) {
-                $i++;
-                $formEdit->setDataForm(array(
-                    'title_' . $i =>
-                        array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'название категории'),
-                    'id_' . $i =>
-                        array('required' => true, 'typeInput' => 'hidden', 'validators' => array('regex' => 'numbers'), 'filters' => array('trim', 'int', 'tag'))
-                ), null, $i);
-                $categoryPage['title_' . $i] = $value['title'];
-                $categoryPage['id_' . $i] = $value['id'];
-            }
-            $formAdd = new formGenerate('addCategory', 'standart grouped',
-                array(
-                    'title' =>
-                        array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'название категории'),
-                ));
         if ($this->request->isPost()) {
+
             $Post = $this->request->getPost()->toArray();
-            $formEdit->setData($Post);
-            $formAdd->setData($Post);
-            if ($formEdit->isValid() && $Post['edit']!==null) {
-                $this->validData = $formEdit->getData();
-                for ($i = 2; $i <= $formEdit->iteratorss; $i++) {
-                    \Royal\Models\CategoryPagesModel::model()
-                        ->setAttributes(array(
-                            'id' => $this->validData['id_' . $i],
-                            'title' => $this->validData['title_' . $i],
-                        ), true)->save();
+
+            if (isset($Post['edit'])) {
+
+                $formEdit->setData($Post);
+                if ($formEdit->isValid()) {
+
+                    $this->validData = $formEdit->getData();
+
+                    for ($i = 0; $i < $formEdit->countInput; $i++) {
+
+                        \Royal\Models\CategoryPagesModel::model()
+                            ->setAttributes(array(
+                                'id' => $this->validData['id_' . $i],
+                                'title' => $this->validData['title_' . $i],
+                            ))->save();
+                    }
+
                 }
-            } else if($formAdd->isValid() && $Post['add']!==null){
-                $this->validData = $formAdd->getData();
-              $id =   \Royal\Models\CategoryPagesModel::model()
-                    ->setAttributes(array(
-                        'title' => $this->validData['title'],
-                    ), true)->save();
-                $i = $formEdit->iteratorss+1;
-                $formEdit->setDataForm(array(
-                    'title_' . $i =>
-                        array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'название категории'),
-                    'id_' . $i =>
-                        array('required' => true, 'typeInput' => 'hidden', 'validators' => array('regex' => 'numbers'), 'filters' => array('trim', 'int', 'tag'))
-                ),null,$i);
-                $categoryPage['title_'.$i] = $this->validData['title'];
-                $categoryPage['id_'.$i] = $id;
-                $formEdit->setData($categoryPage);
-                $formAdd->clearElements();
-                $categoryDataW = \Royal\Models\CategoryPagesModel::model()->getAll();
+
+            } else {
+
+                $formAdd->setData($Post);
+
+                if ($formAdd->isValid()) {
+
+                    $this->validData = $formAdd->getData();
+                    $id = \Royal\Models\CategoryPagesModel::model()
+                        ->setAttributes(array(
+                            'title' => $this->validData['title'],
+                        ))->save();
+                    $formEdit->addInputForm($Post, $id);
+                    $formEdit->CustomSetData();
+                    $formAdd->clearElements();
+
+                } else {
+
+                    $formEdit->CustomSetData();
+                }
             }
 
         } else {
-            $formEdit->setData($categoryPage);
+            $formEdit->CustomSetData();
         }
+        
         return new ViewModel(array(
             'formEdit' => $formEdit,
-            'formAdd'=>$formAdd,
-            'categoryDataW' => $categoryDataW
+            'formAdd' => $formAdd,
+            'categoryPageData' => $categoryPageData
         ));
     }
-
 
 
 }

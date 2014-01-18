@@ -19,7 +19,13 @@ class CategoryPagesModel extends CategoryPagesModelEntity {
 
     public function rules()
     {
-        return array();
+        $rules =  array(
+            'category_pages'=>array(
+                'title'=>array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'название категории'),
+                'id'=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int'))
+            ),
+        );
+        return $rules[$this->table];
     }
 
 }

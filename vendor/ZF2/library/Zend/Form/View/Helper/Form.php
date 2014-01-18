@@ -63,13 +63,13 @@ class Form extends AbstractHelper
         $formContent = '';
 
         foreach ($form as $element) {
+
             if ($element instanceof FieldsetInterface) {
                 $formContent.= $this->getView()->formCollection($element);
             } else {
                 $formContent.= $this->getView()->formRow($element);
             }
         }
-
         return $this->openTag($form) . $formContent . $this->closeTag();
     }
 

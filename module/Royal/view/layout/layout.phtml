@@ -26,10 +26,14 @@
              <div class='wrapper'>
                 <nav>
                     <header>
-                        <img class="logo" src='image/logo.png'>
+                        <img class="logo" src='/image/logo.png'>
                         <div class='header-menu-top'>
                             <?php
-                                $this->navigation($this->GetNavigationHelper())->findOneByResource('2')->setActive(true);
+                                if($page->topActive){
+                                    $this->navigation($this->GetNavigationHelper())->findOneByResource($page->topActivePage)->setActive(true);
+                                }else{
+                                    $this->navigation($this->GetNavigationHelper());
+                                }
                                 echo $this->navigation()->menu()->setPartial('template/navigation_top')->render();
                             ?>
                         </div>
@@ -37,10 +41,10 @@
                             <div class="wrapper-slider">
                                 <div class="container">
                                     <div id="slides">
-                                        <img src="image/image-slider-3.jpg" />
-                                        <img src="image/image-slider-3.jpg" />
-                                        <img src="image/image-slider-4.jpg" />
-                                        <img src="image/image-slider-5.jpg" />
+                                        <img src="/image/image-slider-3.jpg" />
+                                        <img src="/image/image-slider-3.jpg" />
+                                        <img src="/image/image-slider-4.jpg" />
+                                        <img src="/image/image-slider-5.jpg" />
                                     </div>
                                 </div>
                             </div>
@@ -48,7 +52,13 @@
                         <div class="menu-content ">
                             <div class='header-menu-bottom'>
                                     <?php
-                                        $this->navigation($this->GetNavigationHelper())->findOneByResource('2')->setActive(true);
+                                        if($page->bootomActive){
+                                            $this->navigation($this->GetNavigationHelper())->findOneByResource($page->bootomActivePage)->setActive($page->bootomActive);
+                                        }else{
+                                            $this->navigation($this->GetNavigationHelper());
+                                        }
+    //                                    echo $this->navigation()->menu()->setPartial('template/navigation_top')->render();
+    //                                        $this->navigation($this->GetNavigationHelper())->findOneByResource(1)->setActive($page->bootomActive);
                                         echo $this->navigation()->menu()->setPartial('template/navigation_bottom')->render();
                                     ?>
                             </div>

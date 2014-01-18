@@ -7,12 +7,9 @@ use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\Mvc\I18n\Translator;
-use Zend\Validator\AbstractValidator;
 use Zend\Captcha\Image as CaptchaImage;
-use Zend\Form\Element\Captcha;
+use ActiveRecord\ActiveFormModel;
+
 
 class formGenerate extends Form
 {
@@ -29,9 +26,11 @@ class formGenerate extends Form
     protected $typeLabel;
     protected $translatorForm;
     protected $captcha;
-    public $iteratorss;
+    public $countInput;
+    protected   $dataForSetForm;
+//    protected $multiForm;
 
-    public function __construct($name,$classForm,$dataForm=null,$typeLabel = null) {
+    public function __construct($name,$classForm,$model=null,$typeLabel = null) {
 
         parent::__construct($name);
         $this->setAttribute('method', 'post');
@@ -39,8 +38,8 @@ class formGenerate extends Form
         $this->setAttribute('class', $classForm);
         $this->inputFilter = new InputFilter();
         $this->factorys = new InputFactory();
-        if($dataForm){
-            $this->setDataForm($dataForm,$typeLabel);
+        if($model){
+            $this->setDataForm($model);
         }
 
 //        $translator = new Translator();
@@ -57,59 +56,68 @@ class formGenerate extends Form
 
 
     }
+    public function setDataForm($model){
 
+            $this->inData=$model->rules();
+            foreach ($this->inData as $key => $value) {
+                $this->key = $key;
+                $this->value = $value;
+                $this->setForm();
+                $this->add($this->element);
+            }
+        $this->setInputFilter($this->inputFilter);
+    }
+    protected  function setDataFormAdd($data){
 
-    public function setDataForm($dataForm,$typeLabel=null,$i =null){
-
-
-        $this->inData = $dataForm;
-
-        if($typeLabel){
-
-            $this->typeLabel = $typeLabel;
-        }
-
-        foreach ($this->inData as $key => $value) {
-
+        foreach ($data as $key => $value) {
             $this->key = $key;
             $this->value = $value;
             $this->setForm();
             $this->add($this->element);
-
         }
-        $this->iteratorss = $i;
+        $this->setInputFilter($this->inputFilter);
+    }
+    /**
+     * @param $model
+     * @param $tableData
+     */
+    public function setMultiFormEdit($model,$tableData){
+
+        $this->inData=$model->rules();
+        $this->countInput = count($tableData);
+
+        for($i=0;$i<$this->countInput;$i++){
+            foreach ($this->inData as $key => $value) {
+                $this->key = $key.'_'.$i;
+                $this->value = $value;
+                $this->setForm();
+                $this->add($this->element);
+                $this->dataForSetForm[$key.'_'.$i] = $tableData[$i][$key];
+            }
+        }
         $this->setInputFilter($this->inputFilter);
 
     }
 
-    public function __get($name) {
 
-        if(method_exists($this, ($method = 'get_' . $name))) {
+    public function CustomSetData(){
+        $this->setData($this->dataForSetForm);
+    }
 
-            return $this->$method();
-
-        } else {
-            return false;
+    public function addInputForm($post,$id){
+        $buff =array();
+        foreach($this->inData as $key=>$value){
+            $buff[$key.'_'.$this->countInput] =$value;
+             $this->dataForSetForm[$key.'_'.$this->countInput] = $post[$key];
         }
+        $this->dataForSetForm['id_'.$this->countInput] = $id;
+        $this->setDataFormAdd($buff);
     }
 
 
-    public function __set($name, $data) {
-
-        if(method_exists($this, ($method = $name))) {
-
-            foreach ($data as $key => $Value) {
-                $this->$key = $Value;
-            }
-
-            $data = $this->$method();
-
-            return $data;
-        }
-
-        return false;
-
-    }
+//    public function CustomGetData(){
+//        $this->getData();
+//    }
 
     protected function setForm() {
 
@@ -289,8 +297,6 @@ class formGenerate extends Form
 
             }
 
-
-
     }
 
     protected function getRegexParam() {
@@ -335,8 +341,6 @@ class formGenerate extends Form
 
             }
 
-
-
             }else{
 
                 $this->message = $regex['message'][$this->value['validators']['regex']];
@@ -344,16 +348,6 @@ class formGenerate extends Form
                 $this->pattern = $regex['pattern'][$this->value['validators']['regex']];
 
             }
-
-
-//            echo  $this->value['validators']['length'];
-//            exit;
-
-
-
-
-
-
 
     }
 
@@ -387,10 +381,6 @@ class formGenerate extends Form
                 $this->max =  $length[$this->value['validators']['length']][1];
 
             }
-
-
-//            echo  $this->value['validators']['length'];
-//            exit;
 
         }else{
 
@@ -444,18 +434,10 @@ class formGenerate extends Form
 
         $this->element = new  Element\Checkbox($this->key, array(
             'label' => $this->label,
-
-
         ));
-
-
-        //$this->add($element);
-
     }
 
-    protected function getTextareaParam() {
-//        echo $this->value['class'];
-//        exit;
+    protected function getTextareaParam() {;
         $this->element = new Element\Textarea($this->key, array(
                                         'label' =>$this->label,
                                     )
@@ -463,12 +445,9 @@ class formGenerate extends Form
         if(isset($this->value['class'])){
             $this->element->setAttribute('class',$this->value['class']);
         }
-
-
     }
     protected function getCaptchaParam() {
-//        echo $this->value['class'];
-//        exit;
+
         $captchaImage = new CaptchaImage(array(
                 'font' =>'./public/capcha/Times New Roman Cyr Regular.ttf',
                 'width' => 250,
@@ -552,111 +531,7 @@ class formGenerate extends Form
 
                 $this->label = isset($label[$this->typeLabel][$this->key])?$label[$this->typeLabel][$this->key]:'';
         }
-
-//        echo $this->label;
-//        exit;
-
-        //$this->add($element);
-
     }
-  public function   checkValidation($data){
-
-        $flag  = false;
-        $checkEmail = true;
-        $checkName = true;
-        $checkSurname = true;
-
-        foreach($data as $key=>$value){
-
-            switch($key){
-
-                case'email';
-                  $value = array_values(array_diff($value, array('')));
-//                    print_r($value);
-//                    exit;
-                    for($i=0;$i<count($value);$i++){
-//                        echo $i. ' 123 '.$value[$i].'<br />';
-
-                            $checkEmail =   preg_match('/^[^\W][a-zA-Z0-9\_\.\-]+(\.[a-zA-Z0-9\_\-\.]+)*\@[a-zA-Z0-9_\-\.]+(\.[a-zA-Z0-9\_\.\-]+)*\.[a-zA-Z\-\.\_]{2,4}$/',trim($value[$i]));
-
-                        if(!$checkEmail){
-
-//                            echo count($value);
-//                            exit;
-                            break;
-                        }
-
-                       $data['email'][$i]= strip_tags(trim($value[$i]));
-//                        echo  '123'.$data['email'][$i].'123';
-//                        exit;
-                    }
-                    break;
-                case'name';
-
-                    for($i=0;$i<count($value);$i++){
-
-                        if((empty($value[$i]))&&(!empty($data['email'][$i]))&&(empty($data['surname'][$i]))||($data['name'][$i]==' ' || $data['surname'][$i]==' ')){
-
-                            $data['name'][$i]= 'Аноним';
-                            continue;
-
-                        }elseif((empty($value[$i]))&&(empty($data['email'][$i]))){
-
-                            continue;
-
-                        }else if(empty($value[$i])){
-
-                            continue;
-
-                        }
-
-                        $checkName =   preg_match('/^[а-яА-ЯёЁa-zA-Z \-]+$/u',trim($value[$i]));
-                        if(!$checkName){
-
-                            break;
-                        }
-                        $data['name'][$i]= strip_tags(trim($value[$i]));
-                    }
-                    break;
-                case'surname';
-
-
-                    for($i=0;$i<count($value);$i++){
-
-                        if((empty($value[$i]))&&(!empty($data['email'][$i]))|| $value[$i]==' '){
-                            continue;
-                        }elseif((empty($value[$i]))&&(empty($data['email'][$i]))){
-                            continue;
-                        }
-                        $checkSurname =   preg_match('/^[а-яА-ЯёЁa-zA-Z \-]+$/u',trim($value[$i]));
-                        if(!$checkSurname){
-
-                            break;
-                        }
-                        $data['surname'][$i]= strip_tags(trim($value[$i]));
-
-                    }
-                    break;
-            }
-            if(($checkEmail)&&($checkName)&&($checkSurname)){
-
-                $flag = true;
-
-            }else{
-
-                $flag = false;
-                break;
-
-            }
-
-        }
-
-
-        return array($flag,$data);
-
-
-    }
-
     /**
      * Clear elements
      * @return void

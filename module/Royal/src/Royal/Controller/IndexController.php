@@ -22,17 +22,6 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-
-
-
-
-        return new ViewModel(array(
-
-            )
-        );
+        return new ViewModel(array());
     }
-
-    private function renderMenuTop(){}
-    private function renderMenuBottom(){}
-    private function renderMenuRight(){}
 }

@@ -8,47 +8,6 @@
  */
 
 return array(
-
-//'navigation' => array(
-//    'default' => array(
-//        array(
-//            'label' => 'Home',
-//            'route' => 'home',
-//        ),
-//        array(
-//            'label' => 'Album',
-//            'route' => 'Royal',
-//            'pages' => array(
-//                array(
-//                    'label' => 'Add',
-//                    'route' => 'Royal',
-//                    'action' => 'Index',
-//                ),
-//
-//            ),
-//        ),
-//    ),
-//),
-//    'navigation' => array(
-//        'default' => array(
-//            array(
-//                'label' => 'Home',
-//                'route' => 'home',
-//            ),
-//            array(
-//                'label' => 'Album',
-//                'route' => 'Royal',
-//                'pages' => array(
-//                    array(
-//                        'label' => 'Add',
-//                        'route' => 'Royal',
-//                        'action' => 'Index',
-//                    ),
-//
-//                ),
-//            ),
-//        ),
-//    ),
     'console' => array(
         'router' => array(
             'routes' => array(

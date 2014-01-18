@@ -155,6 +155,7 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     public function setAttributes($attributes, $fromDataBase = false)
     {
+
         $arrayOfAttributes = (array) $attributes;
         if ($fromDataBase) {
             $this->attributes = $attributes;
@@ -256,6 +257,7 @@ abstract class ActiveRecord extends AbstractTableGateway
     public function write()
     {
         if ($this->getScenario() == 'insert') {
+
             if($this->insert($this->getAttributes())){
 
                 return $this->adapter->getDriver()->getConnection()->getLastGeneratedValue();
@@ -266,6 +268,7 @@ abstract class ActiveRecord extends AbstractTableGateway
 
             }
         } else {
+
             $this->nativeAttributes = array('id'=>$this->id);
             return $this->update($this->getAttributes(), $this->nativeAttributes);
         }

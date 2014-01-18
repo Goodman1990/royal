@@ -81,18 +81,7 @@ abstract class ActiveRecordModel extends ActiveRecord
      */
     public function validate()
     {
-        if (!$this->beforeValidate()) {
-            return false;
-        }
-
-        foreach ($this->rules() as $rule) {
-            $errors = \Validator\CreateValidator::getInstance()->validate($this, $rule)->getErrors();
-            if (count($errors)) {
-                $this->setErrors($errors);
-            }
-        }
-
-        return !$this->hasErrors();
+        return true;
     }
 
     /**
@@ -111,7 +100,7 @@ abstract class ActiveRecordModel extends ActiveRecord
     public function save()
     {
         if ($this->beforeValidate() && $this->validate()) {
-            $this->write();
+            return $this->write();
         }
 
         return !$this->hasErrors();
@@ -164,6 +153,11 @@ abstract class ActiveRecordModel extends ActiveRecord
         );
     }
 
+    public function getActiveRecor(){
+
+        return $this;
+    }
+
     /**
      * Clear AR model
      * @return void
@@ -199,9 +193,9 @@ abstract class ActiveRecordModel extends ActiveRecord
 
     /**
      * Processing form
-     * @param \Training\Form\formGenerate $form
+     * @param \Royal\Form\formGenerate $form
      * @param \Zend\Stdlib\RequestInterface $request
-     * @return bool|\Training\Form\formGenerate
+     * @return bool|\Royal\Form\formGenerate
      */
     public function formProceed(\Royal\Form\formGenerate $form, \Zend\Stdlib\RequestInterface $request)
     {
