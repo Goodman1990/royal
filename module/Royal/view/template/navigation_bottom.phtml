@@ -1,6 +1,6 @@
 <ul>
     <?php foreach($this->container as $this->pages){?>
-        <li <?php if($this->pages->isActive())echo 'class = "active-bottom"'?> >
+        <li <?php if($this->pages->isActive())echo 'class = "active-bottom"'; if(!$this->pages->visible) echo 'style="display:none;';?> >
             <a href="<?php echo  $this->pages->uri ?>" ><?php echo $this->pages->label  ?></a>
         </li>
     <?php } ?>

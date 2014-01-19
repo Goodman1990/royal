@@ -41,13 +41,17 @@ class adminController extends AbstractActionController
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
-
+                    echo '<pre>';
+                    print_r($this->validData);
+                    exit;
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
 
                         \Royal\Models\CategoryPagesModel::model()
                             ->setAttributes(array(
                                 'id' => $this->validData['id_' . $i],
                                 'title' => $this->validData['title_' . $i],
+                                'number'=>$this->validData['number_' . $i],
+                                'visible'=>$this->validData['visible_' . $i],
                             ))->save();
                     }
 
@@ -63,6 +67,8 @@ class adminController extends AbstractActionController
                     $id = \Royal\Models\CategoryPagesModel::model()
                         ->setAttributes(array(
                             'title' => $this->validData['title'],
+                            'number'=>$this->validData['number'],
+                            'visible'=>$this->validData['visible'],
                         ))->save();
                     $formEdit->addInputForm($Post, $id);
                     $formEdit->CustomSetData();
@@ -77,7 +83,7 @@ class adminController extends AbstractActionController
         } else {
             $formEdit->CustomSetData();
         }
-        
+
         return new ViewModel(array(
             'formEdit' => $formEdit,
             'formAdd' => $formAdd,

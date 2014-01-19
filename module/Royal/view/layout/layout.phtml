@@ -1,6 +1,6 @@
 <?php echo $this->doctype();?>
+<?php //  echo $page->activePage['top']; exit;  ?>
 <meta charset="utf-8">
-
 <html lang="en">
     <head>
         <?php echo $this->headTitle('royal')->setSeparator(' - ')->setAutoEscape(false) ?>
@@ -29,8 +29,9 @@
                         <img class="logo" src='/image/logo.png'>
                         <div class='header-menu-top'>
                             <?php
-                                if($page->topActive){
-                                    $this->navigation($this->GetNavigationHelper())->findOneByResource($page->topActivePage)->setActive(true);
+                                if(isset($page->activePage['top'])){
+
+                                    $this->navigation($this->GetNavigationHelper())->findOneByResource($page->activePage['top'])->setActive(true);
                                 }else{
                                     $this->navigation($this->GetNavigationHelper());
                                 }
@@ -52,8 +53,8 @@
                         <div class="menu-content ">
                             <div class='header-menu-bottom'>
                                     <?php
-                                        if($page->bootomActive){
-                                            $this->navigation($this->GetNavigationHelper())->findOneByResource($page->bootomActivePage)->setActive($page->bootomActive);
+                                        if(isset($page->activePage['bottom'])){
+                                            $this->navigation($this->GetNavigationHelper())->findOneByResource($page->activePage['bottom'])->setActive(true);
                                         }else{
                                             $this->navigation($this->GetNavigationHelper());
                                         }

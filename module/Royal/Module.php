@@ -65,11 +65,12 @@ class Module implements ServiceProviderInterface,
 
         return array(
             'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                  'ActiveRecord' =>  __DIR__ . '/../../vendor/ActiveRecord/lib/ActiveRecord',
-                  'Helper' => __DIR__ . '/view/Helper/',
-                  'Navigation' => __DIR__ . '/Navigation',
+                    'namespaces' => array(
+                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                    'ActiveRecord' =>  __DIR__ . '/../../vendor/ActiveRecord/lib/ActiveRecord',
+                    'Helper' => __DIR__ . '/view/Helper/',
+                    'Navigation' => __DIR__ . '/Navigation',
+                    'Page' => __DIR__ . '/../../vendor/Page',
                 ),
             ),
         );

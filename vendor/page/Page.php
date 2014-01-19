@@ -28,7 +28,7 @@ class Page
     }
 
     public function setActivePage($page){
-        $this->active_page=$page;
+        $this->activePage=$page;
     }
 
 

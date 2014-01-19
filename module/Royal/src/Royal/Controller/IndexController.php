@@ -9,19 +9,58 @@
 
 namespace Royal\Controller;
 
+use Page\Page;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\TableGateway\Feature;
-use Zend\Navigation\Navigation;
-use Royal\helpers\generalHelper;
+use Zend\Mvc\MvcEvent;
+use Royal\Models;
 
 
 class IndexController extends AbstractActionController
 {
 	public $adapter;
+    public $id_page;
+    public $Page;
+    public $view;
 
-    public function indexAction()
+
+    protected function attachDefaultListeners()
     {
-        return new ViewModel(array());
+        parent::attachDefaultListeners();
+        $events = $this->getEventManager();
+//        $events->attach('dispatch', array($this, 'postDispatch'), -100);
+        $events->attach('dispatch', array($this, 'preDispatch'), 100);
+    }
+    public function preDispatch (MvcEvent $e){
+        $this->Page = new Page();
+    }
+
+    private function parseParam($id_page){
+
+       $pos =  stripos($id_page, '_', 0);
+       return substr($id_page,0,$pos);
+
+    }
+
+
+    public function indexAction() {
+
+        $id_page = $this->params()->fromRoute('id_page', 0);
+        $this->id_page = $this->parseParam($id_page);
+
+        if($this->id_page==0){
+
+            $elementCategory =  array_shift(Models\CategoryPagesModel::model()->findAll());
+            $this->id_page = $elementCategory['id'];
+
+        }
+
+        $this->Page->setActivePage(array('top'=>$this->id_page));
+        $this->layout()->setVariables(array('page'=>$this->Page));
+
+        return new ViewModel(array(
+
+        ));
     }
 }

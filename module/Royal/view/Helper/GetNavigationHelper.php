@@ -18,14 +18,12 @@ class GetNavigationHelper extends AbstractHelper {
         $navigation = array();
     	$generalHelper = new generalHelper();
         $navigationInfo = \Royal\Models\CategoryPagesModel::model()->getAll();
-//        print_r($navigationInfo);
-//        exit;
-
         foreach ($navigationInfo as $key ) {
         	$navigation[] =  array(
                 'label' => $key['title'],
                 'uri'=>'    /'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
                 'resource'=>$key['id'],
+                'visible' => $key['visible'],
             );
         }
         $container = new \Zend\Navigation\Navigation($navigation);
