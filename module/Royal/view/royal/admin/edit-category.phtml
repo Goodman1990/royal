@@ -1,21 +1,38 @@
 <div class="left-content">
     <?php echo $this->form()->openTag($formEdit);?>
+    <div id="sort-form">
     <?php  for($i=0;$i<$formEdit->countInput;$i++){ ?>
-        <div>
+        <div class="ech">
             <?php echo $this->formRow($formEdit->get('title_'.$i)) ?>
             <?php echo $this->formRow($formEdit->get('visible_'.$i)) ?>
-            <?php echo $this->formRow($formEdit->get('number_'.$i)) ?>
+            <?php echo $this->formRow($formEdit->get('number_'.$i)->setAttribute('class','number')) ?>
             <?php echo $this->formRow($formEdit->get('id_'.$i)) ?>
             <hr>
         </div>
 
     <?php } ?>
+    </div>
     <?php echo $this->form()->closeTag($formEdit);?>
     <button form="editCategory" name="edit">сохранить</button>
     <br />
     <?php echo  $this->form($formAdd);?>
     <button form="addCategory" name="add">сохранить</button>
 </div>
+
+<script type="text/javascript">
+    $(function() {
+        $( "#sort-form " ).sortable({
+            stop: function( event, ui) {
+
+                $('#sort-form .ech').each(function(i, elm){
+                    $(elm).find('.number').val(i+1);
+                });
+                
+            }
+        });
+        $( "#sort-form" ).disableSelection();
+    });
+</script>
 
 
 
