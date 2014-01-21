@@ -13,7 +13,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\TableGateway\Feature;
 use Royal\Form\formGenerate;
+use Page\Page;
 use Royal\helpers\generalHelper;
+use Zend\Mvc\MvcEvent;
 
 
 class adminController extends AbstractActionController
@@ -21,6 +23,19 @@ class adminController extends AbstractActionController
     public $adapter;
     public $request;
     public $validData;
+
+
+    protected function attachDefaultListeners()
+    {
+        parent::attachDefaultListeners();
+        $events = $this->getEventManager();
+//        $events->attach('dispatch', array($this, 'postDispatch'), -100);
+        $events->attach('dispatch', array($this, 'preDispatch'), 100);
+    }
+    public function preDispatch (MvcEvent $e){
+        $this->Page = new Page();
+        $this->layout('layout/layoutAdmin');
+    }
 
     public function editCategoryAction()
     {
@@ -41,9 +56,7 @@ class adminController extends AbstractActionController
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
-                    echo '<pre>';
-                    print_r($this->validData);
-                    exit;
+
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
 
                         \Royal\Models\CategoryPagesModel::model()
@@ -75,11 +88,9 @@ class adminController extends AbstractActionController
                     $formAdd->clearElements();
 
                 } else {
-
                     $formEdit->CustomSetData();
                 }
             }
-
         } else {
             $formEdit->CustomSetData();
         }

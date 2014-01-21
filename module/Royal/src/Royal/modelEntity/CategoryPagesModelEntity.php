@@ -30,6 +30,8 @@ class CategoryPagesModelEntity extends ActiveRecordModel {
         return array(
             "id",
 "title",
+"visible",
+"number",
 
         );
     }

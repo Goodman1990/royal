@@ -1,5 +1,16 @@
 <div class="left-content">
-    <?php echo $this->form($formEdit);?>
+    <?php echo $this->form()->openTag($formEdit);?>
+    <?php  for($i=0;$i<$formEdit->countInput;$i++){ ?>
+        <div>
+            <?php echo $this->formRow($formEdit->get('title_'.$i)) ?>
+            <?php echo $this->formRow($formEdit->get('visible_'.$i)) ?>
+            <?php echo $this->formRow($formEdit->get('number_'.$i)) ?>
+            <?php echo $this->formRow($formEdit->get('id_'.$i)) ?>
+            <hr>
+        </div>
+
+    <?php } ?>
+    <?php echo $this->form()->closeTag($formEdit);?>
     <button form="editCategory" name="edit">сохранить</button>
     <br />
     <?php echo  $this->form($formAdd);?>
