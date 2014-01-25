@@ -23,35 +23,47 @@ class adminController extends AbstractActionController
     public $adapter;
     public $request;
     public $validData;
+    public $Page;
 
 
     protected function attachDefaultListeners()
     {
         parent::attachDefaultListeners();
         $events = $this->getEventManager();
-//        $events->attach('dispatch', array($this, 'postDispatch'), -100);
+
+
         $events->attach('dispatch', array($this, 'preDispatch'), 100);
+        $events->attach('dispatch', array($this, 'postDispatch'), -100);
     }
     public function preDispatch (MvcEvent $e){
         $this->Page = new Page();
         $this->layout('layout/layoutAdmin');
+
+    }
+    public function PostDispatch (MvcEvent $e){
+
+        $this->layout()->setVariables(array('page'=>$this->Page));
     }
 
     public function editCategoryAction()
     {
         $this->request = $this->getRequest();
+
         $id_page = $this->params()->fromRoute('id_page', 0);
 
         if($id_page=='page'){
-
             $model = \Royal\Models\CategoryPagesModel::model();
-
+            $this->Page->setActivePage(array('admin'=>array(
+                'tab'=>'1',
+                'sub'=>'1.2'
+            )));
         }else{
-
+            $this->Page->setActivePage(array('admin'=>array(
+                'tab'=>'1',
+                'sub'=>'1.1'
+            )));
             $model = \Royal\Models\CategoriesProductModel::model();
         }
-//        $CategoryPagesModel = \Royal\Models\CategoryPagesModel::model();//->findAll()->addOrder('DESK number')->customExecute();
-
         $categoryData = $model->findAllOrder('number DESK ');//->addOrder('DESK number')->customExecute();
 
         $formEdit = new formGenerate('editCategory', 'standart grouped');

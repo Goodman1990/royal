@@ -31,9 +31,9 @@
                             <?php
                                 if(isset($page->activePage['top'])){
 
-                                    $this->navigation($this->GetNavigationHelper())->findOneByResource($page->activePage['top'])->setActive(true);
+                                    $this->navigation($this->GetNavigationHelper('top'))->findOneByResource($page->activePage['top'])->setActive(true);
                                 }else{
-                                    $this->navigation($this->GetNavigationHelper());
+                                    $this->navigation($this->GetNavigationHelper('top'));
                                 }
                                 echo $this->navigation()->menu()->setPartial('template/navigation_top')->render();
                             ?>
@@ -54,9 +54,9 @@
                             <div class='header-menu-bottom'>
                                     <?php
                                         if(isset($page->activePage['bottom'])){
-                                            $this->navigation($this->GetNavigationHelper())->findOneByResource($page->activePage['bottom'])->setActive(true);
+                                            $this->navigation($this->GetNavigationHelper('bottom'))->findOneByResource($page->activePage['bottom'])->setActive(true);
                                         }else{
-                                            $this->navigation($this->GetNavigationHelper());
+                                            $this->navigation($this->GetNavigationHelper('bottom'));
                                         }
     //                                    echo $this->navigation()->menu()->setPartial('template/navigation_top')->render();
     //                                        $this->navigation($this->GetNavigationHelper())->findOneByResource(1)->setActive($page->bootomActive);

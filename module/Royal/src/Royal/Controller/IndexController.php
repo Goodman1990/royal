@@ -29,11 +29,15 @@ class IndexController extends AbstractActionController
     {
         parent::attachDefaultListeners();
         $events = $this->getEventManager();
-//        $events->attach('dispatch', array($this, 'postDispatch'), -100);
         $events->attach('dispatch', array($this, 'preDispatch'), 100);
+        $events->attach('dispatch', array($this, 'postDispatch'), -100);
     }
     public function preDispatch (MvcEvent $e){
         $this->Page = new Page();
+    }
+
+    public function PostDispatch (MvcEvent $e){
+        $this->layout()->setVariables(array('page'=>$this->Page));
     }
 
     private function parseParam($id_page){
@@ -42,7 +46,6 @@ class IndexController extends AbstractActionController
        return substr($id_page,0,$pos);
 
     }
-
 
     public function indexAction() {
 
