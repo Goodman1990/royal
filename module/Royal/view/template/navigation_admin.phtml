@@ -1,0 +1,22 @@
+<div id="nav">
+
+        <?php foreach($this->container as $this->pages){ ?>
+
+    <ul  <?php if($this->pages->isActive())echo 'class = "tab_active"';else echo 'class="tab"'; if(!$this->pages->visible) echo 'style="display:none;';?>>
+            <li>
+                <a href="<?php echo  $this->pages->uri ?>" ><b><?php echo $this->pages->label  ?></b></a>
+
+                <ul <?php if($this->pages->isActive())echo 'class = "sub_active"';else echo 'class="sub"';  ?>>
+
+                    <?php foreach ($this->pages->pages  as $this->pages){?>
+
+                        <li <?php  if($this->pages->isActive())echo 'class = "current_sub"';  if(!$this->pages->visible) echo 'style="display:none;';?> >
+                            <a href="<?php echo  $this->pages->uri ?>" ><b><?php echo $this->pages->label  ?></b></a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </li>
+    </ul>
+        <?php } ?>
+
+</div>

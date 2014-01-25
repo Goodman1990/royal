@@ -1,0 +1,134 @@
+ul#nav {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+
+#nav {
+    float:left;
+    width:100%;
+    height:75px; /* Высота всего меню (и верхнего уровня и нижнего, все вместе) */
+    position:relative;
+    margin:10px 0 40px; /* Отступ сверху и снизу от меню */
+}
+
+#nav .select, #nav .current {
+    margin:0;
+    padding:0;
+    list-style:none;
+    display:block;
+}
+
+#nav li {
+    font-family: Arial; /* Шрифт меню */
+    display:inline;
+    margin:0;
+    padding:0;
+    height:auto;
+}
+
+#nav .select a, #nav .current a {
+    display:block;
+    height:40px; /* Высота верхнего уровня */
+    float:left;
+    background: url("/images/left_nav.png") no-repeat left top; /* Путь к левому изображению */
+    padding:0 0 0 5px;
+    text-decoration:none;
+    font-size:14px; /* Размер шрифта верхнего уровня */
+    line-height:40px;
+    white-space:nowrap;
+    margin-right: 2px; /* Отступы пунктов верхнего уровня */
+    position: relative;
+    z-index: 500;
+}
+
+#nav .select a b, #nav .current a b {
+    height:100%;
+    display:block;
+    background:url("/images/right_nav.png") no-repeat right top; /* Путь к правому изображению */
+    padding:0 20px 0 15px;
+    color:#606060; /* Цвет ссылок верхнего уровня */
+}
+
+#nav .select a:hover, #nav .select li:hover a {
+    background-position:0 -50px;
+    cursor:pointer;
+}
+
+#nav .select a:hover b, #nav .select li:hover a b {
+    background-position:100% -50px;
+    color:#fff;
+}
+
+#nav .sub {
+    display:none;
+}
+
+#nav .current a {
+    background-position:0 -50px;
+    border-color:#046;
+}
+#nav .current a b {
+    background-position:100% -50px;
+    color:#fff; /* Цвет шрифта активного меню верхнего уровня */
+}
+
+
+#nav .sub li a:hover, #nav .select a:hover .sub li a:hover, #nav .select li:hover .sub li a:hover, #nav .sub_active .current_sub a, #nav .sub_active a:hover {
+    color:#fff; /* Цвет шрифта активного меню нижнего уровня */
+    text-decoration:underline;
+}
+
+
+#nav .select li a:hover .sub, #nav .select li:hover .sub, #nav .sub_active {
+    display:block;
+    position:absolute;
+    width:100%;
+    height: 35px;
+    top:40px;
+    left:0;
+    background:#9E9B9B; /* Фон нижнего уровня */
+    padding:0;
+    z-index:100;
+}
+
+#nav .sub_active {
+    z-index:10;
+}
+
+#nav .sub, #nav .sub_active {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+
+* html #nav .sub_active, * html #nav .select a:hover .sub {
+    z-index:-1;
+    margin-top:0;
+    margin-top:1px;
+}
+
+#nav .sub_active a {
+    height:25px;
+    float:left;
+    text-decoration:none;
+    line-height:24px;
+    white-space:nowrap;
+    font-weight:normal;
+}
+
+#nav .sub_active a, #nav .select a:hover .sub li a, #nav .select li:hover .sub li a {
+    display:inline;
+    background:none;
+    padding:0 10px;
+    margin:0;
+    font-size:13px; /* Размер шрифта нижнего уровня */
+    width:auto;
+    white-space:nowrap;
+    font-weight:normal;
+    border:0;
+    color:#eee; /* Цвет шрифта нижнего уровня */
+    height:35px;
+    line-height:35px;
+}

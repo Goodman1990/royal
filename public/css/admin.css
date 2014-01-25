@@ -101,71 +101,194 @@ form[name="editCategory"] div {
 			height: auto;
 			width: 53%;
 		}
+ul#nav {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
 
-		.header-menu-bottom ul li,.header-menu-top ul li{
-			height: 37px;
-			margin-right: 44px;
-			display: inline-block;
-			color: white;
-			font-size: 18px;
-			font-family: 'agbengaly';
-		}
+#nav {
+    /*float:left;*/
+    width:100%;
+    height:75px; /* Высота всего меню (и верхнего уровня и нижнего, все вместе) */
+    position:relative;
+    margin:10px 0 40px; /* Отступ сверху и снизу от меню */
+}
 
-		.header-menu-bottom ul,.header-menu-top ul{
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			margin-top: 20px; 
-			width: 53%;
-		}
-		.header-menu-bottom ul li:last-child , .header-menu-top ul li:last-child{
-			margin-right: 0;
-		}
-		.header-menu-bottom ul li a, .header-menu-top ul li a{
-			text-decoration: none;
-			color: white;
-		}
+#nav .tab, #nav .current {
+    margin:0;
+    padding:0;
+    list-style:none;
+    display:block;
+}
 
-		.header-menu-bottom ul li{
-			height: 37px;
-			margin-right: 7%;
-			display: inline-block;
-			color: white;
-			font-size: 14px;
-			font-family: 'agbengaly';
-			text-decoration: underline
-		}
+#nav li {
+    font-family: Arial; /* Шрифт меню */
+    display:inline;
+    margin:0;
+    padding:0;
+    height:auto;
+}
 
-		.header-menu-bottom ul{
-			width: 64%;
-		}
-		.header-menu-bottom ul li:hover,.active-bottom{
-			cursor: pointer;
-			text-decoration:none !important;
-		}
-		/*.active-bottom{
-			cursor: pointer;
-			text-decoration:none;
-		}*/
-		.header-menu-top ul li:hover, .active-top{
-			cursor: pointer;
-			background-image: url(../image/hover-header-menu.png);
-			background-repeat:no-repeat;
-			background-position: center;
-			background-size: 100%;
-		}
+#nav .tab a, #nav .current a {
+    display:block;
+    height:40px; /* Высота верхнего уровня */
+    float:left;
+    background: url("/images/left_nav.png") no-repeat left top; /* Путь к левому изображению */
+    padding:0 0 0 5px;
+    text-decoration:none;
+    font-size:14px; /* Размер шрифта верхнего уровня */
+    line-height:40px;
+    white-space:nowrap;
+    margin-right: 2px; /* Отступы пунктов верхнего уровня */
+    position: relative;
+    z-index: 500;
+}
+
+#nav .tab a b, #nav .current a b {
+    height:100%;
+    display:block;
+    background:url("/images/right_nav.png") no-repeat right top; /* Путь к правому изображению */
+    padding:0 20px 0 15px;
+    color:#606060; /* Цвет ссылок верхнего уровня */
+}
+
+#nav .tab a:hover, #nav .tab li:hover a {
+    background-position:0 -50px;
+    cursor:pointer;
+}
+
+#nav .tab a:hover b, #nav .tab li:hover a b {
+    background-position:100% -50px;
+    color:#fff;
+}
+
+#nav .sub {
+    display:none;
+}
+
+#nav .current a {
+    background-position:0 -50px;
+    border-color:#046;
+}
+#nav .current a b {
+    background-position:100% -50px;
+    color:#fff; /* Цвет шрифта активного меню верхнего уровня */
+}
+
+
+#nav .sub li a:hover, #nav .tab a:hover .sub li a:hover, #nav .tab li:hover .sub li a:hover, #nav .sub_active .current_sub a, #nav .sub_active a:hover {
+    color:#fff; /* Цвет шрифта активного меню нижнего уровня */
+    text-decoration:underline;
+}
+
+
+#nav .tab li a:hover .sub, #nav .tab li:hover .sub, #nav .sub_active {
+    display:block;
+    position:absolute;
+    width:100%;
+    /*height: 35px;*/
+    top:40px;
+    left:0;
+    background:#9E9B9B; /* Фон нижнего уровня */
+    padding:0;
+    z-index:100;
+}
+
+#nav .sub_active {
+    z-index:10;
+}
+
+#nav .sub, #nav .sub_active {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+
+* html #nav .sub_active, * html #nav .tab a:hover .sub {
+    z-index:-1;
+    margin-top:0;
+    margin-top:1px;
+}
+
+#nav .sub_active a {
+    height:25px;
+    float:left;
+    text-decoration:none;
+    line-height:24px;
+    white-space:nowrap;
+    font-weight:normal;
+}
+
+#nav .sub_active a, #nav .tab a:hover .sub li a, #nav .tab li:hover .sub li a {
+    display:inline;
+    background:none;
+    padding:0 10px;
+    margin:0;
+    font-size:13px; /* Размер шрифта нижнего уровня */
+    width:auto;
+    white-space:nowrap;
+    font-weight:normal;
+    border:0;
+    color:#eee; /* Цвет шрифта нижнего уровня */
+    height:35px;
+    line-height:35px;
+}
+
+		/*.header-menu-bottom ul li,.header-menu-top ul li{*/
+			/*height: 37px;*/
+			/*margin-right: 44px;*/
+			/*display: inline-block;*/
+			/*color: white;*/
+			/*font-size: 18px;*/
+			/*font-family: 'agbengaly';*/
+		/*}*/
+
+		/*.header-menu-bottom ul,.header-menu-top ul{*/
+			/*display: block;*/
+			/*margin-left: auto;*/
+			/*margin-right: auto;*/
+			/*margin-top: 20px; */
+			/*width: 53%;*/
+		/*}*/
+		/*.header-menu-bottom ul li:last-child , .header-menu-top ul li:last-child{*/
+			/*margin-right: 0;*/
+		/*}*/
+		/*.header-menu-bottom ul li a, .header-menu-top ul li a{*/
+			/*text-decoration: none;*/
+			/*color: white;*/
+		/*}*/
+
+		/*.header-menu-bottom ul li{*/
+			/*height: 37px;*/
+			/*margin-right: 7%;*/
+			/*display: inline-block;*/
+			/*color: white;*/
+			/*font-size: 14px;*/
+			/*font-family: 'agbengaly';*/
+			/*text-decoration: underline*/
+		/*}*/
+
+		/*.header-menu-bottom ul{*/
+			/*width: 64%;*/
+		/*}*/
+		/*.header-menu-bottom ul li:hover,.active-bottom{*/
+			/*cursor: pointer;*/
+			/*text-decoration:none !important;*/
+		/*}*/
+
+		/*.header-menu-top ul li:hover, .active-top{*/
+			/*cursor: pointer;*/
+			/*background-image: url(../image/hover-header-menu.png);*/
+			/*background-repeat:no-repeat;*/
+			/*background-position: center;*/
+			/*background-size: 100%;*/
+		/*}*/
 	.papirus{
 		height: auto;
 	}
-		/*.warpper-uzor-top{*/
-			/*background-image: url(../image/papirus.png);*/
-			/*background-repeat: repeat-y;*/
-			/*background-size: 100%;*/
-			/*margin: 0 auto;*/
-			/*width:65%;*/
-			/*height: 38%;*/
-		    /*max-height: 139px;*/
-		/*}*/
+
 		.uzor-top{
 			width: 99%;
 			margin: 0 auto;
@@ -175,7 +298,6 @@ form[name="editCategory"] div {
 			height: 153px;
 		}
 		.content{
-
 
 		    color: #293757;
 			font-family: 'agopus';
@@ -206,257 +328,169 @@ form[name="editCategory"] div {
 				min-height: 100px;
 				width: 100%;
 			}
-
-				/*.podpis{*/
-					/*position: relative;*/
-					/*right: 0; */
-					/*max-height: 73px;*/
-					/*max-width: 197px;*/
-					/*width: 36%;*/
-					/*height: auto;*/
-				/*}*/
-
-			/*.right-content{*/
-				/*float: left;*/
-				/*line-height: 1.2;*/
-				/*width: 23%;*/
-				/*min-height: 500px;*/
-				/*height: inherit;*/
-			/*}*/
-				/*.pero{*/
-					/*margin-left: 14%;*/
-					/*height: auto;*/
-					/*width:31%;*/
-				/*}*/
-				/*.contact{*/
-					/*list-style: none;*/
-					/*width: 75%;*/
-					/*display: block;*/
-					/*margin: 0 auto;*/
-					/*color: #0b1c40;*/
-					/*text-decoration: none;*/
-					/*margin-bottom: 20px;*/
-				/*}*/
-				/*.contact-header{*/
-					/*font-weight: bold;*/
-					/*font-size: 24px;*/
-					/*line-height: 1.2;*/
-				/*}*/
-				/*.tel,.email,.adres,.city{*/
-					/*font-size: 16px;*/
-				/*}*/
-				/*.uzor{*/
-					/*display: block;*/
-					/*margin: 0 auto;*/
-					/*width: 27%;*/
-					/*height: auto;*/
-				/*}*/
-				/*.portfolio-wrapper{*/
-					/*max-height: 203px;*/
-					/*height: 20%;*/
-				/*}*/
-					/*.portfollio{*/
-						/*height: auto;*/
-						/*width:73%; */
-						/*max-width: 135px;*/
-						/*max-height: 122px;*/
-						/*margin: 0 auto;*/
-						/*display: block;*/
-					/*}*/
-					/*.work{*/
-						/*font-family: 'agopus';*/
-						/*font-size: 20px;*/
-						/*display: block;*/
-						/*text-align: center;*/
-						/*margin: 0 auto;*/
-						/*width: 65%;*/
-					/*}*/
-					/*.buttot-show{*/
-						/*width: auto;*/
-						/*max-width: 57px;*/
-						/*height: auto;*/
-						/*display: block;*/
-						/*text-decoration: none;*/
-						/*color: #293757;*/
-						/*font-size: 12px;*/
-	    				/*box-shadow: 0 0 5px rgba(0,0,0,0.5); */
-						/*margin: 12px auto 10px auto;*/
-	    				/*box-shadow: 0 0 5px rgba(0,0,0,0.5); *//* Параметры тени */
-	    				/*padding: 5px;*/
-					/*}*/
-				
-		/*.uzor-down {*/
-			/*width: 47%;*/
-			/*margin-left: 16%;*/
-			/*background-image: url(../image/uzor-down.jpg);*/
-			/*background-repeat: no-repeat;*/
-			/*background-position: center;*/
-			/*background-size: 100%;*/
-			/*height: 107px;*/
-		/*}*/
 	.footer{
 		height: 40px;
 		margin: 0 auto;
 		width: 65%;
 	}
 /* All Smartphones in portrait and landscape ----------- */
-@media only 
-screen 
-and (min-width :380px ) 
-and (max-width :780px ),
-screen
-and (min-device-width :380px ) 
-and (max-device-width :780px )
-and (orientation : landscape),
-screen
-and (min-device-width :380px ) 
-and (max-device-width :780px )
-and (orientation : portrait) {
+/*@media only */
+/*screen */
+/*and (min-width :380px ) */
+/*and (max-width :780px ),*/
+/*screen*/
+/*and (min-device-width :380px ) */
+/*and (max-device-width :780px )*/
+/*and (orientation : landscape),*/
+/*screen*/
+/*and (min-device-width :380px ) */
+/*and (max-device-width :780px )*/
+/*and (orientation : portrait) {*/
 /* YOUR STYLE GOES HERE */
-	.right-content{
-		float: none;		
-		width: 90%;
-		height: auto;
-		min-height: 0;
-		margin: 0 auto;
-	}
+	/*.right-content{*/
+		/*float: none;		*/
+		/*width: 90%;*/
+		/*height: auto;*/
+		/*min-height: 0;*/
+		/*margin: 0 auto;*/
+	/*}*/
 
-	.warpper-uzor-top{
-	    height: 27%;
-		max-height: 139px;
-	}
+	/*.warpper-uzor-top{*/
+	    /*height: 27%;*/
+		/*max-height: 139px;*/
+	/*}*/
 
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-	.pero{
-		display: none;
-	}
-	.contact{
-		margin :0;
-		margin-right:11%; 
-		display: inline-block;
-		width: 55%;
-		list-style: none;
-		color: #0b1c40;
-		text-decoration: none;
-	}
-	.uzor{
-		display: none;
-	}
-	.portfolio-blok{
-		display: inline-block;
-		margin-left: 20%;
-		width: 32%;
-		margin: 0;
-	}
-	.portfollio{
-		width: 100%;
-		margin: 0 ;
-		height: auto;
-	}
-	.work{
-		width: 100%;
-		font-family: 'agopus';
-		font-size: 20px;
-		display: block;
-		text-align: center;
-		margin: 0;
-	}
-	.buttot-show{
+	/*.left-content{*/
+		/*float: none;*/
+		/*width: 94%;*/
+		/*padding: 3%;*/
+	/*}*/
+	/*.warpper-content{*/
+		/*overflow: hidden;*/
+	/*}*/
+			/**/
+	/*.pero{*/
+		/*display: none;*/
+	/*}*/
+	/*.contact{*/
+		/*margin :0;*/
+		/*margin-right:11%; */
+		/*display: inline-block;*/
+		/*width: 55%;*/
+		/*list-style: none;*/
+		/*color: #0b1c40;*/
+		/*text-decoration: none;*/
+	/*}*/
+	/*.uzor{*/
+		/*display: none;*/
+	/*}*/
+	/*.portfolio-blok{*/
+		/*display: inline-block;*/
+		/*margin-left: 20%;*/
+		/*width: 32%;*/
+		/*margin: 0;*/
+	/*}*/
+	/*.portfollio{*/
+		/*width: 100%;*/
+		/*margin: 0 ;*/
+		/*height: auto;*/
+	/*}*/
+	/*.work{*/
+		/*width: 100%;*/
+		/*font-family: 'agopus';*/
+		/*font-size: 20px;*/
+		/*display: block;*/
+		/*text-align: center;*/
+		/*margin: 0;*/
+	/*}*/
+	/*.buttot-show{*/
 
-		width: 46%;
-		min-width: 29px;
-		max-width: 70px;
-		padding: 4%;
-		height: auto;
-		display: block;
-		text-decoration: none;
-		color: #293757;
-		font-size: 12px;
-		box-shadow: 0 0 5px rgba(0,0,0,0.5);
-	}
-					
-}
+		/*width: 46%;*/
+		/*min-width: 29px;*/
+		/*max-width: 70px;*/
+		/*padding: 4%;*/
+		/*height: auto;*/
+		/*display: block;*/
+		/*text-decoration: none;*/
+		/*color: #293757;*/
+		/*font-size: 12px;*/
+		/*box-shadow: 0 0 5px rgba(0,0,0,0.5);*/
+	/*}*/
+					/**/
+/*}*/
 
-@media only 
-screen
-and (max-width: 379px),
-screen 
-and (max-device-width : 379px){
-	.right-content{
-		min-height: 0;
-		float: none;		
-		width: 90%;
-		margin: 0 ;
-		margin-left: 10px;
-		height: auto; 
+/*@media only */
+/*screen*/
+/*and (max-width: 379px),*/
+/*screen */
+/*and (max-device-width : 379px){*/
+	/*.right-content{*/
+		/*min-height: 0;*/
+		/*float: none;		*/
+		/*width: 90%;*/
+		/*margin: 0 ;*/
+		/*margin-left: 10px;*/
+		/*height: auto; */
 
-	}
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-	.pero{
-		display: none;
-		
-	}
-	.contact{
-		width: 100%;	
-		margin: 0;
-		display: block;
-		
-		list-style: none;
-		color: #0b1c40;
-		text-decoration: none;
-		
-	}		
-	.uzor{
-		display: none;
-	}
-	.portfolio-blok{
-		display: none;
-	}
-	.portfollio{
-		width: 100%;
-		margin: 0 ;
-		height: auto;
-	}
-	.work{
-		width: 100%;
-		font-family: 'agopus';
-		font-size: 20px;
-		display: block;
-		text-align: center;
-		margin: 0;
-	}
-	.buttot-show{
-		width: 90%;
-		max-width: 70px;
-		height: auto;
-		display: block;
-		text-decoration: none;
-		color: #293757;
-		font-size: 12px;
-		box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-	}
+	/*}*/
+	/*.left-content{*/
+		/*float: none;*/
+		/*width: 94%;*/
+		/*padding: 3%;*/
+	/*}*/
+	/*.warpper-uzor-top{*/
+	    /*height: 14%;*/
+		/*max-height: 139px;*/
+	/*}*/
+	/*.warpper-content{*/
+		/*overflow: hidden;*/
+	/*}*/
+			/**/
+	/*.pero{*/
+		/*display: none;*/
+		/**/
+	/*}*/
+	/*.contact{*/
+		/*width: 100%;	*/
+		/*margin: 0;*/
+		/*display: block;*/
+		/**/
+		/*list-style: none;*/
+		/*color: #0b1c40;*/
+		/*text-decoration: none;*/
+		/**/
+	/*}		*/
+	/*.uzor{*/
+		/*display: none;*/
+	/*}*/
+	/*.portfolio-blok{*/
+		/*display: none;*/
+	/*}*/
+	/*.portfollio{*/
+		/*width: 100%;*/
+		/*margin: 0 ;*/
+		/*height: auto;*/
+	/*}*/
+	/*.work{*/
+		/*width: 100%;*/
+		/*font-family: 'agopus';*/
+		/*font-size: 20px;*/
+		/*display: block;*/
+		/*text-align: center;*/
+		/*margin: 0;*/
+	/*}*/
+	/*.buttot-show{*/
+		/*width: 90%;*/
+		/*max-width: 70px;*/
+		/*height: auto;*/
+		/*display: block;*/
+		/*text-decoration: none;*/
+		/*color: #293757;*/
+		/*font-size: 12px;*/
+		/*box-shadow: 0 0 5px rgba(0,0,0,0.5); */
+	/*}*/
 
-}
+/*}*/
 
 /*@media only 
 screen 
@@ -767,158 +801,5 @@ and (orientation : portrait){
 
 
 /* All Smartphones in landscape ----------- */
-@media only screen 
-and (min-width : 321px) {
-/* YOUR STYLE GOES HERE */
-}
 
-/* All Smartphones in portrait ----------- */
-@media only screen 
-and (max-width : 479px) {
-/* YOUR STYLE GOES HERE */
-}
-
-/***** ANDROID DEVICES *****/
-
-/* Android 240 X 320 ----------- */
-@media only screen
-and (max-width: 241px){
-/* YOUR STYLE GOES HERE */
-}
-
-/* Android(Samsung Galaxy) in portrait 380 X 685 ----------- */
-@media only screen
-and (min-width: 375px)
-and (max-width: 385px){
-/* YOUR STYLE GOES HERE */
-}
-
-/* Android(Samsung Galaxy) in Landscape 685 X  380 ----------- */
-@media only screen
-and (min-width: 680px)
-and (max-width: 690px){
-/* YOUR STYLE GOES HERE */
-}
-
-/* Kindle Portrait 600 X 1024 ----------- */
-@media only screen
-and (min-width: 595px)
-and (max-width: 610px){
-/* YOUR STYLE GOES HERE */
-}
-
-/* Kindle Landscape 1024 X 600 ----------- */
-@media only screen
-and (min-width: 1000px)
-and (max-width: 1030px){
-/* YOUR STYLE GOES HERE */
-}
-
-
-
-
-
-
-/***** ALL GENERATION IPADS *****/
-
-/* iPads in portrait and landscape----------- */
-
-
-/* iPad in landscape----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : landscape) {
-/* YOUR STYLE GOES HERE */
-}
-
-/* iPad in portrait----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : portrait){
-/* YOUR STYLE GOES HERE */
-}
-
-
-
-/***** Retina IPAD 3 & 4*****/
-
-/* Retina iPad 3 & 4 in portrait and landscape----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px)
-and (-webkit-min-device-pixel-ratio: 2){
-/* YOUR STYLE GOES HERE */
-}
-
-/* Retina iPad 3 & 4 in landscape----------- */
-
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : landscape)
-and (-webkit-min-device-pixel-ratio: 2){
-/* YOUR STYLE GOES HERE */
-}
-
-/* Retina iPad 3 & 4 in landscape----------- */
-
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : portrait)
-and (-webkit-min-device-pixel-ratio: 2){
-/* YOUR STYLE GOES HERE */
-}
-
-
-
-
-/***** IPAD 1 & 2 (ALSO IPAD MINI)*****/
-
-/* iPad 1 & 2 in portrait and landscape ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (-webkit-min-device-pixel-ratio: 1){
-/* YOUR STYLE GOES HERE */
-}
-
-/* iPad 1 & 2 in landscape ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : landscape)
-and (-webkit-min-device-pixel-ratio: 1)  {
-/* YOUR STYLE GOES HERE */
-}
-
-/* iPad 1 & 2 in portrait ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : portrait) 
-and (-webkit-min-device-pixel-ratio: 1){
-/* YOUR STYLE GOES HERE */
-}
-
-/* Desktops and laptops ----------- */
-@media only screen 
-and (min-width : 1224px) {
-/* YOUR STYLE GOES HERE */
-}
-
-/* Large screens ----------- */
-@media only screen 
-and (min-width : 1824px) {
-/* YOUR STYLE GOES HERE */
-}
-
-/* Only iPhone 4 ----------- */
-@media
-only screen and (-webkit-min-device-pixel-ratio : 1.5),
-only screen and (min-device-pixel-ratio : 1.5) {
-/* YOUR STYLE GOES HERE */
-}
 
