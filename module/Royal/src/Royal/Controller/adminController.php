@@ -13,7 +13,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\TableGateway\Feature;
 use Royal\Form\formGenerate;
+use Page\Page;
 use Royal\helpers\generalHelper;
+use Zend\Mvc\MvcEvent;
 
 
 class adminController extends AbstractActionController
@@ -22,14 +24,39 @@ class adminController extends AbstractActionController
     public $request;
     public $validData;
 
+
+    protected function attachDefaultListeners()
+    {
+        parent::attachDefaultListeners();
+        $events = $this->getEventManager();
+//        $events->attach('dispatch', array($this, 'postDispatch'), -100);
+        $events->attach('dispatch', array($this, 'preDispatch'), 100);
+    }
+    public function preDispatch (MvcEvent $e){
+        $this->Page = new Page();
+        $this->layout('layout/layoutAdmin');
+    }
+
     public function editCategoryAction()
     {
         $this->request = $this->getRequest();
-        $CategoryPagesModel = \Royal\Models\CategoryPagesModel::model();
-        $categoryPageData = $CategoryPagesModel->getAll();
+        $id_page = $this->params()->fromRoute('id_page', 0);
+
+        if($id_page=='page'){
+
+            $model = \Royal\Models\CategoryPagesModel::model();
+
+        }else{
+
+            $model = \Royal\Models\CategoriesProductModel::model();
+        }
+//        $CategoryPagesModel = \Royal\Models\CategoryPagesModel::model();//->findAll()->addOrder('DESK number')->customExecute();
+
+        $categoryData = $model->findAllOrder('number DESK ');//->addOrder('DESK number')->customExecute();
+
         $formEdit = new formGenerate('editCategory', 'standart grouped');
-        $formEdit->setMultiFormEdit($CategoryPagesModel, $categoryPageData);
-        $formAdd = new formGenerate('addCategory', 'standart grouped', $CategoryPagesModel);
+        $formEdit->setMultiFormEdit($model->rules(), $categoryData);
+        $formAdd = new formGenerate('addCategory', 'standart grouped', $model);
 
         if ($this->request->isPost()) {
 
@@ -41,20 +68,23 @@ class adminController extends AbstractActionController
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
-                    echo '<pre>';
-                    print_r($this->validData);
-                    exit;
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
 
-                        \Royal\Models\CategoryPagesModel::model()
+                        $model::model()
                             ->setAttributes(array(
                                 'id' => $this->validData['id_' . $i],
                                 'title' => $this->validData['title_' . $i],
                                 'number'=>$this->validData['number_' . $i],
                                 'visible'=>$this->validData['visible_' . $i],
                             ))->save();
+                        $k = $this->validData['number_'.$i]-1;
+                        $validData['id_'.$k] = $this->validData['id_'.$i];
+                        $validData['title_'.$k] = $this->validData['title_'.$i];
+                        $validData['number_'.$k] = $this->validData['number_'.$i];
+                        $validData['visible_'.$k] = $this->validData['visible_'.$i];
                     }
 
+                    $formEdit->setData($validData);
                 }
 
             } else {
@@ -64,7 +94,7 @@ class adminController extends AbstractActionController
                 if ($formAdd->isValid()) {
 
                     $this->validData = $formAdd->getData();
-                    $id = \Royal\Models\CategoryPagesModel::model()
+                    $id = $model::model()
                         ->setAttributes(array(
                             'title' => $this->validData['title'],
                             'number'=>$this->validData['number'],
@@ -77,19 +107,20 @@ class adminController extends AbstractActionController
                 } else {
 
                     $formEdit->CustomSetData();
+
                 }
             }
-
         } else {
+
             $formEdit->CustomSetData();
+
         }
 
         return new ViewModel(array(
             'formEdit' => $formEdit,
             'formAdd' => $formAdd,
-            'categoryPageData' => $categoryPageData
+            'categoryPageData' => $categoryData
         ));
     }
-
 
 }

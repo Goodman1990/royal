@@ -7,9 +7,9 @@
 
 namespace Royal\Models;
 
-use Royal\modelEntity\CategoryPagesModelEntity;
+use Royal\modelEntity\CategoriesProductModelEntity;
 
-class CategoryPagesModel extends CategoryPagesModelEntity {
+class CategoriesProductModel extends CategoriesProductModelEntity {
 
     public static function model($options = null,$className=__CLASS__)
     {
@@ -25,7 +25,6 @@ class CategoryPagesModel extends CategoryPagesModelEntity {
             'visible'=>array('typeInput' => 'checkbox','filters' => array('int'),'validators' =>false,'setLabel' => 'видемость'),
             'id'=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int'))
         );
-
     }
 
 }

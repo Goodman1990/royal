@@ -1,0 +1,61 @@
+<?php echo $this->doctype();?>
+<?php //  echo 123; exit;  ?>
+<meta charset="utf-8">
+<html lang="en">
+    <head>
+<!--        --><?php //var_dump($this->basePath());  exit;?>
+        <?php echo $this->headTitle('royal')->setSeparator(' - ')->setAutoEscape(false) ?>
+        <?php
+            echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php
+            echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                      ->prependStylesheet($this->basePath() . '/css/admin.css');
+        ?>
+        <!-- Scripts -->
+        <?php
+
+            echo $this->headScript()
+                ->prependFile($this->basePath() . '/js/jquery.slides.min.js',   'text/javascript')
+
+            ->prependFile($this->basePath() . '/js/jquery-ui.js','text/javascript')
+                ->prependFile($this->basePath() . '/js/jquery.min.js','text/javascript');
+        ?>
+    </head>
+        <body>
+             <div class='wrapper'>
+                <nav>
+                    <header>
+                        <img class="logo" src='/image/logo.png'>
+                        <div class="menu-content ">
+                            <div class='header-menu-bottom'>
+                                    <?php
+                                        if(isset($page->activePage['bottom'])){
+                                            $this->navigation($this->GetNavigationHelper())->findOneByResource($page->activePage['bottom'])->setActive(true);
+                                        }else{
+                                            $this->navigation($this->GetNavigationHelper());
+                                        }
+                                        echo $this->navigation()->menu()->setPartial('template/navigation_bottom')->render();
+                                    ?>
+                            </div>
+                        </div>
+                    </header>
+                </nav>
+                 <div class="papirus">
+                     <div class="content">
+                         <div class="warpper-content">
+                            <?php echo $this->content; ?>
+                        </div>
+                    </div>
+                 <div class="footer"></div>
+                 <!-- /container -->
+              <?php echo $this->inlineScript()
+                  ->prependFile($this->basePath() . '/js/init.slides.js','text/javascript')
+                  ->prependFile($this->basePath() . '/js/resize.border.slider.js','text/javascript');
+              ?>
+        </body>
+</html>

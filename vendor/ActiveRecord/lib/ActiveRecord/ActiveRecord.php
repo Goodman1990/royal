@@ -19,6 +19,7 @@ abstract class ActiveRecord extends AbstractTableGateway
     protected $scenario;
     protected $_select;
     protected $_criteria = array();
+    protected $customSelect;
 
 
 
@@ -187,9 +188,42 @@ abstract class ActiveRecord extends AbstractTableGateway
      * Fetch all records raw format (as object)
      * @return object
      */
-    protected function findAll()
+    public  function findAll()
     {
-        return $this->select()->toArray();
+
+        $this->customSelect = $this->sql->select();
+
+        return $this->customExecute();
+
+    }
+
+    public  function findAllOrder($order){
+
+        $this->customSelect =$this->sql->select()->order($order);
+
+
+        return $this->customExecute();
+    }
+
+    public  function findAllGroup($group){
+
+        $this->customSelect = $this->sql->select()->group($group);
+
+        return $this->customExecute();
+
+    }
+
+    protected   function  customExecute(){
+
+        $statement = $this->sql->prepareStatementForSqlObject($this->customSelect);
+        $results = $statement->execute();
+        $data = array();
+        foreach($results as $result)
+            $data[] = $result;
+
+
+        return $data;
+
     }
 
     /**

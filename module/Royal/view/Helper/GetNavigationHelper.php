@@ -17,7 +17,7 @@ class GetNavigationHelper extends AbstractHelper {
 
         $navigation = array();
     	$generalHelper = new generalHelper();
-        $navigationInfo = \Royal\Models\CategoryPagesModel::model()->getAll();
+        $navigationInfo = \Royal\Models\CategoryPagesModel::model()->findAllOrder('number DESK ');
         foreach ($navigationInfo as $key ) {
         	$navigation[] =  array(
                 'label' => $key['title'],

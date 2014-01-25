@@ -11,7 +11,7 @@ namespace Royal\modelEntity;
 
 use ActiveRecord\ActiveRecordModel;
 
-class CategoryPagesModelEntity extends ActiveRecordModel {
+class CategoriesProductModelEntity extends ActiveRecordModel {
 
     
 
@@ -22,7 +22,7 @@ class CategoryPagesModelEntity extends ActiveRecordModel {
 
     public function getTableName()
     {
-        return "category_pages";
+        return "categories_product";
     }
 
     public function attributeNames()

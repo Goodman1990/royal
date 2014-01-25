@@ -32,22 +32,12 @@ class Module implements ServiceProviderInterface,
     {
         $eventManager = $e->getApplication()->getEventManager();
         $serviceManager = $e->getApplication()->getServiceManager();
-//       $gggg =  $serviceManager->getServiceLocator()->get('nav');
-//        print_r($gggg);
-//        exit;
 
-
-
-
-//        $serviceManager->get('router');
-//        print_r($serviceManager->get('router'));
-//        exit;
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
         $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
 
-        // $translator = $serviceManager->get('translator');
 
         Feature\GlobalAdapterFeature::setStaticAdapter($dbAdapter);
 
@@ -70,7 +60,7 @@ class Module implements ServiceProviderInterface,
                     'ActiveRecord' =>  __DIR__ . '/../../vendor/ActiveRecord/lib/ActiveRecord',
                     'Helper' => __DIR__ . '/view/Helper/',
                     'Navigation' => __DIR__ . '/Navigation',
-                    'Page' => __DIR__ . '/../../vendor/Page',
+                    'Page' => __DIR__ . '/../../vendor/page',
                 ),
             ),
         );

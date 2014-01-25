@@ -81,9 +81,9 @@ class formGenerate extends Form
      * @param $model
      * @param $tableData
      */
-    public function setMultiFormEdit($model,$tableData){
+    public function setMultiFormEdit($rules,$tableData){
 
-        $this->inData=$model->rules();
+        $this->inData=$rules;
         $this->countInput = count($tableData);
 
         for($i=0;$i<$this->countInput;$i++){
@@ -99,18 +99,33 @@ class formGenerate extends Form
 
     }
 
-
-    public function CustomSetData(){
-        $this->setData($this->dataForSetForm);
+    public function setDataForSet($tableData){
+        for($i=0;$i<$this->countInput;$i++){
+            foreach ($this->inData as $key => $value) {
+                $this->dataForSetForm[$key.'_'.$i] = $tableData[$i][$key];
+            }
+        }
+        $this->setInputFilter($this->inputFilter);
     }
 
-    public function addInputForm($post,$id){
+    public function CustomSetData(){
+        if($this->dataForSetForm!=null)
+            $this->setData($this->dataForSetForm);
+    }
+
+    public function     addInputForm($post,$id){
         $buff =array();
+//        echo '<pre>';
+//        print_r($this->dataForSetForm);
+
         foreach($this->inData as $key=>$value){
             $buff[$key.'_'.$this->countInput] =$value;
-             $this->dataForSetForm[$key.'_'.$this->countInput] = $post[$key];
+            $this->dataForSetForm[$key.'_'.$this->countInput] = $post[$key];
         }
+//        print_r($this->dataForSetForm);
+//        exit;
         $this->dataForSetForm['id_'.$this->countInput] = $id;
+        $this->countInput++;
         $this->setDataFormAdd($buff);
     }
 
