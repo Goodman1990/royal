@@ -46,21 +46,17 @@ class IndexController extends AbstractActionController
 
     public function indexAction() {
 
-        $id_page = $this->params()->fromRoute('id_page', 0);
-        $this->id_page = $this->parseParam($id_page);
-
+        $this->id_page = $this->parseParam($this->params()->fromRoute('id_page', 0));
         if($this->id_page==0){
 
             $elementCategory =  array_shift(Models\CategoryPagesModel::model()->findAll());
             $this->id_page = $elementCategory['id'];
 
         }
-
         $this->Page->setActivePage(array('top'=>$this->id_page));
         $this->layout()->setVariables(array('page'=>$this->Page));
 
         return new ViewModel(array(
-
         ));
     }
 }
