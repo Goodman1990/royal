@@ -16,6 +16,7 @@ use Royal\Form\formGenerate;
 use Page\Page;
 use Royal\helpers\generalHelper;
 use Zend\Mvc\MvcEvent;
+use Zend\Http\PhpEnvironment\Request;
 
 
 class adminController extends AbstractActionController
@@ -33,17 +34,18 @@ class adminController extends AbstractActionController
 
 
         $events->attach('dispatch', array($this, 'preDispatch'), 100);
-        $events->attach('dispatch', array($this, 'postDispatch'), -100);
+//        $events->attach('dispatch', array($this, 'postDispatch'), -100);
     }
     public function preDispatch (MvcEvent $e){
         $this->Page = new Page();
         $this->layout('layout/layoutAdmin');
-
-    }
-    public function PostDispatch (MvcEvent $e){
-
         $this->layout()->setVariables(array('page'=>$this->Page));
+
     }
+//    public function PostDispatch (MvcEvent $e){
+//
+//
+//    }
 
     public function editCategoryAction()
     {
@@ -133,6 +135,45 @@ class adminController extends AbstractActionController
             'formAdd' => $formAdd,
             'categoryPageData' => $categoryData
         ));
+    }
+
+    public function imageAction() {
+
+
+        $request =$this->getRequest();
+        $this->Page->setActivePage(array('admin'=>array(
+            'tab'=>'1',
+            'sub'=>'1.2'
+        )));
+//        $this->layout()->setVariables(array('page'=>$this->Page));
+        if($request->isPost()){
+
+            $files =  $request->getFiles()->toArray();
+//            print_r($files);
+//            exit;
+            $httpadapter = new \Zend\File\Transfer\Adapter\Http();
+            $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
+            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg'));
+            $httpadapter->setValidators(array($filesize,$ext));
+            if($httpadapter->isValid()) {
+
+                $httpadapter->setDestination(TMP_DIR);
+
+                if($httpadapter->receive()) {
+
+                    $filterRaname = new \Zend\Filter\File\Rename(array(
+                        "randomize" => true,
+                    ));
+                    $filterRaname->filter($httpadapter->getFileName());
+                }
+            }
+
+        }
+        return new ViewModel(array(
+                '1'=>'1'
+        ));
+
+
     }
 
 }

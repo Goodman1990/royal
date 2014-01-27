@@ -32,6 +32,7 @@ class IndexController extends AbstractActionController
         $events->attach('dispatch', array($this, 'preDispatch'), 100);
         $events->attach('dispatch', array($this, 'postDispatch'), -100);
     }
+
     public function preDispatch (MvcEvent $e){
         $this->Page = new Page();
     }

@@ -1,0 +1,109 @@
+<form name="upload-form" id="upload-form" method="post" enctype="multipart/form-data">
+    <div class="form-element">
+        <label for="image-file">Avatar Image Upload</label>
+        <input type="file" name="image-file" id="image-file" multiple>
+        <input type="file" name="image-file_1" id="image-file" multiple>
+    </div>
+
+    <button>Submit</button>
+</form>
+
+
+<script type="text/javascript">
+
+
+
+<!---->
+//        $('#image-file').uploadify({
+//            'auto'     : false,
+//            'multi'    : false,
+//            'swf'      : '/js/uploadify.swf',
+//            'uploader' : '/admin',
+//            'onQueueComplete' : function(queueData) {
+//               if(queueData.filesSelected ==queueData.filesQueued){
+//
+//                alert(1);
+//
+//               }
+//            },
+//            'onUploadSuccess' : function(file, data, response) {
+
+//                if(($('#imageHidden').val()!=='')&&($('#imageHidden').val()!=='default.png')){//удаляем старый файл
+//
+//                    $.post(
+//                        "/general/upload",
+//                        {
+//                            'typeEvent':'deleted',
+//                            'imageName':$('#imageHidden').val()
+//                        }
+//                    );
+//                }
+//
+//                if (response === "error") {
+//
+//                    $('.descr p').css({
+//                        color: 'red'
+//                    });
+//
+//                    return false;
+//
+//                }
+//                var data = JSON.parse(data);
+//
+//                var imgName = data[0]['image'];
+//                console.log(data);
+//                widthScreen = screen.width; // ширина
+//                heightScreen = screen.height; // высота
+//                imageHight = data[0]['imageHight'];
+//                imageWidth = data[0]['imageWidth'];
+//
+//                var imgTrainingCrop = $('#target');
+//
+//
+//                $('.jc-demo-box').remove;
+//                $('#imageHidden').val(imgName);
+//                var imgTrainingCrop = $('#target');
+//
+//                imgTrainingCrop.attr('src', '/userData/' + imgName);
+//                $(".container-crop").dialog(({height: "auto",
+//                    width: 'auto',
+//                    dialogClass:'uploader',
+//                    closeOnEscape: false, draggable: false, zIndex: "10", position: "left top"}));
+//                $("#target").imgAreaSelect({
+//                    x1: 0, y1: 0, x2: 50, y2: 50,
+//                    aspectRatio: '1:1',
+//                    handles: true,
+//                    zIndex: 1000000,
+//                    minHeight: 50,
+//                    minWidth: 50,
+//                    onInit: function(img, selection) {
+//
+//                        $("#x1").val(0);
+//                        $("#y1").val(0);
+//                        $("#x2").val(50);
+//                        $("#y2").val(50);
+//                        $("#w").val(50);
+//                        $("#h").val(50);
+//                    },
+//                    onSelectEnd: function(img, selection) {
+//
+//                        $("#x1").val(selection.x1);
+//                        $("#y1").val(selection.y1);
+//                        $("#x2").val(selection.x2);
+//                        $("#y2").val(selection.y2);
+//                        $("#w").val(selection.width);
+//                        $("#h").val(selection.height);
+//
+//                    }
+//
+//
+//                });
+            }
+//        });
+
+
+
+
+
+
+</script>

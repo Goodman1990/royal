@@ -1,153 +1,213 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: artgen2
- * Date: 12.09.13
- * Time: 12:17
- * To change this template use File | Settings | File Templates.
- */
+
+
 
 namespace Royal\helpers;
 
-use Zend\Crypt\BlockCipher;
 
-class generalHelper {
+class SimpleImage
+{
 
+    public $image;
+    public $image_type;
+    public $height;
+    public $width;
 
-    public function encodeUtf8($str) {
-
-        $str = json_encode($str);
-        $arr_replace_utf = array(
-            '\u0410', '\u0430', '\u0411', '\u0431', '\u0412', '\u0432',
-            '\u0413', '\u0433', '\u0414', '\u0434', '\u0415', '\u0435', '\u0401', '\u0451', '\u0416',
-            '\u0436', '\u0417', '\u0437', '\u0418', '\u0438', '\u0419', '\u0439', '\u041a', '\u043a',
-            '\u041b', '\u043b', '\u041c', '\u043c', '\u041d', '\u043d', '\u041e', '\u043e', '\u041f',
-            '\u043f', '\u0420', '\u0440', '\u0421', '\u0441', '\u0422', '\u0442', '\u0423', '\u0443',
-            '\u0424', '\u0444', '\u0425', '\u0445', '\u0426', '\u0446', '\u0427', '\u0447', '\u0428',
-            '\u0448', '\u0429', '\u0449', '\u042a', '\u044a', '\u042b', '\u044b', '\u042c', '\u044c',
-            '\u042d', '\u044d', '\u042e', '\u044e', '\u042f', '\u044f'
-        );
-
-        $arr_replace_cyr = array(
-            'А', 'а', 'Б', 'б', 'В', 'в', 'Г', 'г', 'Д', 'д', 'Е', 'е',
-            'Ё', 'ё', 'Ж', 'ж', 'З', 'з', 'И', 'и', 'Й', 'й', 'К', 'к', 'Л', 'л', 'М', 'м', 'Н', 'н', 'О', 'о',
-            'П', 'п', 'Р', 'р', 'С', 'с', 'Т', 'т', 'У', 'у', 'Ф', 'ф', 'Х', 'х', 'Ц', 'ц', 'Ч', 'ч', 'Ш', 'ш',
-            'Щ', 'щ', 'Ъ', 'ъ', 'Ы', 'ы', 'Ь', 'ь', 'Э', 'э', 'Ю', 'ю', 'Я', 'я'
-        );
-
-        $str2 = str_replace($arr_replace_utf, $arr_replace_cyr, $str);
-
-        return $str2;
-    }
-    public  function transliteration($str){
-
-
-        $arr_replace_utf = array(
-            'А', 'а', 'Б', 'б', 'В', 'в', 'Г', 'г', 'Д', 'д', 'Е', 'е',
-            'Ё', 'ё', 'Ж', 'ж', 'З', 'з', 'И', 'и', 'Й', 'й', 'К', 'к', 'Л', 'л', 'М', 'м', 'Н', 'н', 'О', 'о',
-            'П', 'п', 'Р', 'р', 'С', 'с', 'Т', 'т', 'У', 'у', 'Ф', 'ф', 'Х', 'х', 'Ц', 'ц', 'Ч', 'ч', 'Ш', 'ш',
-            'Щ', 'щ','Ы', 'ы','Э', 'э', 'Ю', 'ю', 'Я', 'я',' ','ь','ъ'
-
-        );
-
-        $arr_replace_cyr = array(
-            'A', 'a', 'B', 'b', 'V', 'v',
-            'G', 'g', 'D', 'd', 'Ye', 'ye', 'E', 'e', 'zh',
-            'Zh', 'Z', 'z', 'I', 'i', 'Y', 'y', 'K', 'k',
-            'L', 'l', 'M', 'm', 'N', 'n', 'O', 'o', 'P',
-            'p', 'R','r','S', 's', 'T', 't', 'U', 'u', 'F', 'f',
-            'X', 'x', 'C', 'c', 'Сh', 'ch', 'Sh', 'sh', 'Sch',
-            'sch', 'Y', 'y', 'E', 'e', 'Yu', 'yu', 'Ya', 'ya','_','',''
-
-        );
-
-        $str2 = str_replace($arr_replace_utf, $arr_replace_cyr, $str);
-
-        $pattern = "/([^A-Za-z1-9\_])/";
-        $str2= preg_replace($pattern,'', $str2);
-
-        return $str2;
-
+    function __construct($filename = null)
+    {
+        if (!empty($filename)) {
+            $this->load($filename);
+        }
     }
 
-    public  function generatePinCode(){
-
-        $keyNumbers='';
-        $keyLetters='';
-        $key='';
-        $sum = 0;
-        $length=0;
-        $numbers  = "1234659784645613252136455988963789411236547895565287442698746321239";//генерируем ключ для шифрования
-        $letters = "qqsxzaqedcvfQWERFTGHJKJNHBGFGBHfghjkadetutijndfvdscbmNJMKLMNadDFASFDFSDaswreyhdqwBVCXZXDFGYHUJIOPLKMNrtyhjmmmnASDASDbvtyuASDioplmnbvghjk";
-        $string=  time();
-
-        while($length<2)
-        $length= (int) substr($string, rand(0, strlen($string)-1), 1);
-
-        for ($i=0; $i<$length; $i++)
-            $keyNumbers.= substr($numbers, rand(0, strlen($numbers)-1), 1);
-
-        for ($i=0; $i<strlen($keyNumbers); $i++)
-           $sum+=(int) $keyNumbers{$i};
-
-        for ($i=0; $i<$sum; $i++)
-            $keyLetters.= substr($letters, rand(0, strlen($letters)-1), 1);
-
-
-        if(strlen($keyNumbers)>strlen($keyLetters)){
-
-            for($i=0;$i<strlen($keyNumbers);$i++)
-                $key.= substr_replace($keyNumbers[$i],$keyLetters[rand(0, strlen($keyLetters)-1)],rand(0, strlen($keyNumbers)-1) , 0);
-            $key.= substr($keyNumbers, strlen($key));
-
-        }else{
-
-            for($i=0;$i<strlen($keyLetters);$i++)
-                $key.= substr_replace($keyLetters[$i],$keyNumbers[rand(0, strlen($keyNumbers)-1)    ],rand(0, strlen($keyLetters)-1) , 0);
-            $key.= substr($keyLetters, strlen($key));
-
+    private function load($filename)
+    {
+        $image_info = getimagesize($filename);
+        $this->image_type = $image_info[2];
+        if ($this->image_type == IMAGETYPE_JPEG) {
+            $this->image = imagecreatefromjpeg($filename);
+        } elseif ($this->image_type == IMAGETYPE_GIF) {
+            $this->image = imagecreatefromgif($filename);
+        } elseif ($this->image_type == IMAGETYPE_PNG) {
+            $this->image = imagecreatefrompng($filename);
+        } else {
+            throw new Exception("The file you're trying to open is not supported");
         }
 
-        $salt = sha1(md5($key));
-        $key = md5($key.$salt);
-
-
-
-
-        return $key;
-
     }
 
-    public  function encryption($data){
+    public function save($filename, $image_type = IMAGETYPE_JPEG, $compression = 75, $permissions = null)
+    {
+        if ($image_type == IMAGETYPE_JPEG) {
+            imagejpeg($this->image, $filename, $compression);
+        } elseif ($image_type == IMAGETYPE_GIF) {
+            imagegif($this->image, $filename);
+        } elseif ($image_type == IMAGETYPE_PNG) {
+            imagepng($this->image, $filename);
+        }
+        if ($permissions != null) {
+            chmod($filename, $permissions);
+        }
+    }
 
-        $encryptionData =array();
+    public function output($image_type = IMAGETYPE_JPEG, $quality = 80)
+    {
+        if ($image_type == IMAGETYPE_JPEG) {
+            header("Content-type: image/jpeg");
+            imagejpeg($this->image, null, $quality);
+        } elseif ($image_type == IMAGETYPE_GIF) {
+            header("Content-type: image/gif");
+            imagegif($this->image);
+        } elseif ($image_type == IMAGETYPE_PNG) {
+            header("Content-type: image/png");
+            imagepng($this->image);
+        }
+    }
 
-        for($i=0;$i<count($data);$i++){
-            $serializer =  \Zend\Serializer\Serializer::factory('phpserialize');
-            $y  =  $serializer->serialize($data[$i]); //<~ serialized !
-            $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
-            $blockCipher->setKey('JKHJKHkGObhJGJKUfufHUOfTUIFd'); // устанавливаем ключь для шифрования
-            $encryptionData[] = $blockCipher->encrypt($y); //шифруем id
+    public function getWidth()
+    {
+        return $this->width = imagesx($this->image);
+    }
+
+    public function getHeight()
+    {
+        return $this->height = imagesy($this->image);
+    }
+
+    public function resizeToHeight($height)
+    {
+        $ratio = $height / $this->getHeight();
+        $width = $this->getWidth() * $ratio;
+        $this->resize($width, $height);
+    }
+
+    public function resizeToWidth($width)
+    {
+        $ratio = $width / $this->getWidth();
+        $height = $this->getHeight() * $ratio;
+        $this->resize($width, $height);
+    }
+
+    public function square($size)
+    {
+        $new_image = imagecreatetruecolor($size, $size);
+
+        if ($this->getWidth() > $this->getHeight()) {
+            $this->resizeToHeight($size);
+
+            imagecolortransparent($new_image, imagecolorallocate($new_image, 0, 0, 0));
+            imagealphablending($new_image, false);
+            imagesavealpha($new_image, true);
+            imagecopy($new_image, $this->image, 0, 0, ($this->getWidth() - $size) / 2, 0, $size, $size);
+        } else {
+            $this->resizeToWidth($size);
+
+            imagecolortransparent($new_image, imagecolorallocate($new_image, 0, 0, 0));
+            imagealphablending($new_image, false);
+            imagesavealpha($new_image, true);
+            imagecopy($new_image, $this->image, 0, 0, 0, ($this->getHeight() - $size) / 2, $size, $size);
         }
 
-        return $encryptionData;
-
+        $this->image = $new_image;
     }
 
-    public  function decryption($data){
-
-        $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
-        $blockCipher->setKey('JKHJKHkGObhJGJKUfufHUOfTUIFd'); // устанавливаем ключь для шифрования
-        $decryptData = $blockCipher->decrypt($data); //шифруем id
-        $serializer =  \Zend\Serializer\Serializer::factory('phpserialize');
-        $data  =  $serializer->unserialize($decryptData);
-
-
-
-        return $data;
-
+    public function scale($scale)
+    {
+        $width = $this->getWidth() * $scale / 100;
+        $height = $this->getHeight() * $scale / 100;
+        $this->resize($width, $height);
     }
 
+    public function resize($width, $height)
+    {
+        $new_image = imagecreatetruecolor($width, $height);
+
+        imagecolortransparent($new_image, imagecolorallocate($new_image, 0, 0, 0));
+        imagealphablending($new_image, false);
+        imagesavealpha($new_image, true);
+
+        imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
+        $this->image = $new_image;
+    }
+
+    public function cut($x, $y, $width, $height)
+    {
+        $new_image = imagecreatetruecolor($width, $height);
+
+        imagecolortransparent($new_image, imagecolorallocate($new_image, 0, 0, 0));
+        imagealphablending($new_image, false);
+        imagesavealpha($new_image, true);
+
+        imagecopy($new_image, $this->image, 0, 0, $x, $y, $width, $height);
+
+        $this->image = $new_image;
+    }
+
+    public function maxarea($width, $height = null)
+    {
+        $height = $height ? $height : $width;
+
+        if ($this->getWidth() > $width) {
+            $this->resizeToWidth($width);
+        }
+        if ($this->getHeight() > $height) {
+            $this->resizeToheight($height);
+        }
+    }
+
+    public function cutFromCenter($width, $height)
+    {
+
+        if ($width < $this->getWidth() && $width > $height) {
+            $this->resizeToWidth($width);
+        }
+        if ($height < $this->getHeight() && $width < $height) {
+            $this->resizeToHeight($height);
+        }
+
+        $x = ($this->getWidth() / 2) - ($width / 2);
+        $y = ($this->getHeight() / 2) - ($height / 2);
+
+        return $this->cut($x, $y, $width, $height);
+    }
+
+    public function maxareafill($width, $height, $red = 0, $green = 0, $blue = 0)
+    {
+        $this->maxarea($width, $height);
+        $new_image = imagecreatetruecolor($width, $height);
+        $color_fill = imagecolorallocate($new_image, $red, $green, $blue);
+        imagefill($new_image, 0, 0, $color_fill);
+        imagecopyresampled($new_image, $this->image, floor(($width - $this->getWidth()) / 2), floor(($height - $this->getHeight()) / 2), 0, 0, $this->getWidth(), $this->getHeight(), $this->getWidth(), $this->getHeight());
+        $this->image = $new_image;
+    }
 
 
 }
+
+// Usage:
+// Load the original image
+//$image = new SimpleImage('lemon.jpg');
+//
+//// Resize the image to 600px width and the proportional height
+//$image->resizeToWidth(600);
+//$image->save('lemon_resized.jpg');
+//
+//// Create a squared version of the image
+//$image->square(200);
+//$image->save('lemon_squared.jpg');
+//
+//// Scales the image to 75%
+//$image->scale(75);
+//$image->save('lemon_scaled.jpg');
+//
+//// Resize the image to specific width and height
+//$image->resize(80,60);
+//$image->save('lemon_resized2.jpg');
+//
+//// Resize the canvas and fill the empty space with a color of your choice
+//$image->maxareafill(600,400, 32, 39, 240);
+//$image->save('lemon_filled.jpg');
+//
+//// Output the image to the browser:
+//$image->output();
+
