@@ -140,7 +140,7 @@ class adminController extends AbstractActionController
     public function imageAction() {
 
 
-        $request =$this->getRequest();
+        $request =new Request();
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'1',
             'sub'=>'1.2'
@@ -148,9 +148,6 @@ class adminController extends AbstractActionController
 //        $this->layout()->setVariables(array('page'=>$this->Page));
         if($request->isPost()){
 
-            $files =  $request->getFiles()->toArray();
-//            print_r($files);
-//            exit;
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
             $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg'));
@@ -160,7 +157,6 @@ class adminController extends AbstractActionController
                 $httpadapter->setDestination(TMP_DIR);
 
                 if($httpadapter->receive()) {
-
                     $filterRaname = new \Zend\Filter\File\Rename(array(
                         "randomize" => true,
                     ));
@@ -169,6 +165,7 @@ class adminController extends AbstractActionController
             }
 
         }
+
         return new ViewModel(array(
                 '1'=>'1'
         ));

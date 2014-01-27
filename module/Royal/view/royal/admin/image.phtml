@@ -1,17 +1,40 @@
-<form name="upload-form" id="upload-form" method="post" enctype="multipart/form-data">
+<form name="upload-form" id="upload-form" method="post" enctype="multipart/form-data" >
     <div class="form-element">
         <label for="image-file">Avatar Image Upload</label>
-        <input type="file" name="image-file" id="image-file" multiple>
-        <input type="file" name="image-file_1" id="image-file" multiple>
+        <input type="file" name="image-file" id="image-file" >
+<!--        <input type="file" name="image-file_1" id="image-file" multiple>-->
+
     </div>
 
     <button>Submit</button>
 </form>
-
+<div class="progress" style="width: 1%; background-color: red">&nbsp;</div>
 
 <script type="text/javascript">
 
-
+    $(function () {
+//        'use strict';
+//        // Change this to the location of your server-side upload handler:
+//        var url = window.location.hostname === 'blueimp.github.io' ?
+//            '//jquery-file-upload.appspot.com/' : 'server/php/';
+        $('#image-file').fileupload({
+            url: '/admin/image',
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').text(file.name).appendTo('#upload-form');
+                });
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+        }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
 
 <!---->
 //        $('#image-file').uploadify({
@@ -98,7 +121,7 @@
 //
 //
 //                });
-            }
+//            }
 //        });
 
 
