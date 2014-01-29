@@ -48,6 +48,20 @@
                  <div class="papirus">
                      <div class="content">
                          <div class="warpper-content">
+                             <?php if($page->tab){  ?>
+
+                                <?php foreach ($page->tab as $key) { ?>
+
+                                     <div class="tab <?php
+                                     if(isset($key['active']) && $key['active']===true ) echo 'active-tab'; ?>" >
+                                         <a href="<?php echo $key['link'] ?>">
+                                             <?php echo $key['title'] ?>
+                                         </a>
+                                     </div>
+
+                                 <?php } ?>
+
+                            <?php } ?>
                             <?php echo $this->content; ?>
                         </div>
                     </div>

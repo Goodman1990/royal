@@ -21,8 +21,8 @@ class CategoriesProductModel extends CategoriesProductModelEntity {
     {
         return array(
             'title'=>array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'название категории'),
-            'number'=>array('filters' => array('int'),'validators' =>array('regex' => 'numbers'),'setLabel' => 'порядковый номер'),
-            'visible'=>array('typeInput' => 'checkbox','filters' => array('int'),'validators' =>false,'setLabel' => 'видемость'),
+            'number'=>array('validators' =>array('regex' => 'numbers'),'setLabel' => 'порядковый номер'),
+            'visible'=>array('typeInput' => 'checkbox','filters' => array('int'),'validators' =>false,'setLabel' => 'видемость','labelClass'),
             'id'=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int'))
         );
     }

@@ -4,10 +4,18 @@
     <div id="sort-form">
     <?php  for($i=0;$i<$formEdit->countInput;$i++){ ?>
         <div class="ech">
-            <?php echo $this->formRow($formEdit->get('title_'.$i)) ?>
-            <?php echo $this->formRow($formEdit->get('visible_'.$i)) ?>
-            <?php echo $this->formRow($formEdit->get('number_'.$i)->setAttribute('class','number')) ?>
-            <?php echo $this->formRow($formEdit->get('id_'.$i)) ?>
+            <div class="wrapper-input">
+                <?php echo $this->formRow($formEdit->get('title_'.$i)->setAtributes('class','title')) ?>
+            </div>
+            <div class="wrapper-input">
+                <?php echo $this->formRow($formEdit->get('visible_'.$i)->setAtributes('class','visible')) ?>
+            </div>
+            <div class="wrapper-input">
+                <?php echo $this->formRow($formEdit->get('number_'.$i)->setAttribute('class','number')) ?>
+            </div>
+            <div class="wrapper-input">
+            <?php echo $this->formRow($formEdit->get('id_'.$i)->setAtributes('class','id')) ?>
+            </div>
             <hr>
         </div>
 
@@ -20,7 +28,9 @@
     <hr>
     <br />
     <br />
-    <?php echo  $this->form($formAdd);?>
+
+    <?php echo $this->form()->openTag($formAdd);?>
+    <?php echo $this->form()->closeTag($formEdit);?>
     <button form="addCategory" name="add">Добавить</button>
 </div>
 

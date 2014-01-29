@@ -14,6 +14,7 @@ class Page
     public $css;
     public $js;
     public $active_page;
+    public $tab;
 
     public function setClasses($classes){
         $this->classes = $classes;
@@ -29,6 +30,26 @@ class Page
 
     public function setActivePage($page){
         $this->activePage=$page;
+    }
+
+    public function addTab($tabs,$activeTab,$format=false) {
+        if($format){
+
+         $tabs = $this->formatTabsData($tabs,$activeTab);
+
+        }
+        $this->tab = $tabs;
+
+    }
+
+    public function formatTabsData($data,$activeTab){
+
+        for($i=0;$i<count($data);$i++){
+            if($activeTab ==$data[$i]['id'])
+                $data[$i]['active'] = true;
+            $data[$i]['link'] = '/admin/subcategories/'.$data[$i]['id'];
+        }
+        return $data;
     }
 
 

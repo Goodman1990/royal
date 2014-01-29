@@ -28,6 +28,7 @@ class formGenerate extends Form
     protected $captcha;
     public $countInput;
     protected   $dataForSetForm;
+    public $classElement;
 //    protected $multiForm;
 
     public function __construct($name,$classForm,$model=null,$typeLabel = null) {
@@ -88,6 +89,7 @@ class formGenerate extends Form
 
         for($i=0;$i<$this->countInput;$i++){
             foreach ($this->inData as $key => $value) {
+                $this->classElement = $key;
                 $this->key = $key.'_'.$i;
                 $this->value = $value;
                 $this->setForm();
@@ -151,6 +153,7 @@ class formGenerate extends Form
         $this->inputFilter->add(
             $this->factorys->createInput(
                 array(
+                    'class'=>$this->classElement,
                     'name' => $this->key,
                     'required' => isset($this->value['required']) ? $this->value['required'] : false,
                     'filters'=>$dataFilters,
@@ -301,11 +304,15 @@ class formGenerate extends Form
                     'type' => isset($this->value['typeInput']) ? $this->value['typeInput'] : 'text',
                     'attributes' => array(
                         'id' => isset($this->value['id'])?$this->value['id']:'',
+                        'class'=>$this->classElement,
                         'placeholder' =>isset($this->value['placeholder'])?$this->value['placeholder']:'',
-                        'autocomplete'=>"off"
+                        'autocomplete'=>"On"
                     ),
                     'options' => array(
-                        'label' =>$this->label?$this->label:''
+                        'label' =>$this->label?$this->label:'',
+                        'label_attributes' => array(
+                            'class'=>$this->classElement,
+                        ),
                     ),
                 );
 
@@ -449,10 +456,15 @@ class formGenerate extends Form
 
         $this->element = new  Element\Checkbox($this->key, array(
             'label' => $this->label,
+            'class'=>$this->classElement,
+            'label_attributes' => array(
+                'class'=>$this->classElement,
+            ),
         ));
     }
 
-    protected function getTextareaParam() {;
+    protected function getTextareaParam() {
+
         $this->element = new Element\Textarea($this->key, array(
                                         'label' =>$this->label,
                                     )
@@ -460,6 +472,7 @@ class formGenerate extends Form
         if(isset($this->value['class'])){
             $this->element->setAttribute('class',$this->value['class']);
         }
+
     }
     protected function getCaptchaParam() {
 

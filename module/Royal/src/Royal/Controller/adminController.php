@@ -37,6 +37,7 @@ class adminController extends AbstractActionController
 //        $events->attach('dispatch', array($this, 'postDispatch'), -100);
     }
     public function preDispatch (MvcEvent $e){
+        $this->request = $this->getRequest();
         $this->Page = new Page();
         $this->layout('layout/layoutAdmin');
         $this->layout()->setVariables(array('page'=>$this->Page));
@@ -49,28 +50,32 @@ class adminController extends AbstractActionController
 
     public function editCategoryAction()
     {
-        $this->request = $this->getRequest();
 
         $id_page = $this->params()->fromRoute('id_page', 0);
 
         if($id_page=='page'){
+
             $model = \Royal\Models\CategoryPagesModel::model();
             $this->Page->setActivePage(array('admin'=>array(
                 'tab'=>'1',
                 'sub'=>'1.2'
             )));
-        }else{
+
+        }else if($id_page=='product'){
+
             $this->Page->setActivePage(array('admin'=>array(
                 'tab'=>'1',
                 'sub'=>'1.1'
             )));
             $model = \Royal\Models\CategoriesProductModel::model();
+
         }
+
         $categoryData = $model->findAllOrder('number DESK ');//->addOrder('DESK number')->customExecute();
 
-        $formEdit = new formGenerate('editCategory', 'standart grouped');
+        $formEdit = new formGenerate('editCategory', 'category');
         $formEdit->setMultiFormEdit($model->rules(), $categoryData);
-        $formAdd = new formGenerate('addCategory', 'standart grouped', $model);
+        $formAdd = new formGenerate('addCategory', 'category', $model);
 
         if ($this->request->isPost()) {
 
@@ -79,6 +84,7 @@ class adminController extends AbstractActionController
             if (isset($Post['edit'])) {
 
                 $formEdit->setData($Post);
+
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
@@ -96,13 +102,13 @@ class adminController extends AbstractActionController
                         $validData['title_'.$k] = $this->validData['title_'.$i];
                         $validData['number_'.$k] = $this->validData['number_'.$i];
                         $validData['visible_'.$k] = $this->validData['visible_'.$i];
+                        $formEdit->setData($validData);
                     }
-
-                    $formEdit->setData($validData);
                 }
 
             } else {
-
+//                print_r($Post);
+//                exit;
                 $formAdd->setData($Post);
 
                 if ($formAdd->isValid()) {
@@ -137,39 +143,134 @@ class adminController extends AbstractActionController
         ));
     }
 
-    public function imageAction() {
+    public function uploadImageAction() {
 
 
         $request =new Request();
-        $this->Page->setActivePage(array('admin'=>array(
-            'tab'=>'1',
-            'sub'=>'1.2'
-        )));
-//        $this->layout()->setVariables(array('page'=>$this->Page));
         if($request->isPost()){
-
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
-            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg'));
+            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
             $httpadapter->setValidators(array($filesize,$ext));
             if($httpadapter->isValid()) {
 
                 $httpadapter->setDestination(TMP_DIR);
 
                 if($httpadapter->receive()) {
+
                     $filterRaname = new \Zend\Filter\File\Rename(array(
                         "randomize" => true,
                     ));
-                    $filterRaname->filter($httpadapter->getFileName());
+
+                    echo $filterRaname->filter($httpadapter->getFileName());
+
+                }else{
+
+                    echo 'error';
+
                 }
             }
 
         }
 
+        exit;
+
+
+    }
+
+
+    public function subcategoriesAction() {
+
+
+        $categoryData = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
+        $model = \Royal\Models\SubcategoriesProductModel::model();
+
+        $this->Page->setActivePage(array('admin'=>array(
+            'tab'=>'1',
+            'sub'=>'1.3'
+        )));
+        $id_page = $this->params()->fromRoute('id_page', 0);
+        $this->Page->addTab($categoryData,$id_page,true);
+        $subcategoriesData[] = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array('id_categories_product'=>'1 '));
+    //        echo '<pre>';
+    //var_dump($model->rules());
+    //        exit;
+        $formEdit = new formGenerate('editSubCategory', 'category');
+        $formEdit->setMultiFormEdit($model->rules(), $subcategoriesData);
+        $formAdd = new formGenerate('addSubCategory', 'category', $model);
+
+        if ($this->request->isPost()) {
+
+            $Post = $this->request->getPost()->toArray();
+
+            if (isset($Post['edit'])) {
+
+                $formEdit->setData($Post);
+
+                if ($formEdit->isValid()) {
+
+                    $this->validData = $formEdit->getData();
+                    for ($i = 0; $i < $formEdit->countInput; $i++) {
+                        $model::model()
+                            ->setAttributes(array(
+                                'id' => $this->validData['id_' . $i],
+                                'title' => $this->validData['title_' . $i],
+                                'number'=>$this->validData['number_' . $i],
+                                'visible'=>$this->validData['visible_' . $i],
+                                'image'=>$this->validData['image_' . $i]
+                            ))->save();
+                        $k = $this->validData['number_'.$i]-1;
+                        $validData['id_'.$k] = $this->validData['id_'.$i];
+                        $validData['title_'.$k] = $this->validData['title_'.$i];
+                        $validData['number_'.$k] = $this->validData['number_'.$i];
+                        $validData['visible_'.$k] = $this->validData['visible_'.$i];
+                        $validData['image_'.$k] = $this->validData['image_'.$i];
+                        $formEdit->setData($validData);
+                    }
+                }
+
+            } else {
+
+                $formAdd->setData($Post);
+
+                if ($formAdd->isValid()) {
+
+                    $this->validData = $formAdd->getData();
+                    $id = $model::model()
+                        ->setAttributes(array(
+                            'title' => $this->validData['title'],
+                            'number'=>$this->validData['number'],
+                            'visible'=>$this->validData['visible'],
+                            'image'=>$this->validData['image']
+                        ))->save();
+                    $formEdit->addInputForm($Post, $id);
+                    $formEdit->CustomSetData();
+                    $formAdd->clearElements();
+
+                } else {
+
+                    $formEdit->CustomSetData();
+
+                }
+            }
+        } else {
+
+            $formEdit->CustomSetData();
+
+        }
+
         return new ViewModel(array(
-                '1'=>'1'
+            'formEdit' => $formEdit,
+            'formAdd' => $formAdd,
+            'categoryPageData' => $categoryData
         ));
 
+
+    }
+
+    public function getController($controller) {
+
+        return  mb_strtolower(end(explode('\\',$this->getEvent()->getRouteMatch()->getParams()['controller'])));
 
     }
 

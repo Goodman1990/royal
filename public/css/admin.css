@@ -50,12 +50,10 @@ button {
     font-weight: normal;
     font-style: normal;
 }
-form[name="editCategory"] input{
-    display: block;
-}
-form[name="editCategory"] div {
-    width: 90%;
-}
+
+/*form[name="editCategory"] div {*/
+    /*width: 90%;*/
+/*}*/
 .wrapper{
 	margin: 0 auto;
 	height:auto; 
@@ -101,140 +99,140 @@ form[name="editCategory"] div {
 			height: auto;
 			width: 53%;
 		}
-ul#nav {
-    list-style-type:none;
-    margin:0;
-    padding:0;
-}
+            ul#nav {
+                list-style-type:none;
+                margin:0;
+                padding:0;
+            }
 
-#nav {
-    /*float:left;*/
-    width:100%;
-    height:75px; /* Высота всего меню (и верхнего уровня и нижнего, все вместе) */
-    position:relative;
-    margin:10px 0 40px; /* Отступ сверху и снизу от меню */
-}
+            #nav {
+                /*float:left;*/
+                width:100%;
+                height:75px; /* Высота всего меню (и верхнего уровня и нижнего, все вместе) */
+                position:relative;
+                margin:10px 0 40px; /* Отступ сверху и снизу от меню */
+            }
 
-#nav .tab, #nav .current {
-    margin:0;
-    padding:0;
-    list-style:none;
-    display:block;
-}
+            #nav .tab, #nav .current {
+                margin:0;
+                padding:0;
+                list-style:none;
+                display:block;
+            }
 
-#nav li {
-    font-family: Arial; /* Шрифт меню */
-    display:inline;
-    margin:0;
-    padding:0;
-    height:auto;
-}
+            #nav li {
+                font-family: Arial; /* Шрифт меню */
+                display:inline;
+                margin:0;
+                padding:0;
+                height:auto;
+            }
 
-#nav .tab a, #nav .current a {
-    display:block;
-    height:40px; /* Высота верхнего уровня */
-    float:left;
-    background: url("/images/left_nav.png") no-repeat left top; /* Путь к левому изображению */
-    padding:0 0 0 5px;
-    text-decoration:none;
-    font-size:14px; /* Размер шрифта верхнего уровня */
-    line-height:40px;
-    white-space:nowrap;
-    margin-right: 2px; /* Отступы пунктов верхнего уровня */
-    position: relative;
-    z-index: 500;
-}
+            #nav .tab a, #nav .current a {
+                display:block;
+                height:40px; /* Высота верхнего уровня */
+                float:left;
+                background: url("/images/left_nav.png") no-repeat left top; /* Путь к левому изображению */
+                padding:0 0 0 5px;
+                text-decoration:none;
+                font-size:14px; /* Размер шрифта верхнего уровня */
+                line-height:40px;
+                white-space:nowrap;
+                margin-right: 2px; /* Отступы пунктов верхнего уровня */
+                position: relative;
+                z-index: 500;
+            }
 
-#nav .tab a b, #nav .current a b {
-    height:100%;
-    display:block;
-    background:url("/images/right_nav.png") no-repeat right top; /* Путь к правому изображению */
-    padding:0 20px 0 15px;
-    color:#606060; /* Цвет ссылок верхнего уровня */
-}
+            #nav .tab a b, #nav .current a b {
+                height:100%;
+                display:block;
+                background:url("/images/right_nav.png") no-repeat right top; /* Путь к правому изображению */
+                padding:0 20px 0 15px;
+                color:#606060; /* Цвет ссылок верхнего уровня */
+            }
 
-#nav .tab a:hover, #nav .tab li:hover a {
-    background-position:0 -50px;
-    cursor:pointer;
-}
+            #nav .tab a:hover, #nav .tab li:hover a {
+                background-position:0 -50px;
+                cursor:pointer;
+            }
 
-#nav .tab a:hover b, #nav .tab li:hover a b {
-    background-position:100% -50px;
-    color:#fff;
-}
+            #nav .tab a:hover b, #nav .tab li:hover a b {
+                background-position:100% -50px;
+                color:#fff;
+            }
 
-#nav .sub {
-    display:none;
-}
+            #nav .sub {
+                display:none;
+            }
 
-#nav .current a {
-    background-position:0 -50px;
-    border-color:#046;
-}
-#nav .current a b {
-    background-position:100% -50px;
-    color:#fff; /* Цвет шрифта активного меню верхнего уровня */
-}
-
-
-#nav .sub li a:hover, #nav .tab a:hover .sub li a:hover, #nav .tab li:hover .sub li a:hover, #nav .sub_active .current_sub a, #nav .sub_active a:hover {
-    color:#fff; /* Цвет шрифта активного меню нижнего уровня */
-    text-decoration:underline;
-}
+            #nav .current a {
+                background-position:0 -50px;
+                border-color:#046;
+            }
+            #nav .current a b {
+                background-position:100% -50px;
+                color:#fff; /* Цвет шрифта активного меню верхнего уровня */
+            }
 
 
-#nav .tab li a:hover .sub, #nav .tab li:hover .sub, #nav .sub_active {
-    display:block;
-    position:absolute;
-    width:100%;
-    /*height: 35px;*/
-    top:40px;
-    left:0;
-    background:#9E9B9B; /* Фон нижнего уровня */
-    padding:0;
-    z-index:100;
-}
-
-#nav .sub_active {
-    z-index:10;
-}
-
-#nav .sub, #nav .sub_active {
-    margin:0;
-    padding:0;
-    list-style:none;
-}
+            #nav .sub li a:hover, #nav .tab a:hover .sub li a:hover, #nav .tab li:hover .sub li a:hover, #nav .sub_active .current_sub a, #nav .sub_active a:hover {
+                color:#fff; /* Цвет шрифта активного меню нижнего уровня */
+                text-decoration:underline;
+            }
 
 
-* html #nav .sub_active, * html #nav .tab a:hover .sub {
-    z-index:-1;
-    margin-top:0;
-    margin-top:1px;
-}
+            #nav .tab li a:hover .sub, #nav .tab li:hover .sub, #nav .sub_active {
+                display:block;
+                position:absolute;
+                width:100%;
+                /*height: 35px;*/
+                top:40px;
+                left:0;
+                background:#9E9B9B; /* Фон нижнего уровня */
+                padding:0;
+                z-index:100;
+            }
 
-#nav .sub_active a {
-    height:25px;
-    float:left;
-    text-decoration:none;
-    line-height:24px;
-    white-space:nowrap;
-    font-weight:normal;
-}
+            #nav .sub_active {
+                z-index:10;
+            }
 
-#nav .sub_active a, #nav .tab a:hover .sub li a, #nav .tab li:hover .sub li a {
-    display:inline;
-    background:none;
-    padding:0 10px;
-    margin:0;
-    font-size:13px; /* Размер шрифта нижнего уровня */
-    width:auto;
-    white-space:nowrap;
-    font-weight:normal;
-    border:0;
-    color:#eee; /* Цвет шрифта нижнего уровня */
-    height:35px;
-    line-height:35px;
-}
+            #nav .sub, #nav .sub_active {
+                margin:0;
+                padding:0;
+                list-style:none;
+            }
+
+
+            * html #nav .sub_active, * html #nav .tab a:hover .sub {
+                z-index:-1;
+                margin-top:0;
+                margin-top:1px;
+            }
+
+            #nav .sub_active a {
+                height:25px;
+                float:left;
+                text-decoration:none;
+                line-height:24px;
+                white-space:nowrap;
+                font-weight:normal;
+            }
+
+            #nav .sub_active a, #nav .tab a:hover .sub li a, #nav .tab li:hover .sub li a {
+                display:inline;
+                background:none;
+                padding:0 10px;
+                margin:0;
+                font-size:13px; /* Размер шрифта нижнего уровня */
+                width:auto;
+                white-space:nowrap;
+                font-weight:normal;
+                border:0;
+                color:#eee; /* Цвет шрифта нижнего уровня */
+                height:35px;
+                line-height:35px;
+            }
 
 		/*.header-menu-bottom ul li,.header-menu-top ul li{*/
 			/*height: 37px;*/
@@ -326,7 +324,7 @@ ul#nav {
 				float: left;
 				height: inherit;
 				min-height: 100px;
-				width: 100%;
+				width: 92%;
 			}
 	.footer{
 		height: 40px;
@@ -798,7 +796,41 @@ and (orientation : portrait){
     				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
 				}
 }*/
+form.category .wrapper-input{
+    display: inline-block;
+    vertical-align: top;
+}
+.ech{
+ cursor: move;
 
+}
+
+form.category input{
+    display: block;
+}
+
+form button{
+    display: block;
+}
+
+.tab{
+    display: inline-block;
+    margin-left: 10px;
+    border-bottom: 1px dotted;
+    cursor: pointer;
+}
+
+/*form[name='editCategory'] label.number , form[name='editCategory'] label.title {*/
+
+    /*display: block;*/
+
+/*}*/
+
+/*form[name='editCategory'] input.number{*/
+
+    /*width: 20px;*/
+
+/*}*/
 
 /* All Smartphones in landscape ----------- */
 

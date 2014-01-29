@@ -17,6 +17,15 @@
                 <div class="wrapper-input">
                     <?php echo $this->formRow($formEdit->get('id_'.$i)) ?>
                 </div>
+                <div class="wrapper-input">
+                    <?php echo $this->formRow($formEdit->get('id_categories_product_'.$i)) ?>
+                </div>
+                <div class="wrapper-input">
+                    <?php echo $this->formRow($formEdit->get('image_' . $i)) ?>
+                </div>
+                <div class="wrapper-input">
+                    <input type="file" name="image-file" id="image-file" >
+                </div>
 
                 <hr>
             </div>
@@ -40,6 +49,12 @@
             </div>
             <div class="wrapper-input">
                 <?php echo $this->formRow($formAdd->get('id')) ?>
+            </div>
+            <div class="wrapper-input">
+                <?php echo $this->formRow($formAdd->get('id_categories_product')) ?>
+            </div>
+            <div class="wrapper-input">
+                <input type="file" name="image-file" id="image-file" >
             </div>
     <button form="addCategory" name="add" >Добавить</button>
     <?php echo $this->form()->closeTag($formAdd);?>
