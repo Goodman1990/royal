@@ -235,7 +235,8 @@ abstract class AbstractTableGateway implements TableGatewayInterface
         // build result set
         $resultSet = clone $this->resultSetPrototype;
         $resultSet->initialize($result);
-
+//        print_r($resultSet);
+//        exit;
         // apply postSelect features
         $this->featureSet->apply('postSelect', array($statement, $result, $resultSet));
 

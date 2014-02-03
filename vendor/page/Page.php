@@ -15,6 +15,7 @@ class Page
     public $js;
     public $active_page;
     public $tab;
+    public $activeTabTitle;
 
     public function setClasses($classes){
         $this->classes = $classes;
@@ -45,8 +46,10 @@ class Page
     public function formatTabsData($data,$activeTab){
 
         for($i=0;$i<count($data);$i++){
-            if($activeTab ==$data[$i]['id'])
+            if($activeTab ==$data[$i]['id']){
                 $data[$i]['active'] = true;
+                $this->activeTabTitle = $data[$i]['title'];
+            }
             $data[$i]['link'] = '/admin/subcategories/'.$data[$i]['id'];
         }
         return $data;

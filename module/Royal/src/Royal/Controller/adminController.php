@@ -50,7 +50,6 @@ class adminController extends AbstractActionController
 
     public function editCategoryAction()
     {
-
         $id_page = $this->params()->fromRoute('id_page', 0);
 
         if($id_page=='page'){
@@ -145,13 +144,15 @@ class adminController extends AbstractActionController
 
     public function uploadImageAction() {
 
-
         $request =new Request();
+
         if($request->isPost()){
+
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
             $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
             $httpadapter->setValidators(array($filesize,$ext));
+
             if($httpadapter->isValid()) {
 
                 $httpadapter->setDestination(TMP_DIR);
@@ -162,17 +163,16 @@ class adminController extends AbstractActionController
                         "randomize" => true,
                     ));
 
-                    echo $filterRaname->filter($httpadapter->getFileName());
+                    echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
 
                 }else{
 
-                    echo 'error';
+                    exit;
 
                 }
             }
 
         }
-
         exit;
 
 
@@ -180,7 +180,6 @@ class adminController extends AbstractActionController
 
 
     public function subcategoriesAction() {
-
 
         $categoryData = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
         $model = \Royal\Models\SubcategoriesProductModel::model();
@@ -190,11 +189,11 @@ class adminController extends AbstractActionController
             'sub'=>'1.3'
         )));
         $id_page = $this->params()->fromRoute('id_page', 0);
+        if($id_page==0){
+            $id_page = $categoryData[0]['id'];
+        }
+        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array('id_categories_product'=>$id_page));
         $this->Page->addTab($categoryData,$id_page,true);
-        $subcategoriesData[] = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array('id_categories_product'=>'1 '));
-    //        echo '<pre>';
-    //var_dump($model->rules());
-    //        exit;
         $formEdit = new formGenerate('editSubCategory', 'category');
         $formEdit->setMultiFormEdit($model->rules(), $subcategoriesData);
         $formAdd = new formGenerate('addSubCategory', 'category', $model);
@@ -268,10 +267,12 @@ class adminController extends AbstractActionController
 
     }
 
-    public function getController($controller) {
-
-        return  mb_strtolower(end(explode('\\',$this->getEvent()->getRouteMatch()->getParams()['controller'])));
-
+    public function getController()
+    {
+        $controller =  explode('\\',$this->getEvent()->getRouteMatch()->getParams());
+        var_dump($controller);
+        exit;
+        return mb_strtolower(end($controller));
     }
 
 }

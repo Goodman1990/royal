@@ -27,9 +27,8 @@ class formGenerate extends Form
     protected $translatorForm;
     protected $captcha;
     public $countInput;
-    protected   $dataForSetForm;
+    protected $dataForSetForm;
     public $classElement;
-//    protected $multiForm;
 
     public function __construct($name,$classForm,$model=null,$typeLabel = null) {
 
@@ -42,20 +41,6 @@ class formGenerate extends Form
         if($model){
             $this->setDataForm($model);
         }
-
-//        $translator = new Translator();
-//        $this->translatorForm = $translator->addTranslationFile(
-//            'phpArray',
-//            __DIR__.'/../../../../../vendor/zendframework/zendframework/resources/languages/ru/Zend_Validate.php'
-//        );
-//
-////        print_r(__DIR__);
-//       // exit;
-////
-//        AbstractValidator::setDefaultTranslator($translator);
-     //   \Locale::setDefault('ru_RU');
-
-
     }
     public function setDataForm($model){
 

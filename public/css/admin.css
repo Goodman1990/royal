@@ -816,8 +816,16 @@ form button{
 .tab{
     display: inline-block;
     margin-left: 10px;
-    border-bottom: 1px dotted;
+    text-underline: none;
+    /*border-bottom: 1px dotted;*/
     cursor: pointer;
+}
+a{
+    text-decoration: none;
+}
+.tab.active-tab{
+    border-bottom: 1px dotted;
+    text-decoration: none;
 }
 
 /*form[name='editCategory'] label.number , form[name='editCategory'] label.title {*/

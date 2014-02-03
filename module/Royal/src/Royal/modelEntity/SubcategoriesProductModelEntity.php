@@ -34,7 +34,6 @@ class SubcategoriesProductModelEntity extends ActiveRecordModel {
             "visible",
             "image",
             "number",
-
         );
     }
 

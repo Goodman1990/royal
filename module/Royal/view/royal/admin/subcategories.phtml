@@ -1,5 +1,5 @@
 <div class="left-content">
-    Редактировать категории
+    Редактировать категории <?php $page->activeTabTitle; ?>
     <hr>
     <?php echo $this->form()->openTag($formEdit);?>
     <div id="sort-form">
@@ -24,9 +24,8 @@
                     <?php echo $this->formRow($formEdit->get('image_' . $i)) ?>
                 </div>
                 <div class="wrapper-input">
-                    <input type="file" name="image-file" id="image-file" >
+                    <input type="file" name="image-file_<?php echo $i; ?>" id="image-file" >
                 </div>
-
                 <hr>
             </div>
 
@@ -58,7 +57,32 @@
             </div>
     <button form="addCategory" name="add" >Добавить</button>
     <?php echo $this->form()->closeTag($formAdd);?>
+</div>
 
+<div class="container-crop" style="display:none;">
+    <div class="row">
+        <div class="span12">
+            <div class="jc-demo-box">
+                <img src="" id="target" alt="[Jcrop Example]" />
+                <div class="clearfix"></div>
+                <form id="coords"
+                      class="coords"
+                      onsubmit="return false;"
+                    >
+
+                    <div class="inline-labels">
+                        <input   type="hidden" size="4" id="x1" name="x1" />
+                        <input  type="hidden" size="4" id="y1" name="y1" />
+                        <input  type="hidden" size="4" id="x2" name="x2" />
+                        <input   type="hidden" size="4" id="y2" name="y2" />
+                        <input  type="hidden" size="4" id="w" name="w" />
+                        <input  type="hidden" size="4" id="h" name="h" />
+                    </div>
+                    <button id="crop-image"  class="green">загрузить</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -74,6 +98,78 @@
         });
         $( "#sort-form" ).disableSelection();
     });
+    $(function () {
+
+        var image = $('#image-file').fileupload({
+        url: '/admin/uploadImage',
+        dataType: 'json',
+        done: function (e, data) {
+
+            $('#target').attr('src','\\tmp\\'+data.result);
+            $(".container-crop").dialog(({height: "auto",
+                width: 'auto',
+                dialogClass:'uploader',
+                closeOnEscape: false, draggable: false, zIndex: "10", position: "left top"}));
+
+            $('#target').imgAreaSelect({
+                x1: 0, y1: 0, x2: 50, y2: 50,
+                aspectRatio: '1:2',
+                handles: true,
+                zIndex: 1000000,
+                minHeight: 50,
+                minWidth: 50,
+                onInit: function(img, selection) {
+
+                    $("#x1").val(0);
+                    $("#y1").val(0);
+                    $("#x2").val(50);
+                    $("#y2").val(50);
+                    $("#w").val(50);
+                    $("#h").val(50);
+                },
+                onSelectEnd: function(img, selection) {
+
+                    $("#x1").val(selection.x1);
+                    $("#y1").val(selection.y1);
+                    $("#x2").val(selection.x2);
+                    $("#y2").val(selection.y2);
+                    $("#w").val(selection.width);
+                    $("#h").val(selection.height);
+
+                }
+
+
+            });
+
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('.progress').css(
+                'width',
+                progress + '%'
+            );
+        },
+        complete: function (e, data) {
+
+        }
+
+    });
+//            .success(function (result, textStatus, jqXHR) {/* ... */})
+//            .error(function (result, textStatus, jqXHR) {/* ... */})
+//            .complete(function (result, textStatus, jqXHR) {/* ... */});
+//      .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
+
+
+//    $('#sort-form').fileupload({
+//        add: function (e, data) {
+//            var jqXHR = data.submit()
+//                .success(function (result, textStatus, jqXHR) {/* ... */})
+//                .error(function (jqXHR, textStatus, errorThrown) {/* ... */})
+//                .complete(function (result, textStatus, jqXHR) {/* ... */});
+//        }
+//    });
+
 </script>
 
 
