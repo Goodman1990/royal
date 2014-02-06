@@ -21,10 +21,10 @@
                     <?php echo $this->formRow($formEdit->get('id_categories_product_'.$i)) ?>
                 </div>
                 <div class="wrapper-input">
-                    <?php echo $this->formRow($formEdit->get('image_' . $i)) ?>
+                    <?php echo $this->formRow($formEdit->get('image_'.$i)) ?>
                 </div>
                 <div class="wrapper-input">
-                    <input type="file" name="image-file_<?php echo $i; ?>" id="image-file" >
+                    <input  data-iterator="<?php echo $i; ?>" type="file" name="image-file_<?php echo $i; ?>" id="image-file" >
                 </div>
                 <hr>
             </div>
@@ -53,9 +53,12 @@
                 <?php echo $this->formRow($formAdd->get('id_categories_product')) ?>
             </div>
             <div class="wrapper-input">
+                <?php echo $this->formRow($formAdd->get('image')) ?>
+            </div>
+            <div class="wrapper-input">
                 <input type="file" name="image-file" id="image-file" >
             </div>
-    <button form="addCategory" name="add" >Добавить</button>
+    <button form="addSubCategory" name="add" >Добавить</button>
     <?php echo $this->form()->closeTag($formAdd);?>
 </div>
 
@@ -65,16 +68,12 @@
             <div class="jc-demo-box">
                 <img src="" id="target" alt="[Jcrop Example]" />
                 <div class="clearfix"></div>
-                <form id="coords"
-                      class="coords"
-                      onsubmit="return false;"
-                    >
-
+                <form id="coords" class="coords" onsubmit="return false;" >
                     <div class="inline-labels">
-                        <input   type="hidden" size="4" id="x1" name="x1" />
+                        <input  type="hidden" size="4" id="x1" name="x1" />
                         <input  type="hidden" size="4" id="y1" name="y1" />
                         <input  type="hidden" size="4" id="x2" name="x2" />
-                        <input   type="hidden" size="4" id="y2" name="y2" />
+                        <input  type="hidden" size="4" id="y2" name="y2" />
                         <input  type="hidden" size="4" id="w" name="w" />
                         <input  type="hidden" size="4" id="h" name="h" />
                     </div>
@@ -86,6 +85,8 @@
 </div>
 
 <script type="text/javascript">
+
+
     $(function() {
         $( "#sort-form " ).sortable({
             stop: function( event, ui) {
@@ -104,12 +105,21 @@
         url: '/admin/uploadImage',
         dataType: 'json',
         done: function (e, data) {
-
+           var i  = $(e.target).attr('data-iterator');
+           if(typeof i=='undefined'){
+               $('#image').val(data.result);
+           }else{
+               $('input').removeClass('active-input');
+               $('#image_'+i).attr('class','active-input');
+               $('#image_'+i).val(data.result);
+           }
             $('#target').attr('src','\\tmp\\'+data.result);
-            $(".container-crop").dialog(({height: "auto",
+            $(".container-crop").dialog(({
+                height: "auto",
                 width: 'auto',
                 dialogClass:'uploader',
-                closeOnEscape: false, draggable: false, zIndex: "10", position: "left top"}));
+                closeOnEscape: false, draggable: false, zIndex: "10", position: "left top"
+            }));
 
             $('#target').imgAreaSelect({
                 x1: 0, y1: 0, x2: 50, y2: 50,
@@ -153,11 +163,19 @@
 
         }
 
+        });
     });
-//            .success(function (result, textStatus, jqXHR) {/* ... */})
-//            .error(function (result, textStatus, jqXHR) {/* ... */})
-//            .complete(function (result, textStatus, jqXHR) {/* ... */});
-//      .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+    $(document).on('click','#crop-image',function(){
+        sendData = {};
+        sendData.x1 =  $('#x1').val();
+        sendData.x2 =  $('#x2').val();
+        sendData.y2 =  $('#y2').val();
+        sendData.w =  $('#w').val();
+        sendData.h =  $('#h').val();
+        sendData.imageName =  $('.active-input').val();
+
+        $.post('/admin/crop',$( "#coords" ).serialize())
     });
 
 

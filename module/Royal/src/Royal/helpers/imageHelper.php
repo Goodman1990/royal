@@ -5,7 +5,7 @@
 namespace Royal\helpers;
 
 
-class SimpleImage
+class imageHelper
 {
 
     public $image;

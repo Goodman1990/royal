@@ -17,6 +17,7 @@ use Page\Page;
 use Royal\helpers\generalHelper;
 use Zend\Mvc\MvcEvent;
 use Zend\Http\PhpEnvironment\Request;
+use Royal\helpers\imageHelper;
 
 
 class adminController extends AbstractActionController
@@ -192,7 +193,8 @@ class adminController extends AbstractActionController
         if($id_page==0){
             $id_page = $categoryData[0]['id'];
         }
-        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array('id_categories_product'=>$id_page));
+        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->
+            findByAttributes(array('id_categories_product'=>$id_page));
         $this->Page->addTab($categoryData,$id_page,true);
         $formEdit = new formGenerate('editSubCategory', 'category');
         $formEdit->setMultiFormEdit($model->rules(), $subcategoriesData);
@@ -202,7 +204,7 @@ class adminController extends AbstractActionController
 
             $Post = $this->request->getPost()->toArray();
 
-            if (isset($Post['edit'])) {
+            if (isset($Post['editSubCategory'])) {
 
                 $formEdit->setData($Post);
 
@@ -274,5 +276,107 @@ class adminController extends AbstractActionController
         exit;
         return mb_strtolower(end($controller));
     }
+
+    public function cropAction() {
+//        $dataImage = $this->request->getPost()->toArray();
+//        $imageHelper  = new imageHelper();
+//        $targ_w = $targ_h = 320;
+//        $imageHelper->loa
+//
+//
+//
+//
+//
+//            $image = (__DIR__ . '/../../../../../public/userData/' . $name);
+//            $exe = explode('.', $name);
+//
+//
+//
+//
+//
+//
+//            switch (end($exe)) {
+//                case 'png':
+//                    $img_r = imageCreateFromPng($image);
+//                    if(!$img_r){
+//                        $img_r = imagecreatefromjpeg($image);
+//                    }
+//                    break;
+//                case 'jpeg':
+//                    $img_r = imagecreatefromjpeg($image);
+//                    break;
+//                case 'jpg':
+//                    $img_r = imagecreatefromjpeg($image);
+//                    break;
+//                case 'PNG':
+//                    $img_r = imageCreateFromPng($image);
+//                    if(!$img_r){
+//                        $img_r = imagecreatefromjpeg($image);
+//                    }
+//                    break;
+//                case 'JPEG':
+//                    $img_r = imagecreatefromjpeg($image);
+//                    break;
+//                case 'JPG':
+//                    $img_r = imagecreatefromjpeg($image);
+//                    break;
+//                default:
+//                    break;
+//            }
+//
+//            $dst_r = ImageCreateTrueColor($targ_w, $targ_h);
+//
+//            if (($request->getPost('w') == '0') || ($request->getPost('h') == '0')) {
+//
+//                $request->getPost()->set('w', 50);
+//                $request->getPost()->set('h', 50);
+//
+//            }
+//
+//            imagecopyresampled($dst_r, $img_r, 0, 0, $request->getPost('x'), $request->getPost('y'), $targ_w, $targ_h, $request->getPost('w'), $request->getPost('h'));
+//            $filter = new \Zend\Filter\File\Rename(array("randomize" => true,));
+//            $name = $filter->filter($image);
+//
+//            switch (end($exe)) {
+//                case 'png':
+//                    if(!imagepng($dst_r, $name, 0)){
+//                        imagejpeg($dst_r, $name, $jpeg_quality);
+//                    }
+//                    break;
+//                case 'jpeg':
+//                    imagejpeg($dst_r, $name, $jpeg_quality);
+//                    break;
+//                case 'jpg':
+//                    imagejpeg($dst_r, $name, $jpeg_quality);
+//                    break;
+//                case 'PNG':
+//                    if(!imagepng($dst_r, $name, 0)){
+//                        imagejpeg($dst_r, $name, $jpeg_quality);
+//                    }
+//                    break;
+//                case 'JPEG':
+//                    imagejpeg($dst_r, $name, $jpeg_quality);
+//                    break;
+//                case 'JPG':
+//                    imagejpeg($dst_r, $name, $jpeg_quality);
+//                    break;
+//                default:
+//                    break;
+//            }
+//            imagejpeg($dst_r, $name, $jpeg_quality);
+//            var_dump($name);
+//            $imageResize = new SimpleImage();
+//            $imageResize->load($name);
+//            $imageResize->resize($targ_w, $targ_h);
+//            $imageResize->save($name);
+//
+//            echo $name;
+//            exit;
+//        }
+////        var_dump();
+//        exit;
+    }
+
+
 
 }
