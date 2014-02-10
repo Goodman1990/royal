@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 <div class="left-content">
     Редактировать категории <?php $page->activeTabTitle; ?>
     <hr>
@@ -70,12 +71,12 @@
                 <div class="clearfix"></div>
                 <form id="coords" class="coords" onsubmit="return false;" >
                     <div class="inline-labels">
-                        <input  type="hidden" size="4" id="x1" name="x1" />
-                        <input  type="hidden" size="4" id="y1" name="y1" />
-                        <input  type="hidden" size="4" id="x2" name="x2" />
-                        <input  type="hidden" size="4" id="y2" name="y2" />
-                        <input  type="hidden" size="4" id="w" name="w" />
-                        <input  type="hidden" size="4" id="h" name="h" />
+                        <input  type="" size="4" id="x1" name="x1" />
+                        <input  type="" size="4" id="y1" name="y1" />
+                        <input  type="" size="4" id="x2" name="x2" />
+                        <input  type="" size="4" id="y2" name="y2" />
+                        <input  type="" size="4" id="w" name="w" />
+                        <input  type="" size="4" id="h" name="h" />
                     </div>
                     <button id="crop-image"  class="green">загрузить</button>
                 </form>
@@ -107,23 +108,65 @@
         done: function (e, data) {
            var i  = $(e.target).attr('data-iterator');
            if(typeof i=='undefined'){
-               $('#image').val(data.result);
+               $('input').removeClass('active-input');
+               $('.image').val(data.result);
+               $('.image').attr('class','active-input');
            }else{
                $('input').removeClass('active-input');
-               $('#image_'+i).attr('class','active-input');
-               $('#image_'+i).val(data.result);
+               $('.image_'+i).attr('class','active-input');
+               $('.image_'+i).val(data.result);
            }
-            $('#target').attr('src','\\tmp\\'+data.result);
-            $(".container-crop").dialog(({
+
+
+            var newimage = new Image();
+            newimage.src = '\\tmp\\'+data.result;
+
+            newimage.onload = function(){
+
+               var  width  =   this.naturalWidth;
+               var  height =   this.naturalHeight;
+               var flag = false;
+               var  heightScreen = screen.width;
+               var widthScreen = screen.height;
+                if ((heightScreen < height) || (widthScreen < width)) {
+                   flag = 1;
+                    while (1) {
+                         n1 =  width /  height;
+                         n2 =  height /  width;
+                        if ( n1 > 1) {
+                             cof =  n1;
+                        } else {
+                             cof =  n2;
+                        }
+
+                        if (( heightScreen <  height) || ( widthScreen <  width)) {
+
+                             width =  width /  cof;
+                             height =  height /  cof;
+
+                        } else {
+
+                            break;
+                        }
+                    }
+                }
+                $('#target').css({'width':width,'height':height});
+                $('#target').attr('src',this.src);
+
+
+            };
+
+             $(".container-crop").dialog(({
                 height: "auto",
                 width: 'auto',
                 dialogClass:'uploader',
-                closeOnEscape: false, draggable: false, zIndex: "10", position: "left top"
+                closeOnEscape: false, draggable: false, zIndex: "10", position: "left top",
+                close: function(ev, ui) { $('#target').imgAreaSelect({remove: true});  $(this).close();  }
             }));
 
             $('#target').imgAreaSelect({
                 x1: 0, y1: 0, x2: 50, y2: 50,
-                aspectRatio: '1:2',
+                aspectRatio: '1:1',
                 handles: true,
                 zIndex: 1000000,
                 minHeight: 50,
@@ -166,16 +209,23 @@
         });
     });
 
+
     $(document).on('click','#crop-image',function(){
-        sendData = {};
+    var sendData = {};
         sendData.x1 =  $('#x1').val();
         sendData.x2 =  $('#x2').val();
         sendData.y2 =  $('#y2').val();
+        sendData.y1 =  $('#y1').val();
         sendData.w =  $('#w').val();
         sendData.h =  $('#h').val();
-        sendData.imageName =  $('.active-input').val();
+        sendData.width  = $('#target').width();
+        sendData.height  = $('#target').height();
+        sendData.imageName  = $('.active-input').val();
 
-        $.post('/admin/crop',$( "#coords" ).serialize())
+
+       alert($('#target').width());
+
+        $.post('/admin/crop',sendData)
     });
 
 

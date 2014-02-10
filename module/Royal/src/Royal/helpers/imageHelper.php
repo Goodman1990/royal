@@ -12,6 +12,7 @@ class imageHelper
     public $image_type;
     public $height;
     public $width;
+    public $fileName;
 
     function __construct($filename = null)
     {
@@ -20,8 +21,9 @@ class imageHelper
         }
     }
 
-    private function load($filename)
+    public  function load($filename)
     {
+        $this->fileName = $filename;
         $image_info = getimagesize($filename);
         $this->image_type = $image_info[2];
         if ($this->image_type == IMAGETYPE_JPEG) {
@@ -36,18 +38,17 @@ class imageHelper
 
     }
 
-    public function save($filename, $image_type = IMAGETYPE_JPEG, $compression = 75, $permissions = null)
+    public function save()
     {
-        if ($image_type == IMAGETYPE_JPEG) {
-            imagejpeg($this->image, $filename, $compression);
-        } elseif ($image_type == IMAGETYPE_GIF) {
-            imagegif($this->image, $filename);
-        } elseif ($image_type == IMAGETYPE_PNG) {
-            imagepng($this->image, $filename);
+        if ($this->image_type == IMAGETYPE_JPEG) {
+            imagejpeg($this->image, $this->fileName);
+        } elseif ($this->image_type == IMAGETYPE_GIF) {
+            imagegif($this->image, $this->fileName);
+        } elseif ($this->image_type == IMAGETYPE_PNG) {
+            imagepng($this->image, $this->fileName);
         }
-        if ($permissions != null) {
-            chmod($filename, $permissions);
-        }
+        chmod($this->fileName, '777');
+
     }
 
     public function output($image_type = IMAGETYPE_JPEG, $quality = 80)
@@ -179,6 +180,16 @@ class imageHelper
         imagefill($new_image, 0, 0, $color_fill);
         imagecopyresampled($new_image, $this->image, floor(($width - $this->getWidth()) / 2), floor(($height - $this->getHeight()) / 2), 0, 0, $this->getWidth(), $this->getHeight(), $this->getWidth(), $this->getHeight());
         $this->image = $new_image;
+    }
+
+    public function cropImage($request){
+        imagecolortransparent($this->image, imagecolorallocate($this->image, 0, 0, 0));
+        imagealphablending($this->image, false);
+        imagesavealpha($this->image, true);
+        $dst_r =   imagecreatetruecolor(320,320);
+        imagecopyresampled ($dst_r, $this->image, 0, 0, $request['x1'], $request['y1'], 320, 320, $request['w'], $request['h']);
+
+
     }
 
 

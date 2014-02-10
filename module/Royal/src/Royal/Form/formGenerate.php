@@ -48,8 +48,10 @@ class formGenerate extends Form
             foreach ($this->inData as $key => $value) {
                 $this->key = $key;
                 $this->value = $value;
+                $this->classElement = $key;
                 $this->setForm();
                 $this->add($this->element);
+
             }
         $this->setInputFilter($this->inputFilter);
     }

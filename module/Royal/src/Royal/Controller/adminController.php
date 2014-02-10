@@ -178,8 +178,6 @@ class adminController extends AbstractActionController
 
 
     }
-
-
     public function subcategoriesAction() {
 
         $categoryData = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
@@ -278,104 +276,24 @@ class adminController extends AbstractActionController
     }
 
     public function cropAction() {
-//        $dataImage = $this->request->getPost()->toArray();
-//        $imageHelper  = new imageHelper();
-//        $targ_w = $targ_h = 320;
-//        $imageHelper->loa
-//
-//
-//
-//
-//
-//            $image = (__DIR__ . '/../../../../../public/userData/' . $name);
-//            $exe = explode('.', $name);
-//
-//
-//
-//
-//
-//
-//            switch (end($exe)) {
-//                case 'png':
-//                    $img_r = imageCreateFromPng($image);
-//                    if(!$img_r){
-//                        $img_r = imagecreatefromjpeg($image);
-//                    }
-//                    break;
-//                case 'jpeg':
-//                    $img_r = imagecreatefromjpeg($image);
-//                    break;
-//                case 'jpg':
-//                    $img_r = imagecreatefromjpeg($image);
-//                    break;
-//                case 'PNG':
-//                    $img_r = imageCreateFromPng($image);
-//                    if(!$img_r){
-//                        $img_r = imagecreatefromjpeg($image);
-//                    }
-//                    break;
-//                case 'JPEG':
-//                    $img_r = imagecreatefromjpeg($image);
-//                    break;
-//                case 'JPG':
-//                    $img_r = imagecreatefromjpeg($image);
-//                    break;
-//                default:
-//                    break;
-//            }
-//
-//            $dst_r = ImageCreateTrueColor($targ_w, $targ_h);
-//
-//            if (($request->getPost('w') == '0') || ($request->getPost('h') == '0')) {
-//
-//                $request->getPost()->set('w', 50);
-//                $request->getPost()->set('h', 50);
-//
-//            }
-//
-//            imagecopyresampled($dst_r, $img_r, 0, 0, $request->getPost('x'), $request->getPost('y'), $targ_w, $targ_h, $request->getPost('w'), $request->getPost('h'));
-//            $filter = new \Zend\Filter\File\Rename(array("randomize" => true,));
-//            $name = $filter->filter($image);
-//
-//            switch (end($exe)) {
-//                case 'png':
-//                    if(!imagepng($dst_r, $name, 0)){
-//                        imagejpeg($dst_r, $name, $jpeg_quality);
-//                    }
-//                    break;
-//                case 'jpeg':
-//                    imagejpeg($dst_r, $name, $jpeg_quality);
-//                    break;
-//                case 'jpg':
-//                    imagejpeg($dst_r, $name, $jpeg_quality);
-//                    break;
-//                case 'PNG':
-//                    if(!imagepng($dst_r, $name, 0)){
-//                        imagejpeg($dst_r, $name, $jpeg_quality);
-//                    }
-//                    break;
-//                case 'JPEG':
-//                    imagejpeg($dst_r, $name, $jpeg_quality);
-//                    break;
-//                case 'JPG':
-//                    imagejpeg($dst_r, $name, $jpeg_quality);
-//                    break;
-//                default:
-//                    break;
-//            }
-//            imagejpeg($dst_r, $name, $jpeg_quality);
-//            var_dump($name);
-//            $imageResize = new SimpleImage();
-//            $imageResize->load($name);
-//            $imageResize->resize($targ_w, $targ_h);
-//            $imageResize->save($name);
-//
-//            echo $name;
-//            exit;
-//        }
-////        var_dump();
+
+        $dataImage = $this->getRequest()->getPost()->toArray();
+//        echo  $dataImage['x1'].'<br />';
+//        echo  $dataImage['y1'];
 //        exit;
+//      echo   $dataImage['imageName'];
+//        exit;
+        $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
+        $imageHelper->resize($dataImage['width'],$dataImage['height']);
+        $imageHelper->save();
+
+        $imageHelper2 = new imageHelper($imageHelper->fileName);
+        $imageHelper->cropImage($dataImage);
+        $imageHelper->save();
+
+
     }
+
 
 
 
