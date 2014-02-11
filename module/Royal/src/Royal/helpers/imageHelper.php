@@ -25,6 +25,8 @@ class imageHelper
     {
         $this->fileName = $filename;
         $image_info = getimagesize($filename);
+//        var_dump($image_info);
+//        exit;
         $this->image_type = $image_info[2];
         if ($this->image_type == IMAGETYPE_JPEG) {
             $this->image = imagecreatefromjpeg($filename);
@@ -47,7 +49,7 @@ class imageHelper
         } elseif ($this->image_type == IMAGETYPE_PNG) {
             imagepng($this->image, $this->fileName);
         }
-        chmod($this->fileName, '777');
+//        chmod($this->fileName, '777');
 
     }
 
@@ -183,10 +185,10 @@ class imageHelper
     }
 
     public function cropImage($request){
-        imagecolortransparent($this->image, imagecolorallocate($this->image, 0, 0, 0));
-        imagealphablending($this->image, false);
-        imagesavealpha($this->image, true);
-        $dst_r =   imagecreatetruecolor(320,320);
+//        imagecolortransparent($this->image, imagecolorallocate($this->image, 0, 0, 0));
+//        imagealphablending($this->image, false);
+//        imagesavealpha($this->image, true);
+        $dst_r =   ImageCreateTrueColor(320,320);
         imagecopyresampled ($dst_r, $this->image, 0, 0, $request['x1'], $request['y1'], 320, 320, $request['w'], $request['h']);
 
 

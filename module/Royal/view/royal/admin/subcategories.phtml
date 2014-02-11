@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 <div class="left-content">
-    Редактировать категории <?php $page->activeTabTitle; ?>
+<!--    Редактировать категории --><?php //$page->activeTabTitle; ?>
     <hr>
     <?php echo $this->form()->openTag($formEdit);?>
     <div id="sort-form">
@@ -25,14 +25,14 @@
                     <?php echo $this->formRow($formEdit->get('image_'.$i)) ?>
                 </div>
                 <div class="wrapper-input">
-                    <input  data-iterator="<?php echo $i; ?>" type="file" name="image-file_<?php echo $i; ?>" id="image-file" >
+                    <input  data-iterator="<?php echo $i; ?>" type="file" name="image-file_<?php echo $i; ?>" id="image-file_<?php echo $i; ?>" >
                 </div>
                 <hr>
             </div>
 
         <?php } ?>
     </div>
-    <button form="editCategory" name="edit">Редактировать</button>
+    <button form="editSubCategory" name="edit">Редактировать</button>
     <?php echo $this->form()->closeTag($formEdit);?>
     <br />
     <p>Добавить категорию</p>
@@ -48,10 +48,7 @@
                 <?php echo $this->formRow($formAdd->get('number')) ?>
             </div>
             <div class="wrapper-input">
-                <?php echo $this->formRow($formAdd->get('id')) ?>
-            </div>
-            <div class="wrapper-input">
-                <?php echo $this->formRow($formAdd->get('id_categories_product')) ?>
+                <?php echo $this->formRow($formAdd->get('id_categories_product')->setValue($id_page)); ?>
             </div>
             <div class="wrapper-input">
                 <?php echo $this->formRow($formAdd->get('image')) ?>
@@ -71,12 +68,12 @@
                 <div class="clearfix"></div>
                 <form id="coords" class="coords" onsubmit="return false;" >
                     <div class="inline-labels">
-                        <input  type="" size="4" id="x1" name="x1" />
-                        <input  type="" size="4" id="y1" name="y1" />
-                        <input  type="" size="4" id="x2" name="x2" />
-                        <input  type="" size="4" id="y2" name="y2" />
-                        <input  type="" size="4" id="w" name="w" />
-                        <input  type="" size="4" id="h" name="h" />
+                        <input  type="hidden" size="4" id="x1" name="x1" />
+                        <input  type="hidden" size="4" id="y1" name="y1" />
+                        <input  type="hidden" size="4" id="x2" name="x2" />
+                        <input  type="hidden" size="4" id="y2" name="y2" />
+                        <input  type="hidden" size="4" id="w" name="w" />
+                        <input  type="hidden" size="4" id="h" name="h" />
                     </div>
                     <button id="crop-image"  class="green">загрузить</button>
                 </form>
@@ -102,34 +99,40 @@
     });
     $(function () {
 
-        var image = $('#image-file').fileupload({
+        var image = $('input[type="file"]').fileupload({
         url: '/admin/uploadImage',
         dataType: 'json',
         done: function (e, data) {
+
            var i  = $(e.target).attr('data-iterator');
            if(typeof i=='undefined'){
+
                $('input').removeClass('active-input');
                $('.image').val(data.result);
                $('.image').attr('class','active-input');
            }else{
+
                $('input').removeClass('active-input');
                $('.image_'+i).attr('class','active-input');
                $('.image_'+i).val(data.result);
            }
-
-
             var newimage = new Image();
             newimage.src = '\\tmp\\'+data.result;
-
             newimage.onload = function(){
 
-               var  width  =   this.naturalWidth;
-               var  height =   this.naturalHeight;
-               var flag = false;
-               var  heightScreen = screen.width;
-               var widthScreen = screen.height;
+                var width  =   this.naturalWidth;
+                var height =   this.naturalHeight;
+                var flag = false;
+                var heightScreen;
+                var widthScreen;
+                var n1;
+                var n2;
+                var cof;
+                heightScreen = screen.width;
+                widthScreen = screen.height;
                 if ((heightScreen < height) || (widthScreen < width)) {
                    flag = 1;
+                    var  i = 0;
                     while (1) {
                          n1 =  width /  height;
                          n2 =  height /  width;
@@ -140,7 +143,6 @@
                         }
 
                         if (( heightScreen <  height) || ( widthScreen <  width)) {
-
                              width =  width /  cof;
                              height =  height /  cof;
 
@@ -152,7 +154,7 @@
                 }
                 $('#target').css({'width':width,'height':height});
                 $('#target').attr('src',this.src);
-
+                $('#target').attr('data-cof', i+' '+cof);
 
             };
 
@@ -211,6 +213,7 @@
 
 
     $(document).on('click','#crop-image',function(){
+
     var sendData = {};
         sendData.x1 =  $('#x1').val();
         sendData.x2 =  $('#x2').val();
@@ -221,11 +224,10 @@
         sendData.width  = $('#target').width();
         sendData.height  = $('#target').height();
         sendData.imageName  = $('.active-input').val();
-
-
-       alert($('#target').width());
+        sendData.data  = $('#target').attr('data-cof');
 
         $.post('/admin/crop',sendData)
+
     });
 
 

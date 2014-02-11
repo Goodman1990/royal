@@ -143,46 +143,10 @@ class adminController extends AbstractActionController
         ));
     }
 
-    public function uploadImageAction() {
-
-        $request =new Request();
-
-        if($request->isPost()){
-
-            $httpadapter = new \Zend\File\Transfer\Adapter\Http();
-            $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
-            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
-            $httpadapter->setValidators(array($filesize,$ext));
-
-            if($httpadapter->isValid()) {
-
-                $httpadapter->setDestination(TMP_DIR);
-
-                if($httpadapter->receive()) {
-
-                    $filterRaname = new \Zend\Filter\File\Rename(array(
-                        "randomize" => true,
-                    ));
-
-                    echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
-
-                }else{
-
-                    exit;
-
-                }
-            }
-
-        }
-        exit;
-
-
-    }
     public function subcategoriesAction() {
 
         $categoryData = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
         $model = \Royal\Models\SubcategoriesProductModel::model();
-
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'1',
             'sub'=>'1.3'
@@ -191,8 +155,8 @@ class adminController extends AbstractActionController
         if($id_page==0){
             $id_page = $categoryData[0]['id'];
         }
-        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->
-            findByAttributes(array('id_categories_product'=>$id_page));
+        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
+            ->findByAttributes(array('id_categories_product'=>$id_page));
         $this->Page->addTab($categoryData,$id_page,true);
         $formEdit = new formGenerate('editSubCategory', 'category');
         $formEdit->setMultiFormEdit($model->rules(), $subcategoriesData);
@@ -202,22 +166,26 @@ class adminController extends AbstractActionController
 
             $Post = $this->request->getPost()->toArray();
 
-            if (isset($Post['editSubCategory'])) {
+            if (isset($Post['edit'])) {
 
                 $formEdit->setData($Post);
-
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
+//                    echo'<pre>';
+//                    var_dump($this->validData);
+//                    exit;
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
                         $model::model()
                             ->setAttributes(array(
                                 'id' => $this->validData['id_' . $i],
+                                'id_categories_product' => $this->validData['id_categories_product_' . $i],
                                 'title' => $this->validData['title_' . $i],
                                 'number'=>$this->validData['number_' . $i],
                                 'visible'=>$this->validData['visible_' . $i],
                                 'image'=>$this->validData['image_' . $i]
                             ))->save();
+                       
                         $k = $this->validData['number_'.$i]-1;
                         $validData['id_'.$k] = $this->validData['id_'.$i];
                         $validData['title_'.$k] = $this->validData['title_'.$i];
@@ -233,15 +201,13 @@ class adminController extends AbstractActionController
                 $formAdd->setData($Post);
 
                 if ($formAdd->isValid()) {
-
                     $this->validData = $formAdd->getData();
+//                    echo'<pre>';
+//                    var_dump($this->validData);
+//                    exit;
+                    unset($this->validData['id']);
                     $id = $model::model()
-                        ->setAttributes(array(
-                            'title' => $this->validData['title'],
-                            'number'=>$this->validData['number'],
-                            'visible'=>$this->validData['visible'],
-                            'image'=>$this->validData['image']
-                        ))->save();
+                        ->setAttributes($this->validData)->save();
                     $formEdit->addInputForm($Post, $id);
                     $formEdit->CustomSetData();
                     $formAdd->clearElements();
@@ -261,40 +227,57 @@ class adminController extends AbstractActionController
         return new ViewModel(array(
             'formEdit' => $formEdit,
             'formAdd' => $formAdd,
-            'categoryPageData' => $categoryData
+            'categoryPageData' => $categoryData,
+            'id_page'=>$id_page
         ));
 
 
     }
 
-    public function getController()
-    {
+    public function getController() {
         $controller =  explode('\\',$this->getEvent()->getRouteMatch()->getParams());
-        var_dump($controller);
-        exit;
         return mb_strtolower(end($controller));
     }
 
     public function cropAction() {
 
         $dataImage = $this->getRequest()->getPost()->toArray();
-//        echo  $dataImage['x1'].'<br />';
-//        echo  $dataImage['y1'];
-//        exit;
-//      echo   $dataImage['imageName'];
-//        exit;
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
         $imageHelper->resize($dataImage['width'],$dataImage['height']);
+        $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
         $imageHelper->save();
-
-        $imageHelper2 = new imageHelper($imageHelper->fileName);
-        $imageHelper->cropImage($dataImage);
-        $imageHelper->save();
-
-
+        exit;
     }
 
+    public function uploadImageAction() {
 
+        $request =new Request();
+        if($request->isPost()){
 
+            $httpadapter = new \Zend\File\Transfer\Adapter\Http();
+            $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
+            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
+            $httpadapter->setValidators(array($filesize,$ext));
 
+            if($httpadapter->isValid()) {
+
+                $httpadapter->setDestination(TMP_DIR);
+
+                if($httpadapter->receive()) {
+
+                    $filterRaname = new \Zend\Filter\File\Rename(array(
+                        "randomize" => true,
+                    ));
+                    echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
+
+                }else{
+
+                    exit;
+
+                }
+            }
+
+        }
+        exit;
+    }
 }

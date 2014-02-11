@@ -24,7 +24,7 @@ class SubcategoriesProductModel extends SubcategoriesProductModelEntity {
             'number'=>array('validators' =>array('regex' => 'numbers'),'setLabel' => 'порядковый номер'),
             'visible'=>array('typeInput' => 'checkbox','filters' => array('int'),'validators' =>false,'setLabel' => 'видемость','labelClass'),
             'image'=>array('validators' =>false,'typeInput' => 'hidden','required' => true),
-            'id'=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
+            'id'=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('int')),
             'id_categories_product'=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')));
     }
 

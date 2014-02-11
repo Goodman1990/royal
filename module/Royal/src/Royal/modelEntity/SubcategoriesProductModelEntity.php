@@ -29,15 +29,13 @@ class SubcategoriesProductModelEntity extends ActiveRecordModel {
     {
         return array(
             "id",
-            "id_categories_product",
-            "title",
-            "visible",
-            "image",
-            "number",
+"id_categories_product",
+"title",
+"visible",
+"image",
+"number",
+
         );
     }
-
-
-
 
 } 

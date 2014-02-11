@@ -19,7 +19,6 @@ abstract class ActiveRecord extends AbstractTableGateway
     protected $scenario;
     protected $_select;
     protected $_criteria = array();
-    protected $customSelect;
 
 
 
@@ -156,7 +155,6 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     public function setAttributes($attributes, $fromDataBase = false)
     {
-
         $arrayOfAttributes = (array) $attributes;
         if ($fromDataBase) {
             $this->attributes = $attributes;
@@ -188,14 +186,12 @@ abstract class ActiveRecord extends AbstractTableGateway
      * Fetch all records raw format (as object)
      * @return object
      */
-    public  function findAll()
+    protected function findAll()
     {
-
-        $this->customSelect = $this->sql->select();
-
-        return $this->customExecute();
-
+        return $this->select()->toArray();
     }
+
+
 
     public  function findAllOrder($order){
 
@@ -226,6 +222,7 @@ abstract class ActiveRecord extends AbstractTableGateway
 
     }
 
+
     /**
      * Find record by primary key
      * @return object
@@ -241,7 +238,7 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     protected function findByAttributes($attributes)
     {
-        return $this->select($attributes);
+        return $this->select($attributes)->toArray();
     }
 
     /**
@@ -290,22 +287,27 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     public function write()
     {
+        echo $this->getScenario();
+//        exit;
         if ($this->getScenario() == 'insert') {
 
-            if($this->insert($this->getAttributes())){
-
-                return $this->adapter->getDriver()->getConnection()->getLastGeneratedValue();
-
-            }else{
-
-                return false;
-
-            }
+            $status = $this->insert($this->getAttributes());
         } else {
-
-            $this->nativeAttributes = array('id'=>$this->id);
-            return $this->update($this->getAttributes(), $this->nativeAttributes);
+            return $this->update($this->getAttributes(), array(
+            'id'=>$this->id
+            ));
         }
+        
+        if ($status) {
+			$id = $this->getInsertId();
+			if (preg_match('/^\d+$/', $id) && $id != '0') {
+				$this->setAttributes(compact('id'));
+			}
+		} else {
+			$this->addError($this->$this->tablePrimaryKey, 'User not created!');
+		}
+        
+        return !$this->hasErrors();
     }
 
     /**
@@ -395,23 +397,10 @@ abstract class ActiveRecord extends AbstractTableGateway
     }
 
     /**
-     * @return String
+     * @return string of id or zero
      */
-    public function getInsertId(){
-
+    public function getInsertId()
+    {
         return $this->adapter->getDriver()->getConnection()->getLastGeneratedValue();
-    }
-
-    /**
-     * Set table
-     * @param string $table
-     * @return ActiveRecord
-     */
-    public function setTable($table){
-
-        $this->table = $table;
-
-        return $this;
-
     }
 }
