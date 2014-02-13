@@ -32,10 +32,7 @@ class adminController extends AbstractActionController
     {
         parent::attachDefaultListeners();
         $events = $this->getEventManager();
-
-
         $events->attach('dispatch', array($this, 'preDispatch'), 100);
-//        $events->attach('dispatch', array($this, 'postDispatch'), -100);
     }
     public function preDispatch (MvcEvent $e){
         $this->request = $this->getRequest();
@@ -44,10 +41,6 @@ class adminController extends AbstractActionController
         $this->layout()->setVariables(array('page'=>$this->Page));
 
     }
-//    public function PostDispatch (MvcEvent $e){
-//
-//
-//    }
 
     public function editCategoryAction()
     {
@@ -145,8 +138,11 @@ class adminController extends AbstractActionController
 
     public function subcategoriesAction() {
 
+//        if(!$this->request->isPost()){
         $categoryData = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
         $model = \Royal\Models\SubcategoriesProductModel::model();
+
+//        var_dump($categoryData);
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'1',
             'sub'=>'1.3'
@@ -155,6 +151,7 @@ class adminController extends AbstractActionController
         if($id_page==0){
             $id_page = $categoryData[0]['id'];
         }
+//        }
         $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
             ->findByAttributes(array('id_categories_product'=>$id_page));
         $this->Page->addTab($categoryData,$id_page,true);
@@ -172,9 +169,7 @@ class adminController extends AbstractActionController
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
-//                    echo'<pre>';
-//                    var_dump($this->validData);
-//                    exit;
+
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
                         $model::model()
                             ->setAttributes(array(
@@ -192,8 +187,13 @@ class adminController extends AbstractActionController
                         $validData['number_'.$k] = $this->validData['number_'.$i];
                         $validData['visible_'.$k] = $this->validData['visible_'.$i];
                         $validData['image_'.$k] = $this->validData['image_'.$i];
-                        $formEdit->setData($validData);
+
+//
                     }
+
+                    $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
+                        ->findByAttributes(array('id_categories_product'=>$id_page));
+                    $formEdit->setData($subcategoriesData);
                 }
 
             } else {
@@ -202,9 +202,6 @@ class adminController extends AbstractActionController
 
                 if ($formAdd->isValid()) {
                     $this->validData = $formAdd->getData();
-//                    echo'<pre>';
-//                    var_dump($this->validData);
-//                    exit;
                     unset($this->validData['id']);
                     $id = $model::model()
                         ->setAttributes($this->validData)->save();
@@ -251,6 +248,8 @@ class adminController extends AbstractActionController
 
     public function uploadImageAction() {
 
+        $this->Page = new Page();
+        $this->layout()->setVariables(array('page'=>$this->Page));
         $request =new Request();
         if($request->isPost()){
 
@@ -276,6 +275,8 @@ class adminController extends AbstractActionController
 
                 }
             }
+
+            exit;
 
         }
         exit;

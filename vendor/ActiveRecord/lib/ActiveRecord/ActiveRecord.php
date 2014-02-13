@@ -238,7 +238,7 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     protected function findByAttributes($attributes)
     {
-        return $this->select($attributes)->toArray();
+        return $this->select($attributes)->order('id DESK')->toArray();
     }
 
     /**

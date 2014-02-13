@@ -103,7 +103,7 @@
         url: '/admin/uploadImage',
         dataType: 'json',
         done: function (e, data) {
-
+            alert(1)
            var i  = $(e.target).attr('data-iterator');
            if(typeof i=='undefined'){
 
@@ -152,6 +152,7 @@
                         }
                     }
                 }
+
                 $('#target').css({'width':width,'height':height});
                 $('#target').attr('src',this.src);
                 $('#target').attr('data-cof', i+' '+cof);
@@ -229,16 +230,6 @@
         $.post('/admin/crop',sendData)
 
     });
-
-
-//    $('#sort-form').fileupload({
-//        add: function (e, data) {
-//            var jqXHR = data.submit()
-//                .success(function (result, textStatus, jqXHR) {/* ... */})
-//                .error(function (jqXHR, textStatus, errorThrown) {/* ... */})
-//                .complete(function (result, textStatus, jqXHR) {/* ... */});
-//        }
-//    });
 
 </script>
 

@@ -102,17 +102,14 @@ class formGenerate extends Form
             $this->setData($this->dataForSetForm);
     }
 
-    public function     addInputForm($post,$id){
+    public function addInputForm($post,$id){
         $buff =array();
-//        echo '<pre>';
-//        print_r($this->dataForSetForm);
 
         foreach($this->inData as $key=>$value){
             $buff[$key.'_'.$this->countInput] =$value;
             $this->dataForSetForm[$key.'_'.$this->countInput] = $post[$key];
         }
-//        print_r($this->dataForSetForm);
-//        exit;
+
         $this->dataForSetForm['id_'.$this->countInput] = $id;
         $this->countInput++;
         $this->setDataFormAdd($buff);
