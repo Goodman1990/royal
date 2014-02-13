@@ -191,25 +191,34 @@ abstract class ActiveRecord extends AbstractTableGateway
         return $this->select()->toArray();
     }
 
+    public function customSelect($where){
 
+        $this->customSelect['where'] = $where;//$this->sql->select()->where($where);
+
+        return $this;
+    }
+
+    public function addOrder($order){
+
+        $this->customSelect['order'] = $order;
+
+        return $this;
+    }
 
     public  function findAllOrder($order){
 
         $this->customSelect =$this->sql->select()->order($order);
 
-
         return $this->customExecute();
     }
 
-    public  function findAllGroup($group){
-
+    public function findAllGroup($group){
         $this->customSelect = $this->sql->select()->group($group);
 
         return $this->customExecute();
-
     }
 
-    protected   function  customExecute(){
+    public function  customExecute(){
 
         $statement = $this->sql->prepareStatementForSqlObject($this->customSelect);
         $results = $statement->execute();
@@ -217,12 +226,8 @@ abstract class ActiveRecord extends AbstractTableGateway
         foreach($results as $result)
             $data[] = $result;
 
-
         return $data;
-
     }
-
-
     /**
      * Find record by primary key
      * @return object
@@ -238,7 +243,7 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     protected function findByAttributes($attributes)
     {
-        return $this->select($attributes)->order('id DESK')->toArray();
+        return $this->select($attributes)->toArray();
     }
 
     /**

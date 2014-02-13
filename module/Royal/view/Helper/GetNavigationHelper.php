@@ -40,7 +40,6 @@ class GetNavigationHelper extends AbstractHelper {
                 'resource'=>$key['id'],
                 'visible' => $key['visible'],
                 'pages'=>array(
-
                     array(
                         'label' => $key['title'],
                         'uri'=>'    /'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
@@ -56,16 +55,10 @@ class GetNavigationHelper extends AbstractHelper {
             );
         }
 
-//        echo'<pre>';
-//        var_dump($navigation[0]);
-//        ;
-//        var_dump($this->getAdminNavigation());
-//        exit;
         $container = new \Zend\Navigation\Navigation($navigation);
 
         return $container;
     }
-
 
     public function getAdminNavigation(){
 
@@ -90,7 +83,7 @@ class GetNavigationHelper extends AbstractHelper {
                     ),
                     array(
                         'label' => 'Под категории',
-                        'uri'=>'/admin/editCategory/page',
+                        'uri'=>'/admin/subcategories/',
                         'resource'=>'1.3',
                         'visible' =>1,
                     ),
