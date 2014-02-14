@@ -83,12 +83,51 @@ class GetNavigationHelper extends AbstractHelper {
                     ),
                     array(
                         'label' => 'Под категории',
-                        'uri'=>'/admin/subcategories/',
+                        'uri'=>'/admin/editSubcategories/subcategories',
                         'resource'=>'1.3',
+                        'visible' =>1,
+                    ),
+                    array(
+                        'label' => 'Производители',
+                        'uri'=>'/admin/editSubcategories/manufacturers',
+                        'resource'=>'1.4',
                         'visible' =>1,
                     ),
                 ),
             ),
+            array(
+                'label' => 'категории',
+                'uri'=>'/admin/editCategory/product',
+                'resource'=>'1',
+                'visible' =>1,
+                'pages'=>array(
+                    array( 'label' => 'Тывфывовара',
+                        'uri'=>'/admin/editCategory/product',
+                        'resource'=>'1.1',
+                        'visible' =>1,
+                    ),
+
+                    array(
+                        'label' => 'Странфывфывфыц',
+                        'uri'=>'/admin/editCategory/page',
+                        'resource'=>'1.2',
+                        'visible' =>1,
+                    ),
+                    array(
+                        'label' => 'Под кфывфывфыатегории',
+                        'uri'=>'/admin/editSubcategories/subcategories',
+                        'resource'=>'1.3',
+                        'visible' =>1,
+                    ),
+                    array(
+                        'label' => 'Произвфывфывфыодители',
+                        'uri'=>'/admin/editSubcategories/manufacturers',
+                        'resource'=>'1.4',
+                        'visible' =>1,
+                    ),
+                ),
+            ),
+
 //            array(
 //                'label' => 'категории',
 //                'uri'=>'/admin/editCategory/product',

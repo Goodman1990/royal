@@ -16,6 +16,9 @@ class Page
     public $active_page;
     public $tab;
     public $activeTabTitle;
+    public $controller;
+    public $action;
+    public $paramRoute;
 
     public function setClasses($classes){
         $this->classes = $classes;
@@ -35,9 +38,7 @@ class Page
 
     public function addTab($tabs,$activeTab,$format=false) {
         if($format){
-
          $tabs = $this->formatTabsData($tabs,$activeTab);
-
         }
         $this->tab = $tabs;
 
@@ -50,7 +51,10 @@ class Page
                 $data[$i]['active'] = true;
                 $this->activeTabTitle = $data[$i]['title'];
             }
-            $data[$i]['link'] = '/admin/subcategories/'.$data[$i]['id'];
+
+            $data[$i]['link'] = '/'.$this->controller.'/'.$this->action.'/'.$this->paramRoute[0].'/'.$data[$i]['id'];
+//            var_dump($data[$i]['link']);
+//            exit;
         }
         return $data;
     }

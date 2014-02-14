@@ -26,6 +26,8 @@ class adminController extends AbstractActionController
     public $request;
     public $validData;
     public $Page;
+    public $action;
+    public $controller;
 
 
     protected function attachDefaultListeners()
@@ -35,16 +37,36 @@ class adminController extends AbstractActionController
         $events->attach('dispatch', array($this, 'preDispatch'), 100);
     }
     public function preDispatch (MvcEvent $e){
+
+//        $this->action = $this->getAction();
+//        $this->controller = $this->getController();
+
         $this->request = $this->getRequest();
         $this->Page = new Page();
+        $route = $this->getParamsCustom();
+
+        $this->Page->controller = $route['__CONTROLLER__'];
+        $this->Page->action = $route['action'];
+        $routeParam = explode('/',$this->getRequest()->getUri()->toString());
+            for($i=5;$i<count($routeParam);$i++){
+                $this->Page->paramRoute[] = $routeParam[$i];
+            }
+
         $this->layout('layout/layoutAdmin');
+
         $this->layout()->setVariables(array('page'=>$this->Page));
 
+
+    }
+
+    private function getParamsCustom(){
+
+        return  $route = $this->getEvent()->getRouteMatch()->getParams();
     }
 
     public function editCategoryAction()
     {
-        $id_page = $this->params()->fromRoute('id_page', 0);
+        $id_page = $this->params()->fromRoute('param1', 0);
 
         if($id_page=='page'){
 
@@ -136,25 +158,43 @@ class adminController extends AbstractActionController
         ));
     }
 
-    public function subcategoriesAction() {
+    public function editSubcategoriesAction() {
 
-//        if(!$this->request->isPost()){
-        $categoryData = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
-        $model = \Royal\Models\SubcategoriesProductModel::model();
 
-//        var_dump($categoryData);
-        $this->Page->setActivePage(array('admin'=>array(
-            'tab'=>'1',
-            'sub'=>'1.3'
-        )));
-        $id_page = $this->params()->fromRoute('id_page', 0);
+        $page = $this->params()->fromRoute('param1', 0);
+
+        if($page=='subcategories'){
+
+            $categoryData = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
+            $model = \Royal\Models\SubcategoriesProductModel::model();
+            $this->Page->setActivePage(array('admin'=>array(
+                'tab'=>'1',
+                'sub'=>'1.3'
+            )));
+            $rowTable = 'id_categories_product';
+
+        }else{
+
+            $categoryData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
+            $model = \Royal\Models\ManufacturersModel::model();
+            $this->Page->setActivePage(array('admin'=>array(
+                'tab'=>'1',
+                'sub'=>'1.4'
+            )));
+            $rowTable = 'id_subcategories_product';
+
+        }
+
+
+        $id_page= $this->params()->fromRoute('param2', 0);
         if($id_page==0){
             $id_page = $categoryData[0]['id'];
         }
-//        }
-        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
-            ->findByAttributes(array('id_categories_product'=>$id_page));
+        $id_page= $this->params()->fromRoute('param2', 0);
+
         $this->Page->addTab($categoryData,$id_page,true);
+        $subcategoriesData = $model::model(array('asArray'=>true))
+            ->findByAttributes(array($rowTable=>$id_page));
         $formEdit = new formGenerate('editSubCategory', 'category');
         $formEdit->setMultiFormEdit($model->rules(), $subcategoriesData);
         $formAdd = new formGenerate('addSubCategory', 'category', $model);
@@ -174,7 +214,7 @@ class adminController extends AbstractActionController
                         $model::model()
                             ->setAttributes(array(
                                 'id' => $this->validData['id_' . $i],
-                                'id_categories_product' => $this->validData['id_categories_product_' . $i],
+                                $rowTable => $this->validData[$rowTable.'_' . $i],
                                 'title' => $this->validData['title_' . $i],
                                 'number'=>$this->validData['number_' . $i],
                                 'visible'=>$this->validData['visible_' . $i],
@@ -182,17 +222,10 @@ class adminController extends AbstractActionController
                             ))->save();
                        
                         $k = $this->validData['number_'.$i]-1;
-                        $validData['id_'.$k] = $this->validData['id_'.$i];
-                        $validData['title_'.$k] = $this->validData['title_'.$i];
-                        $validData['number_'.$k] = $this->validData['number_'.$i];
-                        $validData['visible_'.$k] = $this->validData['visible_'.$i];
-                        $validData['image_'.$k] = $this->validData['image_'.$i];
-
-//
                     }
 
-                    $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
-                        ->findByAttributes(array('id_categories_product'=>$id_page));
+                    $subcategoriesData = $model::model(array('asArray'=>true))
+                        ->findByAttributes(array($rowTable=>$id_page));
                     $formEdit->setData($subcategoriesData);
                 }
 
@@ -225,24 +258,36 @@ class adminController extends AbstractActionController
             'formEdit' => $formEdit,
             'formAdd' => $formAdd,
             'categoryPageData' => $categoryData,
-            'id_page'=>$id_page
+            'id_page'=>$id_page,
+            'tableRow'=>$rowTable,
+            'subcategoriesData'=>$subcategoriesData
         ));
 
 
     }
 
-    public function getController() {
-        $controller =  explode('\\',$this->getEvent()->getRouteMatch()->getParams());
-        return mb_strtolower(end($controller));
-    }
+//    private  function getController() {
+//        $route = $this->getEvent()->getRouteMatch()->getParams();
+//        return $route['__CONTROLLER__'];
+//    }
+//
+//    private  function getAction() {
+//        $route =  $this->getEvent()->getRouteMatch()->getParams();
+//        return $route['action'];
+//    }
+
 
     public function cropAction() {
 
+
         $dataImage = $this->getRequest()->getPost()->toArray();
+//        var_dump(file_exists('public/tmp/'.$dataImage['imageName']));
+//        exit;
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
         $imageHelper->resize($dataImage['width'],$dataImage['height']);
         $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
         $imageHelper->save();
+        echo $dataImage['imageName'];
         exit;
     }
 

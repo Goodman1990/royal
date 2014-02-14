@@ -45,11 +45,12 @@ return array(
             'Royal' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '[/:controller][/:action][/:id_page]',
+                    'route'    => '[/:controller][/:action][/:param1][/:param2]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id_page'=>'[a-zA-Z-0-9_]*',
+                        'param1'=>'[a-zA-Z-0-9_]*',
+                        'param2'=>'[a-zA-Z-0-9_]*',
                     ),
                     'defaults' => array(
                         '__NAMESPACE__' => 'Royal\Controller',

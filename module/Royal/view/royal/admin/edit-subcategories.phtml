@@ -1,11 +1,12 @@
 <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 <div class="left-content">
-<!--    Редактировать категории --><?php //$page->activeTabTitle; ?>
+    Редактировать категории
     <hr>
     <?php echo $this->form()->openTag($formEdit);?>
     <div id="sort-form">
         <?php  for($i=0;$i<$formEdit->countInput;$i++){ ?>
             <div class="ech">
+                <div class="group-form">
                 <div class="wrapper-input">
                     <?php echo $this->formRow($formEdit->get('title_'.$i)) ?>
                 </div>
@@ -19,7 +20,7 @@
                     <?php echo $this->formRow($formEdit->get('id_'.$i)) ?>
                 </div>
                 <div class="wrapper-input">
-                    <?php echo $this->formRow($formEdit->get('id_categories_product_'.$i)) ?>
+                    <?php echo $this->formRow($formEdit->get($tableRow.'_'.$i)) ?>
                 </div>
                 <div class="wrapper-input">
                     <?php echo $this->formRow($formEdit->get('image_'.$i)) ?>
@@ -27,6 +28,7 @@
                 <div class="wrapper-input">
                     <input  data-iterator="<?php echo $i; ?>" type="file" name="image-file_<?php echo $i; ?>" id="image-file_<?php echo $i; ?>" >
                 </div>
+                <img  width="100" height="100" class="prewiew" src="/tmp/<?php  echo $subcategoriesData[$i]['image']; ?>" alt=""/>
                 <hr>
             </div>
 
@@ -48,7 +50,7 @@
                 <?php echo $this->formRow($formAdd->get('number')) ?>
             </div>
             <div class="wrapper-input">
-                <?php echo $this->formRow($formAdd->get('id_categories_product')->setValue($id_page)); ?>
+                <?php echo $this->formRow($formAdd->get($tableRow)->setValue($id_page)); ?>
             </div>
             <div class="wrapper-input">
                 <?php echo $this->formRow($formAdd->get('image')) ?>
@@ -97,24 +99,24 @@
         });
         $( "#sort-form" ).disableSelection();
     });
+
     $(function () {
 
         var image = $('input[type="file"]').fileupload({
         url: '/admin/uploadImage',
         dataType: 'json',
         done: function (e, data) {
-            alert(1)
+
            var i  = $(e.target).attr('data-iterator');
            if(typeof i=='undefined'){
-
                $('input').removeClass('active-input');
                $('.image').val(data.result);
-               $('.image').attr('class','active-input');
+               $('.image').addClass('active-input');
            }else{
-
+               alert(i);
                $('input').removeClass('active-input');
-               $('.image_'+i).attr('class','active-input');
-               $('.image_'+i).val(data.result);
+               $('input[name="image_'+i+'"]').addClass('active-input');
+               $('input[name="image_'+i+'"]').val(data.result);
            }
             var newimage = new Image();
             newimage.src = '\\tmp\\'+data.result;
@@ -221,8 +223,11 @@
         sendData.height  = $('#target').height();
         sendData.imageName  = $('.active-input').val();
         sendData.data  = $('#target').attr('data-cof');
-
+        console.log( $('.active-input').val());
         $.post('/admin/crop',sendData)
+            .done(function(e,data){
+              $('.active-input').parent().next().next().attr('src','/tmp/'+e)
+            });
 
     });
 

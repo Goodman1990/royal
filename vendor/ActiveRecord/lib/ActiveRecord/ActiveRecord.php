@@ -70,7 +70,9 @@ abstract class ActiveRecord extends AbstractTableGateway
                 //$answer = $this->$method($args);
                 if (count($answer) == 1) {
                     if ($this->asArray) {
-                        $result = array_pop($answer);
+//                        var_dump($answer);
+//                        exit;
+                        $result = $answer;
                     } else {
                         $this->scenario = 'update';
                         $result = $this->setAttributes(array_pop($answer), true);
@@ -243,7 +245,10 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     protected function findByAttributes($attributes)
     {
+//        var_dump($this->select($attributes)->toArray());
+//        exit;
         return $this->select($attributes)->toArray();
+
     }
 
     /**
@@ -292,8 +297,7 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     public function write()
     {
-        echo $this->getScenario();
-//        exit;
+
         if ($this->getScenario() == 'insert') {
 
             $status = $this->insert($this->getAttributes());

@@ -21,6 +21,7 @@
         <?php
             echo $this->headScript()
                 ->prependFile($this->basePath() . '/js/jquery.imgareaselect.js','text/javascript')
+                ->prependFile($this->basePath() . '/js/admin.js','text/javascript')
                 ->prependFile($this->basePath() . '/js/jquery.uploadify.js','text/javascript')
                 ->prependFile($this->basePath() . '/js/jquery.fileupload.js','text/javascript')
                 ->prependFile($this->basePath() . '/js/jquery.slides.min.js',   'text/javascript')
@@ -50,6 +51,7 @@
                  <div class="papirus">
                      <div class="content">
                          <div class="warpper-content">
+                             <div class="content-tab">
                              <?php if($page->tab){  ?>
 
                                 <?php foreach ($page->tab as $key) { ?>
@@ -64,6 +66,7 @@
                                  <?php } ?>
 
                             <?php } ?>
+                             </div>
                             <?php echo $this->content; ?>
                         </div>
                     </div>
