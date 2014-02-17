@@ -145,35 +145,33 @@ class generalHelper {
 
     }
 
-    public function copyFile($nameFile,$categoriesDir=null,$subCategoriesDir=null,$manufacturersDir=null) {
-
-        if($categoriesDir!=null  && $subCategoriesDir==null){
-             mkdir(TMP_DIR.'\\'.$categoriesDir.'\\'.$nameFile, 0, true);
-            rename(TMP_DIR.'\\'.$nameFile,SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir).'\\'.$nameFile );
-        }else {
-            mkdir(TMP_DIR.'\\'.$categoriesDir.'\\'.$nameFile, 0, true);
-        }
-        if($subCategoriesDir!=null  && $manufacturersDir==null){
-            mkdir(TMP_DIR.'\\'.$categoriesDir.'\\'.$subCategoriesDir, 0, true);
-            rename(TMP_DIR.'\\'.$nameFile,SITE_DIR.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$nameFile );
-        }else if(){
-
-        }
-        if(!file_exists(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir))){
-            mkdir(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir),0700);
-        }
-        if(!file_exists(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir))){
-            mkdir(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir),0766);
-        }
-        if(!file_exists(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir))){
-            mkdir(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir),0700);
-        }
+//    public function copyFile($nameFile,$categoriesDir=null,$subCategoriesDir=null,$manufacturersDir=null) {
+//
+//        if($categoriesDir!=null  && $subCategoriesDir==null){
+//             mkdir(TMP_DIR.'\\'.$categoriesDir.'\\'.$nameFile, 0, true);
+//            rename(TMP_DIR.'\\'.$nameFile,SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir).'\\'.$nameFile );
+//        }else {
+//            mkdir(TMP_DIR.'\\'.$categoriesDir.'\\'.$nameFile, 0, true);
+//        }
+//        if($subCategoriesDir!=null  && $manufacturersDir==null){
+//            mkdir(TMP_DIR.'\\'.$categoriesDir.'\\'.$subCategoriesDir, 0, true);
+//            rename(TMP_DIR.'\\'.$nameFile,SITE_DIR.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$nameFile );
+//        }
+//        if(!file_exists(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir))){
+//            mkdir(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir),0700);
+//        }
+//        if(!file_exists(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir))){
+//            mkdir(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir),0766);
+//        }
+//        if(!file_exists(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir))){
+//            mkdir(SITE_DIR.'\\'.$this->transliteration($categoriesDir).'\\'.$this->transliteration($subCategoriesDir).'\\'.$this->transliteration($manufacturersDir),0700);
+//        }
 
 
 
 
 
-    }
+//    }
 
 
 
