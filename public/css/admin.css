@@ -279,19 +279,23 @@ form.category .wrapper-input{
  cursor: move;
 }
 
-form.category input{
+ input{
     display: block;
+     height: inherit;width: inherit;
 }
-form.category textarea{
+ textarea{
     display: block;
+
 }
 
-form.category select{
+select{
     display: block;
+    height: inherit;width: inherit;
 }
 
 form button{
     display: block;
+
 }
 
 .content-tab .tab{
@@ -361,5 +365,37 @@ button.addProduct{
     display: inline-block;
     align-content: center;
 }
+
+#map{
+    width: 600px;
+    height: 400px;
+}
+
+.googleLabels{
+    color: white;
+    background-color: red;
+    font-family: "Lucida Grande", "Arial", sans-serif;
+    font-size: 10px;
+    text-align: center;
+    width: 10px;
+    white-space: nowrap;
+
+}
+
+.left-content.addProduct div.addres_buy,.left-content.addProduct textarea.video{
+    width: 500px;
+    height: auto;
+    display: block;
+
+}
+.left-content.addProduct textarea.addres_buy,.left-content.addProduct div.video{
+    width: 500px;
+    height: auto;
+    display: block;
+
+}
+
+
+
 
 

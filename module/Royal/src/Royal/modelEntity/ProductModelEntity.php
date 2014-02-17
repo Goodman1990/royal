@@ -29,14 +29,18 @@ class ProductModelEntity extends ActiveRecordModel {
     {
         return array(
             "id",
-"id_subcategories_product",
-"id_categories_product",
-"title",
-"description",
-"count",
-"date_create",
-"file",
-"image",
+        "id_subcategories_product",
+        "id_categories_product",
+        "id_manufacturers",
+        "title",
+        "description",
+        "price",
+        "addres_buy",
+        "video",
+        "count",
+        "date_create",
+        "file",
+        "image",
 
         );
     }

@@ -1,9 +1,12 @@
 <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="/css/jInputFile.css" />
 <script type="text/javascript" src="/js/ckeditor3/ckeditor.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
-<div class="left-content">
 
+<div class="left-content addProduct">
+<!--<iframe width="420" height="315" src="//www.youtube.com/embed/zccCTfN_b6Q" frameborder="0" allowfullscreen></iframe>-->
+<!--<div id="map"></div>-->
     <?php echo $this->form()->openTag($formAdd);?>
 
                 <div class="group-form">
@@ -13,52 +16,51 @@
                     <div class="wrapper-input id_manufacturers">
                         <?php echo $this->formRow($formAdd->get('id_manufacturers')) ?>
                     </div>
+                    <div class="wrapper-input price">
+                        <?php echo $this->formRow($formAdd->get('price')) ?>
+                    </div>
                     <div class="wrapper-input count">
                         <?php echo $this->formRow($formAdd->get('count')) ?>
-                    </div>
-                    <div class="wrapper-input id_subcategories_product">
-                        <?php echo $this->formRow($formAdd->get('id_subcategories_product')) ?>
                     </div>
                     <div class="wrapper-input description">
                         <?php echo $this->formRow($formAdd->get('description')->setAttribute('class','ckeditor')) ?>
                     </div>
-                    <div class="wrapper-input id_categories_product">
-                        <?php echo $this->formRow($formAdd->get('id_categories_product')) ?>
-                    </div>
-
                     <div class="wrapper-input image">
                         <?php echo $this->formRow($formAdd->get('image')) ?>
                     </div>
                     <div class="wrapper-input file">
                         <?php echo $this->formRow($formAdd->get('file')) ?>
                     </div>
+                    <div class="wrapper-input video">
+                        <?php echo $this->formRow($formAdd->get('video')) ?>
+                    </div>
+                    <div class="wrapper-input addres_buy">
+                        <?php echo $this->formRow($formAdd->get('addres_buy')) ?>
+                    </div>
+
+
+                    <?php echo $this->formRow($formAdd->get('id_categories_product')->setValue($categories_product_id)); ?>
+                    <?php echo $this->formRow($formAdd->get('id_subcategories_product')->setValue($id_subcategories_product)); ?>
+
                         <p>Добавить  изображение</p>
                     <hr>
                     <div class="wrapper-input image" >
                         <div class="wrapper-image">
-                            <img  width="100" height="100" class="prewiew" src=""/>
-                            <input  type="file" name="img-file" class="image-file" >
+                            <img  width="100" height="100" class="prewiew-defult" src=""/>
+                            <input  type="file" name="img-file[]" multiple class="image-file" >
                         </div>
-                        <div class="wrapper-image">
-                            <img  width="100" height="100" class="prewiew" src=""/>
-                            <input  type="file" name="img-file" class="image-file" >
-                        </div>
-
                     </div>
-
-
                     <p>Добавить  PDF</p>
                     <hr>
                     <div class="wrapper-input">
                         <input  type="file" name="pdf-file" id="file-pdf" >
-                        <div class="add-image">
-                            +
-                        </div>
                     </div>
 
 
         <button form="addProduct" class="addProduct" name="edit">Добавить продукт</button>
         <?php echo $this->form()->closeTag($formAdd);?>
+
+
 </div>
 
 <div class="container-crop" style="display:none;">
@@ -84,20 +86,20 @@
 </div>
 
 <script type="text/javascript">
-
+globalNameImage = [];
+globalK = 0;
+globalEvent = '';
 
     $(function() {
-
         $(document).ready(function(){
             $('.image-file').jInputFile();
+            $('#file-pdf').jInputFile();
         });
-//        $(document).ready(function(){
-//            $('.image-file').jInputFile();
-//        });
+
+
 
         $( "#sort-form " ).sortable({
             stop: function( event, ui) {
-
                 $('#sort-form .ech').each(function(i, elm){
                     $(elm).find('.number').val(i+1);
                 });
@@ -110,27 +112,150 @@
     $(function () {
 
         var image = $('input[type="file"]').fileupload({
-        url: '/admin/uploadImage',
-        dataType: 'json',
-        done: function (e, data) {
 
-           var i  = $(e.target).attr('data-iterator');
-           if(typeof i=='undefined'){
+            url: '/admin/multiUploadImage',
+            dataType: 'json',
+            multipart:true,
+            done: function (e, data) {
+                globalNameImage.push(data.result);
+                    if(data.originalFiles.length == globalNameImage.length){
+                        globalEvent = e;
+                        cropImage(globalNameImage)
+                    }
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress').css(
+                    'width',
+                    progress + '%'
+                );
+            }
 
-               $('input').removeClass('active-input');
-               $('.image').val(data.result);
-               $('.image').addClass('active-input');
 
-           }else{
+        });
+    });
 
-               $('input').removeClass('active-input');
-               $('input[name="image_'+i+'"]').addClass('active-input');
-               $('input[name="image_'+i+'"]').val(data.result);
-               globalNameInput = i;
+$(document).ready(function(){
 
-           }
+//           $.getJSON(
+//            'http://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent('Украина, г. Донецк, ул. Собинова 2а')+'&sensor=true',
+//            {
+//                address:'Украина, г. Донецк, ул. Собинова 2а',
+//                sensor:true
+//            },
+
+//         function(data){
+//
+//          lat = data.results[0].geometry.location.lat;
+//           lng = data.results[0].geometry.location.lng;
+//             var myOptions = {
+//                 center: new google.maps.LatLng(lat,lng),
+//                 zoom: 10,
+//                 mapTypeId: google.maps.MapTypeId.ROADMAP
+//             };
+//             var map = new google.maps.Map(document.getElementById("map"), myOptions);
+//
+//             var addressArray = new Array("Украина, г. Донецк, ул. Собинова 2а", "Украина г. Донецк, ул. Артема 1");
+//             var geocoder = new google.maps.Geocoder();
+//
+//             for (var i = 0; i < addressArray.length; i++) {
+//
+//                 geocoder.geocode( { 'address': addressArray[i]}, function(results, status) {
+//                     console.log(results[0].formatted_address);
+//                     if (status == google.maps.GeocoderStatus.OK) {
+//                         var marker = new google.maps.Marker({
+//                             map: map,
+//                             position: results[0].geometry.location,
+//                             title: results[0].formatted_address,
+//                             labelContent: "$425K",
+//                             labelAnchor: new google.maps.Point(22, 0),
+//                             labelClass: "googleLabels", // the CSS class for the label
+//                             labelStyle: {opacity: 0.75}
+//
+//                         });
+//
+//                         var iw = new google.maps.InfoWindow({
+//                             content: results[0].formatted_address
+//                         });
+//                         google.maps.event.addListener(marker, "click", function (e) { iw.open(map, this); });
+//                     } else {
+//                         alert("Geocode was not successful for the following reason: " + status);
+//                     }
+//                 });
+//             }
+//
+//            });
+});
+
+    $(document).on('click','#crop-image',function(){
+
+    var sendData = {};
+        sendData.x1 =  $('#x1').val();
+        sendData.x2 =  $('#x2').val();
+        sendData.y2 =  $('#y2').val();
+        sendData.y1 =  $('#y1').val();
+        sendData.w =  $('#w').val();
+        sendData.h =  $('#h').val();
+        sendData.width  = $('#target').width();
+        sendData.height  = $('#target').height();
+        sendData.imageName  = globalNameImage[globalK];
+        sendData.data  = $('#target').attr('data-cof');
+
+        $.post('/admin/crop',sendData)
+            .done(function(e,data){
+                var cloneElement = $(".prewiew-defult").clone();
+                $(cloneElement).attr('src',"/tmp/"+e);
+                $(cloneElement).attr('class',"prewiew");
+                $(cloneElement).css({margin:'5px',border:'solid 2px black'});
+                $( ".container-crop" ).dialog( "close" );
+
+                if(($('input.image').val()==''){
+                    $('input.image').val(globalNameImage[globalK]);
+                }else{
+                    $('input.image').val($('input.image').val()+','+globalNameImage[globalK]);
+                }
+
+                $('#target').imgAreaSelect({remove: true});
+                globalK++;
+                $('.wrapper-input.image').append(cloneElement);
+                if(globalLength>globalK){
+                    cropImage(globalNameImage)
+                }else{
+
+                    globalNameImage = [];
+                    globalK = 0;
+                    globalEvent ='' ;
+                    globalLength = '';
+                }
+
+            });
+
+    });
+
+
+
+    function cropImage(name){
+
+    globalLength = name.length;
+
+            var i  = $(globalEvent.target).attr('data-iterator');
+
+            if(typeof i=='undefined'){
+
+                $('input').removeClass('active-input');
+//                $('.image').val(name[globalK]);
+                $('.image').addClass('active-input');
+
+            }else{
+
+                $('input').removeClass('active-input');
+                $('input[name="image_'+i+'"]').addClass('active-input');
+                $('input[name="image_'+i+'"]').val(name[globalK]);
+                globalNameInput = i;
+
+            }
             var newimage = new Image();
-            newimage.src = '\\tmp\\'+data.result;
+            newimage.src = '\\tmp\\'+name[globalK];
             newimage.onload = function(){
 
                 var width  =   this.naturalWidth;
@@ -144,20 +269,20 @@
                 heightScreen = screen.width;
                 widthScreen = screen.height;
                 if ((heightScreen < height) || (widthScreen < width)) {
-                   flag = 1;
+                    flag = 1;
                     var  i = 0;
                     while (1) {
-                         n1 =  width /  height;
-                         n2 =  height /  width;
+                        n1 =  width /  height;
+                        n2 =  height /  width;
                         if ( n1 > 1) {
-                             cof =  n1;
+                            cof =  n1;
                         } else {
-                             cof =  n2;
+                            cof =  n2;
                         }
 
                         if (( heightScreen <  height) || ( widthScreen <  width)) {
-                             width =  width /  cof;
-                             height =  height /  cof;
+                            width =  width /  cof;
+                            height =  height /  cof;
 
                         } else {
 
@@ -172,81 +297,44 @@
 
             };
 
-             $(".container-crop").dialog(({
+            $(".container-crop").dialog(({
                 height: "auto",
                 width: 'auto',
                 dialogClass:'uploader',
-                closeOnEscape: false, draggable: false, zIndex: "10", position: "left top",
-                close: function(ev, ui) { $('#target').imgAreaSelect({remove: true});  $(this).close();  }
+                closeOnEscape: false, draggable: false, zIndex: "100", position: "left top"
+    //                close: function(ev, ui) { $('#target').imgAreaSelect({remove: true});  $(this).close();  }
             }));
 
-            $('#target').imgAreaSelect({
-                x1: 0, y1: 0, x2: 50, y2: 50,
-                aspectRatio: '1:1',
-                handles: true,
-                zIndex: 1000000,
-                minHeight: 50,
-                minWidth: 50,
-                onInit: function(img, selection) {
 
-                    $("#x1").val(0);
-                    $("#y1").val(0);
-                    $("#x2").val(50);
-                    $("#y2").val(50);
-                    $("#w").val(50);
-                    $("#h").val(50);
-                },
-                onSelectEnd: function(img, selection) {
 
-                    $("#x1").val(selection.x1);
-                    $("#y1").val(selection.y1);
-                    $("#x2").val(selection.x2);
-                    $("#y2").val(selection.y2);
-                    $("#w").val(selection.width);
-                    $("#h").val(selection.height);
+        $('#target').imgAreaSelect({
+            x1: 0, y1: 0, x2: 50, y2: 50,
+            aspectRatio: '1:1',
+            handles: true,
+            zIndex: 1000000,
+            minHeight: 50,
+            minWidth: 50,
+            onInit: function(img, selection) {
 
-                }
-            });
-        },
-        progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('.progress').css(
-                'width',
-                progress + '%'
-            );
-        },
-        complete: function (e, data) {
+                $("#x1").val(0);
+                $("#y1").val(0);
+                $("#x2").val(50);
+                $("#y2").val(50);
+                $("#w").val(50);
+                $("#h").val(50);
+            },
+            onSelectEnd: function(img, selection) {
 
-        }
+                $("#x1").val(selection.x1);
+                $("#y1").val(selection.y1);
+                $("#x2").val(selection.x2);
+                $("#y2").val(selection.y2);
+                $("#w").val(selection.width);
+                $("#h").val(selection.height);
 
+            }
         });
-    });
-    $(document).on('click','#crop-image',function(){
-
-    var sendData = {};
-        sendData.x1 =  $('#x1').val();
-        sendData.x2 =  $('#x2').val();
-        sendData.y2 =  $('#y2').val();
-        sendData.y1 =  $('#y1').val();
-        sendData.w =  $('#w').val();
-        sendData.h =  $('#h').val();
-        sendData.width  = $('#target').width();
-        sendData.height  = $('#target').height();
-        sendData.imageName  = $('.active-input').val();
-        sendData.data  = $('#target').attr('data-cof');
-        $.post('/admin/crop',sendData)
-            .done(function(e,data){
-                if(typeof globalNameInput=="undefined"){
-                    $('.prewiew').attr('src',"/tmp/"+e);
-                }else{
-                    $('.prewiew_'+globalNameInput).attr('src',"/tmp/"+e);
-                }
-            });
-
-    });
-
-
-
+        }
 
 
 

@@ -280,6 +280,7 @@ class adminController extends AbstractActionController
         )));
         $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
 
+
        
         $this->Page->addTab($subcategoriesData,$id_subcategories_product,true);
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
@@ -295,27 +296,32 @@ class adminController extends AbstractActionController
             $id_subcategories_product = $subcategoriesData[0]['id'];
         }
 
+       $categories =    array_pop(\Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByPk($id_subcategories_product));
         $manufacturers = $ManufacturersModel->findByAttributes(array(
             'id_subcategories_product'=>$id_subcategories_product
         ));
 
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
-;
+
         $formAddProduct->setDataForm($rules);
         if ($this->request->isPost()) {
             $Post = $this->request->getPost()->toArray();
             $formAddProduct->setData($Post);
             if($formAddProduct->isValid()){
 
-
+                $this->validData= $formAddProduct->getData();
+                unset($this->validData['id']);
+                echo '<pre>';
+                var_dump($this->validData);
+               \Royal\Models\ProductModel::model()->setAttributes($this->validData)->save();
+                exit;
             }
         }
-
-
-        
-
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
+            'id_subcategories_product'=>$id_subcategories_product,
+            'categories_product_id'=>$categories['id']
+
 
         ));
     }
@@ -364,4 +370,44 @@ class adminController extends AbstractActionController
         }
         exit;
     }
+
+    public function multiUploadImageAction() {
+
+
+
+        $this->Page = new Page();
+        $this->layout()->setVariables(array('page'=>$this->Page));
+        $request =new Request();
+        if($request->isPost()){
+//            var_dump($request->getFiles());
+//            exit;
+            $httpadapter = new \Zend\File\Transfer\Adapter\Http();
+            $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
+            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
+            $httpadapter->setValidators(array($filesize,$ext));
+
+            if($httpadapter->isValid()) {
+//
+                $httpadapter->setDestination(TMP_DIR);
+
+                if($httpadapter->receive()) {
+
+                    $filterRaname = new \Zend\Filter\File\Rename(array(
+                        "randomize" => true,
+                    ));
+
+                    echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
+                    exit;
+
+                }else{
+
+                    exit;
+                }
+
+            }
+            exit;
+        }
+        exit;
+    }
+
 }
