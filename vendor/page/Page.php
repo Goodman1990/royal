@@ -51,10 +51,12 @@ class Page
                 $data[$i]['active'] = true;
                 $this->activeTabTitle = $data[$i]['title'];
             }
+            if(!empty($this->paramRoute)){
+                $data[$i]['link'] = '/'.$this->controller.'/'.$this->action.'/'.$this->paramRoute[0].'/'.$data[$i]['id'];
+            }else{
+                $data[$i]['link'] = '/'.$this->controller.'/'.$this->action.'/'.$data[$i]['id'];
+            }
 
-            $data[$i]['link'] = '/'.$this->controller.'/'.$this->action.'/'.$this->paramRoute[0].'/'.$data[$i]['id'];
-//            var_dump($data[$i]['link']);
-//            exit;
         }
         return $data;
     }

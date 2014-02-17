@@ -4,16 +4,16 @@
     <div id="sort-form">
     <?php  for($i=0;$i<$formEdit->countInput;$i++){ ?>
         <div class="ech">
-            <div class="wrapper-input">
+            <div class="wrapper-input title">
                 <?php echo $this->formRow($formEdit->get('title_'.$i)->setAtributes('class','title')) ?>
             </div>
-            <div class="wrapper-input">
+            <div class="wrapper-input visible">
                 <?php echo $this->formRow($formEdit->get('visible_'.$i)->setAtributes('class','visible')) ?>
             </div>
-            <div class="wrapper-input">
+            <div class="wrapper-input number">
                 <?php echo $this->formRow($formEdit->get('number_'.$i)->setAttribute('class','number')) ?>
             </div>
-            <div class="wrapper-input">
+            <div class="wrapper-input id">
             <?php echo $this->formRow($formEdit->get('id_'.$i)->setAtributes('class','id')) ?>
             </div>
             <hr>

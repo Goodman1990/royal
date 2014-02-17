@@ -9,7 +9,7 @@
                     <?php foreach ($this->pages->pages  as $this->pages){ ?>
 
                         <li <?php  if(!$this->pages->visible) echo 'style="display:none;';?> >
-                            <a href="<?php echo  $this->pages->uri ?>" ><b><?php echo $this->pages->label  ?></b></a>
+                            <a href="<?php echo  $this->pages->uri ?>" ><b <?php  if($this->pages->isActive()){ echo 'class="sub-row active"'; } ?>><?php echo $this->pages->label  ?></b></a>
                         </li>
                     <?php } ?>
                 </ul>

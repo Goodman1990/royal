@@ -64,7 +64,7 @@ class GetNavigationHelper extends AbstractHelper {
 
         return array(
             array(
-                'label' => 'категории',
+                'label' => 'Категории',
                 'uri'=>'/admin/editCategory/product',
                 'resource'=>'1',
                 'visible' =>1,
@@ -96,33 +96,14 @@ class GetNavigationHelper extends AbstractHelper {
                 ),
             ),
             array(
-                'label' => 'категории',
-                'uri'=>'/admin/editCategory/product',
-                'resource'=>'1',
+                'label' => 'Продукт',
+                'uri'=>'/admin/addProduct/',
+                'resource'=>'2',
                 'visible' =>1,
                 'pages'=>array(
-                    array( 'label' => 'Тывфывовара',
-                        'uri'=>'/admin/editCategory/product',
-                        'resource'=>'1.1',
-                        'visible' =>1,
-                    ),
-
-                    array(
-                        'label' => 'Странфывфывфыц',
-                        'uri'=>'/admin/editCategory/page',
-                        'resource'=>'1.2',
-                        'visible' =>1,
-                    ),
-                    array(
-                        'label' => 'Под кфывфывфыатегории',
-                        'uri'=>'/admin/editSubcategories/subcategories',
-                        'resource'=>'1.3',
-                        'visible' =>1,
-                    ),
-                    array(
-                        'label' => 'Произвфывфывфыодители',
-                        'uri'=>'/admin/editSubcategories/manufacturers',
-                        'resource'=>'1.4',
+                    array( 'label' => 'Добавить продукт',
+                        'uri'=>'/admin/addProduct',
+                        'resource'=>'2.1',
                         'visible' =>1,
                     ),
                 ),

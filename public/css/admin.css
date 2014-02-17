@@ -175,8 +175,9 @@ button {
             }
 
 
-            #nav .sub li a:hover, #nav .tab a .sub li a:hover, #nav .tab li .sub li a:hover{
-                color:#fff; /* Цвет шрифта активного меню нижнего уровня */
+            #nav .sub li a:hover, #nav .tab a .sub li a:hover, #nav .tab li .sub li a:hover,
+            .tab .sub-row.active{
+                color:#fff;
                 text-decoration:underline;
             }
 
@@ -189,6 +190,7 @@ button {
                 left:0;
                 padding:0;
                 z-index:100;
+                height: 60px;
             }
             #nav .sub,{
                 margin:0;
@@ -220,55 +222,6 @@ button {
                 line-height:35px;
             }
 
-		/*.header-menu-bottom ul li,.header-menu-top ul li{*/
-			/*height: 37px;*/
-			/*margin-right: 44px;*/
-			/*display: inline-block;*/
-			/*color: white;*/
-			/*font-size: 18px;*/
-			/*font-family: 'agbengaly';*/
-		/*}*/
-
-		/*.header-menu-bottom ul,.header-menu-top ul{*/
-			/*display: block;*/
-			/*margin-left: auto;*/
-			/*margin-right: auto;*/
-			/*margin-top: 20px; */
-			/*width: 53%;*/
-		/*}*/
-		/*.header-menu-bottom ul li:last-child , .header-menu-top ul li:last-child{*/
-			/*margin-right: 0;*/
-		/*}*/
-		/*.header-menu-bottom ul li a, .header-menu-top ul li a{*/
-			/*text-decoration: none;*/
-			/*color: white;*/
-		/*}*/
-
-		/*.header-menu-bottom ul li{*/
-			/*height: 37px;*/
-			/*margin-right: 7%;*/
-			/*display: inline-block;*/
-			/*color: white;*/
-			/*font-size: 14px;*/
-			/*font-family: 'agbengaly';*/
-			/*text-decoration: underline*/
-		/*}*/
-
-		/*.header-menu-bottom ul{*/
-			/*width: 64%;*/
-		/*}*/
-		/*.header-menu-bottom ul li:hover,.active-bottom{*/
-			/*cursor: pointer;*/
-			/*text-decoration:none !important;*/
-		/*}*/
-
-		/*.header-menu-top ul li:hover, .active-top{*/
-			/*cursor: pointer;*/
-			/*background-image: url(../image/hover-header-menu.png);*/
-			/*background-repeat:no-repeat;*/
-			/*background-position: center;*/
-			/*background-size: 100%;*/
-		/*}*/
 	.papirus{
 		height: auto;
 	}
@@ -286,7 +239,7 @@ button {
 		    color: #293757;
 			font-family: 'agopus';
 			font-size: 14px;
-			width: 65%;
+			width: 69%;
 			position: relative;
 			margin: 0 auto;
 			background-image: url(../image/papirus.png);
@@ -317,481 +270,23 @@ button {
 		margin: 0 auto;
 		width: 65%;
 	}
-/* All Smartphones in portrait and landscape ----------- */
-/*@media only */
-/*screen */
-/*and (min-width :380px ) */
-/*and (max-width :780px ),*/
-/*screen*/
-/*and (min-device-width :380px ) */
-/*and (max-device-width :780px )*/
-/*and (orientation : landscape),*/
-/*screen*/
-/*and (min-device-width :380px ) */
-/*and (max-device-width :780px )*/
-/*and (orientation : portrait) {*/
-/* YOUR STYLE GOES HERE */
-	/*.right-content{*/
-		/*float: none;		*/
-		/*width: 90%;*/
-		/*height: auto;*/
-		/*min-height: 0;*/
-		/*margin: 0 auto;*/
-	/*}*/
 
-	/*.warpper-uzor-top{*/
-	    /*height: 27%;*/
-		/*max-height: 139px;*/
-	/*}*/
-
-	/*.left-content{*/
-		/*float: none;*/
-		/*width: 94%;*/
-		/*padding: 3%;*/
-	/*}*/
-	/*.warpper-content{*/
-		/*overflow: hidden;*/
-	/*}*/
-			/**/
-	/*.pero{*/
-		/*display: none;*/
-	/*}*/
-	/*.contact{*/
-		/*margin :0;*/
-		/*margin-right:11%; */
-		/*display: inline-block;*/
-		/*width: 55%;*/
-		/*list-style: none;*/
-		/*color: #0b1c40;*/
-		/*text-decoration: none;*/
-	/*}*/
-	/*.uzor{*/
-		/*display: none;*/
-	/*}*/
-	/*.portfolio-blok{*/
-		/*display: inline-block;*/
-		/*margin-left: 20%;*/
-		/*width: 32%;*/
-		/*margin: 0;*/
-	/*}*/
-	/*.portfollio{*/
-		/*width: 100%;*/
-		/*margin: 0 ;*/
-		/*height: auto;*/
-	/*}*/
-	/*.work{*/
-		/*width: 100%;*/
-		/*font-family: 'agopus';*/
-		/*font-size: 20px;*/
-		/*display: block;*/
-		/*text-align: center;*/
-		/*margin: 0;*/
-	/*}*/
-	/*.buttot-show{*/
-
-		/*width: 46%;*/
-		/*min-width: 29px;*/
-		/*max-width: 70px;*/
-		/*padding: 4%;*/
-		/*height: auto;*/
-		/*display: block;*/
-		/*text-decoration: none;*/
-		/*color: #293757;*/
-		/*font-size: 12px;*/
-		/*box-shadow: 0 0 5px rgba(0,0,0,0.5);*/
-	/*}*/
-					/**/
-/*}*/
-
-/*@media only */
-/*screen*/
-/*and (max-width: 379px),*/
-/*screen */
-/*and (max-device-width : 379px){*/
-	/*.right-content{*/
-		/*min-height: 0;*/
-		/*float: none;		*/
-		/*width: 90%;*/
-		/*margin: 0 ;*/
-		/*margin-left: 10px;*/
-		/*height: auto; */
-
-	/*}*/
-	/*.left-content{*/
-		/*float: none;*/
-		/*width: 94%;*/
-		/*padding: 3%;*/
-	/*}*/
-	/*.warpper-uzor-top{*/
-	    /*height: 14%;*/
-		/*max-height: 139px;*/
-	/*}*/
-	/*.warpper-content{*/
-		/*overflow: hidden;*/
-	/*}*/
-			/**/
-	/*.pero{*/
-		/*display: none;*/
-		/**/
-	/*}*/
-	/*.contact{*/
-		/*width: 100%;	*/
-		/*margin: 0;*/
-		/*display: block;*/
-		/**/
-		/*list-style: none;*/
-		/*color: #0b1c40;*/
-		/*text-decoration: none;*/
-		/**/
-	/*}		*/
-	/*.uzor{*/
-		/*display: none;*/
-	/*}*/
-	/*.portfolio-blok{*/
-		/*display: none;*/
-	/*}*/
-	/*.portfollio{*/
-		/*width: 100%;*/
-		/*margin: 0 ;*/
-		/*height: auto;*/
-	/*}*/
-	/*.work{*/
-		/*width: 100%;*/
-		/*font-family: 'agopus';*/
-		/*font-size: 20px;*/
-		/*display: block;*/
-		/*text-align: center;*/
-		/*margin: 0;*/
-	/*}*/
-	/*.buttot-show{*/
-		/*width: 90%;*/
-		/*max-width: 70px;*/
-		/*height: auto;*/
-		/*display: block;*/
-		/*text-decoration: none;*/
-		/*color: #293757;*/
-		/*font-size: 12px;*/
-		/*box-shadow: 0 0 5px rgba(0,0,0,0.5); */
-	/*}*/
-
-/*}*/
-
-/*@media only 
-screen 
-and (min-device-width :380px ) 
-and (max-device-width :780px ) {
-
-	.right-content{
-		float: none;		
-		width: 90%;
-		height: auto;
-		min-height: 0;
-		margin: 0 auto;
-	}
-
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					margin :0;
-					margin-right:11%; 
-					display: inline-block;
-					width: 55%;
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: inline-block;
-					margin-left: 20%;
-					width: 32%;
-					margin: 0;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-					
-}*/
-
-
-
-/*@media only screen
-and (max-device-width : 379px) {
-.right-content{
-		min-height: 0;
-		float: none;		
-		width: 90%;
-		margin: 0 ;
-		margin-left: 10px;
-		height: auto; 
-
-	}
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					width: 100%;	
-					margin: 0;
-					display: block;
-					
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: none;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-}*/
-
-
-
-/* iPad in landscape----------- */
-/*@media only screen 
-and (min-device-width :380px ) 
-and (max-device-width :780px ) 
-and (orientation : landscape) {
-.right-content{
-		float: none;		
-		width: 90%;
-		height: auto;
-		min-height: 0;
-		margin: 0 auto;
-	}
-
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					margin :0;
-					margin-right:11%; 
-					display: inline-block;
-					width: 55%;
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: inline-block;
-					margin-left: 20%;
-					width: 32%;
-					margin: 0;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-}*/
-
-/* iPad in portrait----------- */
-/*@media only screen 
-and (min-device-width :380px ) 
-and (max-device-width :780px )
-and (orientation : portrait){
-
-.right-content{
-		float: none;		
-		width: 90%;
-		height: auto;
-		min-height: 0;
-		margin: 0 auto;
-	}
-
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					margin :0;
-					margin-right:11%; 
-					display: inline-block;
-					width: 55%;
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: inline-block;
-					margin-left: 20%;
-					width: 32%;
-					margin: 0;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-}*/
 form.category .wrapper-input{
     display: inline-block;
     vertical-align: top;
 }
 .ech{
  cursor: move;
-
 }
 
 form.category input{
+    display: block;
+}
+form.category textarea{
+    display: block;
+}
+
+form.category select{
     display: block;
 }
 
@@ -813,19 +308,58 @@ a{
     border-bottom: 1px dotted;
     text-decoration: none;
 }
+.wrapper-input ul{
+    width: inherit;
+    height: auto;
+    background-color: red;
+    color:#ffffff;
+    padding: 8px;
+    font-size: 12px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    display: block;
+    opacity: 0.8;
+}
 
-/*form[name='editCategory'] label.number , form[name='editCategory'] label.title {*/
+.wrapper-input.title{
+    width: 155px;
+}
+.wrapper-input.visible{
+    width: 70px;
+}
+.wrapper-input.number{
+    width: 127px;
+}
+input {
+    width: inherit;
+}
 
-    /*display: block;*/
+.wrapper-input li {
+    list-style: none;
+}
+form.addProduct .wrapper-input{
+    margin-top: 10px;
+    margin-left: 5px
+}
 
-/*}*/
+form.addProduct p{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.add-image{
+    font-size: 20px;
+    font-weight: bold;
+    color: green;
+    cursor: pointer;
+}
 
-/*form[name='editCategory'] input.number{*/
-
-    /*width: 20px;*/
-
-/*}*/
-
-/* All Smartphones in landscape ----------- */
+button.addProduct{
+    margin-top: 20px;
+}
+.wrapper-image{
+    display: inline-block;
+    align-content: center;
+}
 
 

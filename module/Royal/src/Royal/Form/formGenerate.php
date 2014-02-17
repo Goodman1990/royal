@@ -27,8 +27,10 @@ class formGenerate extends Form
     protected $translatorForm;
     protected $captcha;
     public $countInput;
-    protected $dataForSetForm;
+    public $dataForSetForm;
     public $classElement;
+    public $elementInfo;
+    public $selectInfo;
 
     public function __construct($name,$classForm,$model=null,$typeLabel = null) {
 
@@ -38,13 +40,17 @@ class formGenerate extends Form
         $this->setAttribute('class', $classForm);
         $this->inputFilter = new InputFilter();
         $this->factorys = new InputFactory();
-        if($model){
+        if($model!=null){
+
             $this->setDataForm($model);
         }
     }
     public function setDataForm($model){
-
+            if(is_object($model)){
             $this->inData=$model->rules();
+            }else{
+                $this->inData = $model;
+            }
             foreach ($this->inData as $key => $value) {
                 $this->key = $key;
                 $this->value = $value;
@@ -77,6 +83,7 @@ class formGenerate extends Form
         for($i=0;$i<$this->countInput;$i++){
             foreach ($this->inData as $key => $value) {
                 $this->classElement = $key;
+                $this->elementInfo[$key]['class'] = $key;
                 $this->key = $key.'_'.$i;
                 $this->value = $value;
                 $this->setForm();
@@ -281,27 +288,36 @@ class formGenerate extends Form
 
             $this->getCaptchaParam();
 
+        }else if(isset($this->value['typeInput']) && $this->value['typeInput'] == 'select'){
+
+            $this->getSelectElement();
+
         }else{
 
-                $this->element = array(
-                    'name' => $this->key,
-                    'type' => isset($this->value['typeInput']) ? $this->value['typeInput'] : 'text',
-                    'attributes' => array(
-                        'id' => isset($this->value['id'])?$this->value['id']:'',
+            $this->element = array(
+                'name' => $this->key,
+                'type' => isset($this->value['typeInput']) ? $this->value['typeInput'] : 'text',
+                'attributes' => array(
+                    'id' => isset($this->value['id'])?$this->value['id']:'',
+                    'class'=>$this->classElement,
+                    'placeholder' =>isset($this->value['placeholder'])?$this->value['placeholder']:'',
+                    'autocomplete'=>"On"
+                ),
+                'options' => array(
+                    'label' =>$this->label?$this->label:'',
+                    'label_attributes' => array(
                         'class'=>$this->classElement,
-                        'placeholder' =>isset($this->value['placeholder'])?$this->value['placeholder']:'',
-                        'autocomplete'=>"On"
                     ),
-                    'options' => array(
-                        'label' =>$this->label?$this->label:'',
-                        'label_attributes' => array(
-                            'class'=>$this->classElement,
-                        ),
-                    ),
-                );
+                ),
+            );
 
+        }
 
-            }
+    }
+
+    public function setSelectParam($data) {
+
+        $this->getSelectElement();
 
     }
 
@@ -564,6 +580,25 @@ class formGenerate extends Form
             return $this->get($name)->getValue();
         }
         return;
+    }
+
+
+    public function getSelectElement() {
+
+        $infoSelect = array();
+        foreach ($this->value['selectInfo'] as $key) {
+            $infoSelect[$key['id']] = $key['title'];
+        }
+        $this->element = array(
+            'type' => $this->value['typeInput'],
+            'name' => $this->key,
+            'options' => array(
+                'label' => $this->value['setLabel'],
+                'empty_option' => 'Выберете категорию',
+                'value_options' =>$infoSelect,
+            )
+        );
+
     }
 
 

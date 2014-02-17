@@ -47,10 +47,7 @@ class adminController extends AbstractActionController
 
         $this->Page->controller = $route['__CONTROLLER__'];
         $this->Page->action = $route['action'];
-        $routeParam = explode('/',$this->getRequest()->getUri()->toString());
-            for($i=5;$i<count($routeParam);$i++){
-                $this->Page->paramRoute[] = $routeParam[$i];
-            }
+
 
         $this->layout('layout/layoutAdmin');
 
@@ -64,9 +61,17 @@ class adminController extends AbstractActionController
         return  $route = $this->getEvent()->getRouteMatch()->getParams();
     }
 
+    private function getRouteParam() {
+        $routeParam = explode('/',$this->getRequest()->getUri()->toString());
+        for($i=5;$i<count($routeParam);$i++){
+            $this->Page->paramRoute[] =  $routeParam[$i];
+        }
+    }
+
     public function editCategoryAction()
     {
         $id_page = $this->params()->fromRoute('param1', 0);
+        $this->getRouteParam();
 
         if($id_page=='page'){
 
@@ -118,6 +123,7 @@ class adminController extends AbstractActionController
                         $validData['number_'.$k] = $this->validData['number_'.$i];
                         $validData['visible_'.$k] = $this->validData['visible_'.$i];
                         $formEdit->setData($validData);
+
                     }
                 }
 
@@ -162,6 +168,7 @@ class adminController extends AbstractActionController
 
 
         $page = $this->params()->fromRoute('param1', 0);
+        $this->getRouteParam();
 
         if($page=='subcategories'){
 
@@ -184,7 +191,6 @@ class adminController extends AbstractActionController
             $rowTable = 'id_subcategories_product';
 
         }
-
 
         $id_page= $this->params()->fromRoute('param2', 0);
         if($id_page==0){
@@ -220,8 +226,7 @@ class adminController extends AbstractActionController
                                 'visible'=>$this->validData['visible_' . $i],
                                 'image'=>$this->validData['image_' . $i]
                             ))->save();
-                       
-                        $k = $this->validData['number_'.$i]-1;
+
                     }
 
                     $subcategoriesData = $model::model(array('asArray'=>true))
@@ -266,29 +271,65 @@ class adminController extends AbstractActionController
 
     }
 
-//    private  function getController() {
-//        $route = $this->getEvent()->getRouteMatch()->getParams();
-//        return $route['__CONTROLLER__'];
-//    }
-//
-//    private  function getAction() {
-//        $route =  $this->getEvent()->getRouteMatch()->getParams();
-//        return $route['action'];
-//    }
+    public function addProductAction() {
 
+        $id_subcategories_product = $this->params()->fromRoute('param1', 0);
+        $this->Page->setActivePage(array('admin'=>array(
+            'tab'=>'2',
+            'sub'=>'2.1'
+        )));
+        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
+
+       
+        $this->Page->addTab($subcategoriesData,$id_subcategories_product,true);
+        $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
+
+
+
+        $formAddProduct= new formGenerate('addProduct', 'category addProduct');
+        $formAddColor= new formGenerate('addColor', 'category addProduct color');
+        $ProductModel = \Royal\Models\ProductModel::model(array('asArray'=>true));
+        $rules =  $ProductModel->rules();
+
+        if($id_subcategories_product==0){
+            $id_subcategories_product = $subcategoriesData[0]['id'];
+        }
+
+        $manufacturers = $ManufacturersModel->findByAttributes(array(
+            'id_subcategories_product'=>$id_subcategories_product
+        ));
+
+        $rules['id_manufacturers']['selectInfo'] = $manufacturers;
+;
+        $formAddProduct->setDataForm($rules);
+        if ($this->request->isPost()) {
+            $Post = $this->request->getPost()->toArray();
+            $formAddProduct->setData($Post);
+            if($formAddProduct->isValid()){
+
+
+            }
+        }
+
+
+        
+
+        return new ViewModel(array(
+            'formAdd'=>$formAddProduct,
+
+        ));
+    }
 
     public function cropAction() {
 
-
         $dataImage = $this->getRequest()->getPost()->toArray();
-//        var_dump(file_exists('public/tmp/'.$dataImage['imageName']));
-//        exit;
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
         $imageHelper->resize($dataImage['width'],$dataImage['height']);
         $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
         $imageHelper->save();
         echo $dataImage['imageName'];
         exit;
+
     }
 
     public function uploadImageAction() {
@@ -317,12 +358,9 @@ class adminController extends AbstractActionController
                 }else{
 
                     exit;
-
                 }
             }
-
             exit;
-
         }
         exit;
     }

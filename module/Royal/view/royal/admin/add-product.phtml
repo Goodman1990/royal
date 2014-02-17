@@ -1,0 +1,318 @@
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/css/jInputFile.css" />
+<script type="text/javascript" src="/js/ckeditor3/ckeditor.js"></script>
+
+<div class="left-content">
+
+    <?php echo $this->form()->openTag($formAdd);?>
+
+                <div class="group-form">
+                    <div class="wrapper-input title">
+                        <?php echo $this->formRow($formAdd->get('title')) ?>
+                    </div>
+                    <div class="wrapper-input id_manufacturers">
+                        <?php echo $this->formRow($formAdd->get('id_manufacturers')) ?>
+                    </div>
+                    <div class="wrapper-input count">
+                        <?php echo $this->formRow($formAdd->get('count')) ?>
+                    </div>
+                    <div class="wrapper-input id_subcategories_product">
+                        <?php echo $this->formRow($formAdd->get('id_subcategories_product')) ?>
+                    </div>
+                    <div class="wrapper-input description">
+                        <?php echo $this->formRow($formAdd->get('description')->setAttribute('class','ckeditor')) ?>
+                    </div>
+                    <div class="wrapper-input id_categories_product">
+                        <?php echo $this->formRow($formAdd->get('id_categories_product')) ?>
+                    </div>
+
+                    <div class="wrapper-input image">
+                        <?php echo $this->formRow($formAdd->get('image')) ?>
+                    </div>
+                    <div class="wrapper-input file">
+                        <?php echo $this->formRow($formAdd->get('file')) ?>
+                    </div>
+                        <p>Добавить  изображение</p>
+                    <hr>
+                    <div class="wrapper-input image" >
+                        <div class="wrapper-image">
+                            <img  width="100" height="100" class="prewiew" src=""/>
+                            <input  type="file" name="img-file" class="image-file" >
+                        </div>
+                        <div class="wrapper-image">
+                            <img  width="100" height="100" class="prewiew" src=""/>
+                            <input  type="file" name="img-file" class="image-file" >
+                        </div>
+
+                    </div>
+
+
+                    <p>Добавить  PDF</p>
+                    <hr>
+                    <div class="wrapper-input">
+                        <input  type="file" name="pdf-file" id="file-pdf" >
+                        <div class="add-image">
+                            +
+                        </div>
+                    </div>
+
+
+        <button form="addProduct" class="addProduct" name="edit">Добавить продукт</button>
+        <?php echo $this->form()->closeTag($formAdd);?>
+</div>
+
+<div class="container-crop" style="display:none;">
+    <div class="row">
+        <div class="span12">
+            <div class="jc-demo-box">
+                <img src="" id="target" alt="crop wait" />
+                <div class="clearfix"></div>
+                <form id="coords" class="coords" onsubmit="return false;" >
+                    <div class="inline-labels">
+                        <input  type="hidden" size="4" id="x1" name="x1" />
+                        <input  type="hidden" size="4" id="y1" name="y1" />
+                        <input  type="hidden" size="4" id="x2" name="x2" />
+                        <input  type="hidden" size="4" id="y2" name="y2" />
+                        <input  type="hidden" size="4" id="w" name="w" />
+                        <input  type="hidden" size="4" id="h" name="h" />
+                    </div>
+                    <button id="crop-image"  class="green">загрузить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    $(function() {
+
+        $(document).ready(function(){
+            $('.image-file').jInputFile();
+        });
+//        $(document).ready(function(){
+//            $('.image-file').jInputFile();
+//        });
+
+        $( "#sort-form " ).sortable({
+            stop: function( event, ui) {
+
+                $('#sort-form .ech').each(function(i, elm){
+                    $(elm).find('.number').val(i+1);
+                });
+
+            }
+        });
+        $( "#sort-form" ).disableSelection();
+    });
+
+    $(function () {
+
+        var image = $('input[type="file"]').fileupload({
+        url: '/admin/uploadImage',
+        dataType: 'json',
+        done: function (e, data) {
+
+           var i  = $(e.target).attr('data-iterator');
+           if(typeof i=='undefined'){
+
+               $('input').removeClass('active-input');
+               $('.image').val(data.result);
+               $('.image').addClass('active-input');
+
+           }else{
+
+               $('input').removeClass('active-input');
+               $('input[name="image_'+i+'"]').addClass('active-input');
+               $('input[name="image_'+i+'"]').val(data.result);
+               globalNameInput = i;
+
+           }
+            var newimage = new Image();
+            newimage.src = '\\tmp\\'+data.result;
+            newimage.onload = function(){
+
+                var width  =   this.naturalWidth;
+                var height =   this.naturalHeight;
+                var flag = false;
+                var heightScreen;
+                var widthScreen;
+                var n1;
+                var n2;
+                var cof;
+                heightScreen = screen.width;
+                widthScreen = screen.height;
+                if ((heightScreen < height) || (widthScreen < width)) {
+                   flag = 1;
+                    var  i = 0;
+                    while (1) {
+                         n1 =  width /  height;
+                         n2 =  height /  width;
+                        if ( n1 > 1) {
+                             cof =  n1;
+                        } else {
+                             cof =  n2;
+                        }
+
+                        if (( heightScreen <  height) || ( widthScreen <  width)) {
+                             width =  width /  cof;
+                             height =  height /  cof;
+
+                        } else {
+
+                            break;
+                        }
+                    }
+                }
+
+                $('#target').css({'width':width,'height':height});
+                $('#target').attr('src',this.src);
+                $('#target').attr('data-cof', i+' '+cof);
+
+            };
+
+             $(".container-crop").dialog(({
+                height: "auto",
+                width: 'auto',
+                dialogClass:'uploader',
+                closeOnEscape: false, draggable: false, zIndex: "10", position: "left top",
+                close: function(ev, ui) { $('#target').imgAreaSelect({remove: true});  $(this).close();  }
+            }));
+
+            $('#target').imgAreaSelect({
+                x1: 0, y1: 0, x2: 50, y2: 50,
+                aspectRatio: '1:1',
+                handles: true,
+                zIndex: 1000000,
+                minHeight: 50,
+                minWidth: 50,
+                onInit: function(img, selection) {
+
+                    $("#x1").val(0);
+                    $("#y1").val(0);
+                    $("#x2").val(50);
+                    $("#y2").val(50);
+                    $("#w").val(50);
+                    $("#h").val(50);
+                },
+                onSelectEnd: function(img, selection) {
+
+                    $("#x1").val(selection.x1);
+                    $("#y1").val(selection.y1);
+                    $("#x2").val(selection.x2);
+                    $("#y2").val(selection.y2);
+                    $("#w").val(selection.width);
+                    $("#h").val(selection.height);
+
+                }
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('.progress').css(
+                'width',
+                progress + '%'
+            );
+        },
+        complete: function (e, data) {
+
+        }
+
+        });
+    });
+    $(document).on('click','#crop-image',function(){
+
+    var sendData = {};
+        sendData.x1 =  $('#x1').val();
+        sendData.x2 =  $('#x2').val();
+        sendData.y2 =  $('#y2').val();
+        sendData.y1 =  $('#y1').val();
+        sendData.w =  $('#w').val();
+        sendData.h =  $('#h').val();
+        sendData.width  = $('#target').width();
+        sendData.height  = $('#target').height();
+        sendData.imageName  = $('.active-input').val();
+        sendData.data  = $('#target').attr('data-cof');
+        $.post('/admin/crop',sendData)
+            .done(function(e,data){
+                if(typeof globalNameInput=="undefined"){
+                    $('.prewiew').attr('src',"/tmp/"+e);
+                }else{
+                    $('.prewiew_'+globalNameInput).attr('src',"/tmp/"+e);
+                }
+            });
+
+    });
+
+
+
+
+
+
+    (function($) {
+        $.fn.jInputFile = function(options) {
+
+            return this.each(function() {
+
+                $(this).val('');
+                $(this).wrap('<div></div>');
+                $(this).parent().css('height', $(this).height());
+                $(this).after('<div class="jInputFile-fakeButton"></div><div class="jInputFile-blocker"></div><div class="jInputFile-activeBrowseButton jInputFile-fakeButton"></div><div class="jInputFile-fileName"></div>');
+                $(this).addClass('jInputFile-customFile');
+
+                $(this).hover(
+                    function () {
+                        $(this).parent().children('.jInputFile-activeBrowseButton').css('display', 'block');
+                    },
+                    function () {
+                        $(this).parent().children('.jInputFile-activeBrowseButton').css('display', 'none');
+                    }
+                );
+
+                $(this).change(function(){
+                    var file = $(this).val();
+
+                    //Находим название файла и его расширение
+                    var reWin = /.*\\(.*)/;
+                    var fileName = file.replace(reWin, '$1');
+                    var reUnix = /.*\/(.*)/;
+                    fileName = fileName.replace(reUnix, '$1');
+                    var regExExt =/.*\.(.*)/;
+                    var ext = fileName.replace(regExExt, '$1');
+
+                    //Показываем значок и имя файла
+                    var pos;
+                    if (ext){
+                        switch (ext.toLowerCase()) {
+                            case 'doc': pos = '0'; break;
+                            case 'bmp': pos = '16'; break;
+                            case 'jpg': pos = '32'; break;
+                            case 'jpeg': pos = '32'; break;
+                            case 'png': pos = '48'; break;
+                            case 'gif': pos = '64'; break;
+                            case 'psd': pos = '80'; break;
+                            case 'mp3': pos = '96'; break;
+                            case 'wav': pos = '96'; break;
+                            case 'ogg': pos = '96'; break;
+                            case 'avi': pos = '112'; break;
+                            case 'wmv': pos = '112'; break;
+                            case 'flv': pos = '112'; break;
+                            case 'pdf': pos = '128'; break;
+                            case 'exe': pos = '144'; break;
+                            case 'txt': pos = '160'; break;
+                            default: pos = '176'; break
+                        };
+                        $(this).parent().children('.jInputFile-fileName').html(fileName).css({'background-position':('0px -'+pos+'px'),'background-repeat':'no-repeat', 'display':'block'});
+                    };
+                });
+            });
+        }
+    })(jQuery);
+
+
+
+</script>
+
+
+
