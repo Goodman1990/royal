@@ -112,7 +112,6 @@ globalEvent = '';
     $(function () {
 
         var image = $('input[type="file"]').fileupload({
-
             url: '/admin/multiUploadImage',
             dataType: 'json',
             multipart:true,
@@ -209,7 +208,7 @@ $(document).ready(function(){
                 $(cloneElement).css({margin:'5px',border:'solid 2px black'});
                 $( ".container-crop" ).dialog( "close" );
 
-                if(($('input.image').val()==''){
+                if($('input.image').val()==''){
                     $('input.image').val(globalNameImage[globalK]);
                 }else{
                     $('input.image').val($('input.image').val()+','+globalNameImage[globalK]);

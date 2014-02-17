@@ -279,14 +279,8 @@ class adminController extends AbstractActionController
             'sub'=>'2.1'
         )));
         $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
-
-
-       
         $this->Page->addTab($subcategoriesData,$id_subcategories_product,true);
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
-
-
-
         $formAddProduct= new formGenerate('addProduct', 'category addProduct');
         $formAddColor= new formGenerate('addColor', 'category addProduct color');
         $ProductModel = \Royal\Models\ProductModel::model(array('asArray'=>true));
@@ -297,6 +291,7 @@ class adminController extends AbstractActionController
         }
 
        $categories =    array_pop(\Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByPk($id_subcategories_product));
+
         $manufacturers = $ManufacturersModel->findByAttributes(array(
             'id_subcategories_product'=>$id_subcategories_product
         ));
@@ -304,17 +299,19 @@ class adminController extends AbstractActionController
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
 
         $formAddProduct->setDataForm($rules);
+
         if ($this->request->isPost()) {
+
             $Post = $this->request->getPost()->toArray();
             $formAddProduct->setData($Post);
+
             if($formAddProduct->isValid()){
 
                 $this->validData= $formAddProduct->getData();
                 unset($this->validData['id']);
-                echo '<pre>';
-                var_dump($this->validData);
+
                \Royal\Models\ProductModel::model()->setAttributes($this->validData)->save();
-                exit;
+
             }
         }
         return new ViewModel(array(
