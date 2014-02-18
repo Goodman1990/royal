@@ -1,6 +1,8 @@
 <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="/css/jInputFile.css" />
+<link rel="stylesheet" type="text/css" href="/css/palitra.css" />
 <script type="text/javascript" src="/js/ckeditor3/ckeditor.js"></script>
+<script type="text/javascript" src="/js/palitra.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
 
@@ -25,23 +27,15 @@
                     <div class="wrapper-input description">
                         <?php echo $this->formRow($formAdd->get('description')->setAttribute('class','ckeditor')) ?>
                     </div>
-                    <div class="wrapper-input image">
-                        <?php echo $this->formRow($formAdd->get('image')) ?>
-                    </div>
-                    <div class="wrapper-input file">
-                        <?php echo $this->formRow($formAdd->get('file')) ?>
-                    </div>
+                    <?php echo $this->formRow($formAdd->get('image')) ?>
                     <div class="wrapper-input video">
                         <?php echo $this->formRow($formAdd->get('video')) ?>
                     </div>
                     <div class="wrapper-input addres_buy">
                         <?php echo $this->formRow($formAdd->get('addres_buy')) ?>
                     </div>
-
-
                     <?php echo $this->formRow($formAdd->get('id_categories_product')->setValue($categories_product_id)); ?>
                     <?php echo $this->formRow($formAdd->get('id_subcategories_product')->setValue($id_subcategories_product)); ?>
-
                         <p>Добавить  изображение</p>
                     <hr>
                     <div class="wrapper-input image" >
@@ -52,17 +46,53 @@
                     </div>
                     <p>Добавить  PDF</p>
                     <hr>
-                    <div class="wrapper-input">
-                        <input  type="file" name="pdf-file" id="file-pdf" >
+                    <div class="wrapper-input file">
+                        <div class="wrapper-image file">
+                            <div class="prewiew-defult-pdf ">
+                                <span class="pdf-title">
+                                </span>
+                            </div>
+                        </div>
+                        <input  type="file" name="pdf-file[]"  multiple id="file-pdf" >
+                        <div class="wrapper-input file">
+                            <?php echo $this->formRow($formAdd->get('file')->setAttribute('id','file-pdf-input')) ?>
+                        </div>
                     </div>
 
-
+                    <p>Добавте цвет</p>
+                    <hr>
+                    <div class="container palitra">
+                        <div class="wrraper-pallitra">
+                            <div class="preview"></div>
+                            <div class="colorpicker" style="display:none">
+                                <canvas id="picker" var="2" width="300" height="300"></canvas>
+                                <div class="controls">
+                                    <div><label>R</label> <input type="text" id="rVal" /></div>
+                                    <div><label>G</label> <input type="text" id="gVal" /></div>
+                                    <div><label>B</label> <input type="text" id="bVal" /></div>
+                                    <div><label>RGB</label> <input type="text" id="rgbVal" /></div>
+                                    <div><label>HEX</label> <input type="text" id="hexVal" /></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrraper-pallitra">
+                            <div class="preview"></div>
+                            <div class="colorpicker" style="display:none">
+                                <canvas id="picker" var="2" width="300" height="300"></canvas>
+                                <div class="controls">
+                                    <div><label>R</label> <input type="text" id="rVal" /></div>
+                                    <div><label>G</label> <input type="text" id="gVal" /></div>
+                                    <div><label>B</label> <input type="text" id="bVal" /></div>
+                                    <div><label>RGB</label> <input type="text" id="rgbVal" /></div>
+                                    <div><label>HEX</label> <input type="text" id="hexVal" /></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="green-cross"></div>
+                    </div>
         <button form="addProduct" class="addProduct" name="edit">Добавить продукт</button>
         <?php echo $this->form()->closeTag($formAdd);?>
-
-
 </div>
-
 <div class="container-crop" style="display:none;">
     <div class="row">
         <div class="span12">
@@ -87,8 +117,10 @@
 
 <script type="text/javascript">
 globalNameImage = [];
+globalNamePdf = [];
 globalK = 0;
 globalEvent = '';
+
 
     $(function() {
         $(document).ready(function(){
@@ -111,8 +143,9 @@ globalEvent = '';
 
     $(function () {
 
-        var image = $('input[type="file"]').fileupload({
-            url: '/admin/multiUploadImage',
+
+        var image = $('.image-file').fileupload({
+            url: '/admin/uploadImage',
             dataType: 'json',
             multipart:true,
             done: function (e, data) {
@@ -132,9 +165,80 @@ globalEvent = '';
 
 
         });
+
+
+         $('#file-pdf').fileupload({
+            url: '/admin/uploadPdf',
+            dataType: 'json',
+            multipart:true,
+            done: function (e, data) {
+
+                globalNamePdf.push(data.result);
+                console.log(globalNamePdf.join(','));
+                if(data.originalFiles.length == globalNamePdf.length){
+                    $('.file').val(globalNamePdf.join(','));
+                }
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+
+
+        });
+
     });
 
 $(document).ready(function(){
+
+
+    var imgView = $('.image').val();
+    if(imgView !=''){
+        var arrImg = [];
+        arrImg = imgView.split(',');
+        for(var i= 0;i<arrImg.length;i++){
+            var cloneElement = $(".prewiew-defult").clone();
+            $(cloneElement).attr('src',"/tmp/"+arrImg[i]);
+            $(cloneElement).attr('class',"prewiew");
+            $(cloneElement).css({margin:'5px',border:'solid 2px black'});
+            $('.wrapper-input.image').append(cloneElement);
+
+        }
+    }
+
+    var fileView = $('#file-pdf-input').val();
+
+    if(fileView !=''){
+        var arrfile = [];
+        arrfile = fileView.split(',');
+
+        if(arrfile.length==1){
+
+            var cloneElement = $(".prewiew-defult-pdf").clone();
+            $(cloneElement).find('.pdf-title').text(fileView);
+            var url = '/image/pdf.png';
+            $(cloneElement).css('background-image', 'url(' + url + ')');
+
+            $('.wrapper-image.file').append(cloneElement);
+
+        }else{
+
+            for(var i= 0;i<arrfile.length;i++){
+
+                var cloneElement = $(".prewiew-defult-pdf").clone();
+                $(cloneElement).find('.pdf-title').text(arrfile[i]);
+                var url = '/image/pdf.png';
+                $(cloneElement).css('background-image', 'url(' + url + ')');
+    //            $(cloneElement).css({'background-image': 'url('+url+')'});
+                $('.wrapper-image.file').append(cloneElement);
+
+
+            }
+        }
+    }
 
 //           $.getJSON(
 //            'http://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent('Украина, г. Донецк, ул. Собинова 2а')+'&sensor=true',

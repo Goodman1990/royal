@@ -22,7 +22,7 @@ class ProductModel extends ProductModelEntity {
             "title"=>array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'Название продукта'),
             "description"=>array('typeInput'=>'textarea','validators' => false, 'setLabel' => 'Описание'),
             "video"=>array('typeInput'=>'textarea','validators' => array('regex' => 'numbers_letters',), 'class'=>'video','setLabel' => 'Добавить ссылки на видео'),
-            "addres_buy"=>array('required' => true,'typeInput'=>'textarea','validators' => array('regex' => 'numbers_letters',),'class'=>'addres_buy','setLabel' => 'Где купить'),
+            "addres_buy"=>array('typeInput'=>'textarea','validators' => array('regex' => 'numbers_letters',),'class'=>'addres_buy','setLabel' => 'Где купить'),
             "count"=>array('validators' => array('regex' => 'numbers',), 'setLabel' => 'Количество'),
             "price"=>array('validators' => array('regex' => 'numbers',), 'setLabel' => 'Цена'),
             "file"=>array('validators' =>false,'typeInput' => 'hidden'),

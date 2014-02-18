@@ -123,6 +123,11 @@ class formGenerate extends Form
     }
 
 
+    public function setDataForSetForm(){
+
+    }
+
+
 //    public function CustomGetData(){
 //        $this->getData();
 //    }

@@ -145,6 +145,18 @@ class generalHelper {
 
     }
 
+    public function renameDirectory($oldName,$newName){
+
+
+
+    }
+
+    public function addDirectory($name){
+
+
+
+    }
+
 //    public function copyFile($nameFile,$categoriesDir=null,$subCategoriesDir=null,$manufacturersDir=null) {
 //
 //        if($categoriesDir!=null  && $subCategoriesDir==null){

@@ -102,14 +102,19 @@ class adminController extends AbstractActionController
             $Post = $this->request->getPost()->toArray();
 
             if (isset($Post['edit'])) {
-
+                $oldData = $formEdit->dataForSetForm;
                 $formEdit->setData($Post);
 
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
-
+                        if($id_page == 'product'){
+                            $generalHelper  = new generalHelper();
+                            rename (SITE_DIR.$oldData['title_'.$i] ,SITE_DIR.'categories/'.$this->validData['image_' . $i]);
+//
+//                            rename(TMP_DIR.$this->validData['image_' . $i],SITE_DIR.'/product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/'.$this->validData['image_' . $i]);
+                        }
                         $model::model()
                             ->setAttributes(array(
                                 'id' => $this->validData['id_' . $i],
@@ -135,6 +140,7 @@ class adminController extends AbstractActionController
                 if ($formAdd->isValid()) {
 
                     $this->validData = $formAdd->getData();
+
                     $id = $model::model()
                         ->setAttributes(array(
                             'title' => $this->validData['title'],
@@ -193,14 +199,17 @@ class adminController extends AbstractActionController
         }
 
         $id_page= $this->params()->fromRoute('param2', 0);
+
         if($id_page==0){
             $id_page = $categoryData[0]['id'];
         }
-        $id_page= $this->params()->fromRoute('param2', 0);
+
 
         $this->Page->addTab($categoryData,$id_page,true);
+
         $subcategoriesData = $model::model(array('asArray'=>true))
             ->findByAttributes(array($rowTable=>$id_page));
+
         $formEdit = new formGenerate('editSubCategory', 'category');
         $formEdit->setMultiFormEdit($model->rules(), $subcategoriesData);
         $formAdd = new formGenerate('addSubCategory', 'category', $model);
@@ -210,13 +219,17 @@ class adminController extends AbstractActionController
             $Post = $this->request->getPost()->toArray();
 
             if (isset($Post['edit'])) {
-
+                $oldData = $formEdit->dataForSetForm;
                 $formEdit->setData($Post);
                 if ($formEdit->isValid()) {
 
                     $this->validData = $formEdit->getData();
 
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
+
+                        unlink(SITE_DIR.'categories/'.$oldData['image_'.$i]);
+                        rename(TMP_DIR.$this->validData['image_' . $i],SITE_DIR.'/categories/'.$this->validData['image_' . $i]);
+
                         $model::model()
                             ->setAttributes(array(
                                 'id' => $this->validData['id_' . $i],
@@ -231,7 +244,7 @@ class adminController extends AbstractActionController
 
                     $subcategoriesData = $model::model(array('asArray'=>true))
                         ->findByAttributes(array($rowTable=>$id_page));
-                    $formEdit->setData($subcategoriesData);
+                    $formEdit->setDataForSet($subcategoriesData);
                 }
 
             } else {
@@ -241,6 +254,9 @@ class adminController extends AbstractActionController
                 if ($formAdd->isValid()) {
                     $this->validData = $formAdd->getData();
                     unset($this->validData['id']);
+//                    $generalHelper  = new generalHelper();
+//                    mkdir(SITE_DIR.'categories/'.$generalHelper->transliteration($this->validData['title'].'/'), 0766, true);
+                    rename(TMP_DIR.$this->validData['image'],SITE_DIR.'categories/'.$this->validData['image']);
                     $id = $model::model()
                         ->setAttributes($this->validData)->save();
                     $formEdit->addInputForm($Post, $id);
@@ -310,8 +326,18 @@ class adminController extends AbstractActionController
                 $this->validData= $formAddProduct->getData();
                 unset($this->validData['id']);
 
-               \Royal\Models\ProductModel::model()->setAttributes($this->validData)->save();
+                $manufacturerTitle =  array_pop($ManufacturersModel->findByPk($this->validData['id_manufacturers']));
+                $generalHelper  = new generalHelper();
 
+                if(!file_exists(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/')){
+                    mkdir(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/', 0777, false);
+                }
+
+                $image =explode(',',$this->validData['image']);
+                for($i = 0;$i<count($image);$i++){
+                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/'.$image[$i]);
+                }
+               \Royal\Models\ProductModel::model()->setAttributes($this->validData)->save();
             }
         }
         return new ViewModel(array(
@@ -341,7 +367,6 @@ class adminController extends AbstractActionController
         $this->layout()->setVariables(array('page'=>$this->Page));
         $request =new Request();
         if($request->isPost()){
-
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
             $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
@@ -358,33 +383,35 @@ class adminController extends AbstractActionController
                     ));
                     echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
 
+
                 }else{
+
 
                     exit;
                 }
             }
+
             exit;
         }
+
         exit;
     }
 
-    public function multiUploadImageAction() {
 
-
+    public function uploadPdfAction() {
 
         $this->Page = new Page();
         $this->layout()->setVariables(array('page'=>$this->Page));
         $request =new Request();
         if($request->isPost()){
-//            var_dump($request->getFiles());
-//            exit;
+
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
-            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
+            $ext =   new \Zend\Validator\File\Extension(array('pdf'));
             $httpadapter->setValidators(array($filesize,$ext));
 
             if($httpadapter->isValid()) {
-//
+
                 $httpadapter->setDestination(TMP_DIR);
 
                 if($httpadapter->receive()) {
@@ -392,18 +419,19 @@ class adminController extends AbstractActionController
                     $filterRaname = new \Zend\Filter\File\Rename(array(
                         "randomize" => true,
                     ));
-
                     echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
-                    exit;
+
 
                 }else{
 
+
                     exit;
                 }
-
             }
+
             exit;
         }
+
         exit;
     }
 
