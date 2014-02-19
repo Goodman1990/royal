@@ -61,6 +61,7 @@ class Module implements ServiceProviderInterface,
                     'Helper' => __DIR__ . '/view/Helper/',
                     'Navigation' => __DIR__ . '/Navigation',
                     'Page' => __DIR__ . '/../../vendor/page',
+                    'watermark' => __DIR__ . '/../../vendor/watermark',
                 ),
             ),
         );

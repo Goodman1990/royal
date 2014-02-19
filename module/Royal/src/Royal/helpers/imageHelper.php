@@ -4,6 +4,7 @@
 
 namespace Royal\helpers;
 
+use watermark\watermark;
 
 class imageHelper
 {
@@ -192,6 +193,50 @@ class imageHelper
         imagecopyresampled ($dst_r, $this->image, 0, 0, $request['x1'], $request['y1'], 320, 320, $request['w'], $request['h']);
 
 
+    }
+
+    public function getMainColorImage(){
+
+        $rVsego = '';
+        $gVsego = '';
+        $bVsego = '';
+        $vsego='';
+        $k = $this->image;
+
+            for ($t=0; $t<imagesx($k); $t++) :
+                for ($p=0; $p<imagesy($k); $p++) :
+                    $rgb = imagecolorat($k,$t,$p);
+                    $r   = ($rgb >> 16) & 0xFF;
+                    $g   = ($rgb >> 8)  & 0xFF;
+                    $b   = $rgb & 0xFF;
+
+                    $rVsego += $r;
+                    $gVsego += $g;
+                    $bVsego += $b;
+                    $vsego++;
+                endfor;
+            endfor;
+
+            $rSrednee = dechex(round($rVsego/$vsego));
+            $gSrednee = dechex(round($gVsego/$vsego));
+            $bSrednee = dechex(round($bVsego/$vsego));
+
+        return $rSrednee.$gSrednee.$bSrednee;
+    }
+
+    public function watermark($watermarkImage) {
+
+        $watermark = new watermark();
+        $watermark_options = array(
+            'watermark' => $watermarkImage,
+            'halign' => +1,
+            'valign' => +1,
+            'hshift' => -10,
+            'vshift' => -10,
+            'type' => $this->image_type,
+            'jpeg-quality' => 100,
+        );
+        $watermark::output($this->fileName, $this->fileName, $watermark_options);
     }
 
 

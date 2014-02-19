@@ -299,7 +299,8 @@ abstract class ActiveRecord extends AbstractTableGateway
     {
 
         if ($this->getScenario() == 'insert') {
-
+//            var_dump($this->getAttributes());
+//            exit;
             $status = $this->insert($this->getAttributes());
         } else {
             return $this->update($this->getAttributes(), array(

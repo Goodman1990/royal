@@ -99,11 +99,11 @@ abstract class ActiveRecordModel extends ActiveRecord
      */
     public function save()
     {
-        if ($this->beforeValidate() && $this->validate()) {
-            $this->write();
-        }
 
-        return !$this->hasErrors();
+            $this->write();
+
+
+//        return !$this->hasErrors();
     }
 
     /**

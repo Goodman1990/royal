@@ -18,6 +18,7 @@ use Royal\helpers\generalHelper;
 use Zend\Mvc\MvcEvent;
 use Zend\Http\PhpEnvironment\Request;
 use Royal\helpers\imageHelper;
+use watermark\watermark;
 
 
 class adminController extends AbstractActionController
@@ -290,23 +291,151 @@ class adminController extends AbstractActionController
     public function addProductAction() {
 
         $id_subcategories_product = $this->params()->fromRoute('param1', 0);
+        $id_product = $this->params()->fromRoute('param2', 0);
+
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'2',
             'sub'=>'2.1'
         )));
-        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
-        $this->Page->addTab($subcategoriesData,$id_subcategories_product,true);
-        $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
+        $SubcategoriesProductModel = new \Royal\Models\SubcategoriesProductModel();
+        $subcategoriesData =$SubcategoriesProductModel->findAllOrder('number DESK ');
+        $ManufacturersModel = new \Royal\Models\ManufacturersModel();
+        $ManufacturersModel= $ManufacturersModel::model(array('asArray'=>true));
+        $ProductModel = new \Royal\Models\ProductModel();
+        $ProductModel = $ProductModel::model();
+//        $categoriesProduct = \Royal\Models\CategoriesProductModelModel::model()->findByAttributtes(array('id_sub'));
+
+
+
+
         $formAddProduct= new formGenerate('addProduct', 'category addProduct');
         $formAddColor= new formGenerate('addColor', 'category addProduct color');
-        $ProductModel = \Royal\Models\ProductModel::model(array('asArray'=>true));
         $rules =  $ProductModel->rules();
 
         if($id_subcategories_product==0){
             $id_subcategories_product = $subcategoriesData[0]['id'];
         }
 
-       $categories =    array_pop(\Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByPk($id_subcategories_product));
+       $this->Page->addTab($subcategoriesData,$id_subcategories_product,true);
+       $categories = array_pop(\Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByPk($id_subcategories_product));
+
+       $manufacturers = $ManufacturersModel->findByAttributes(array(
+            'id_subcategories_product'=>$id_subcategories_product
+       ));
+
+        $rules['id_manufacturers']['selectInfo'] = $manufacturers;
+
+        $formAddProduct->setDataForm($rules);
+        if($id_product!=0){
+            $productData =  $ProductModel->findByPk($id_product);
+            $formAddProduct->bind($productData);
+        }
+        if ($this->request->isPost()) {
+            $Post = $this->request->getPost()->toArray();
+            $formAddProduct->setData($Post);
+            if($formAddProduct->isValid()){
+
+                if($id_product!=0){
+                    $this->validData= $formAddProduct->getData()->getAttributes();
+                }else{
+                    $this->validData = $formAddProduct->getData();
+
+                }
+                if($id_product==0){
+                    unset($this->validData['id']);
+                }
+                $manufacturerTitle =  array_pop($ManufacturersModel->findByPk($this->validData['id_manufacturers']));
+                $generalHelper  = new generalHelper();
+                if(!file_exists(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/')){
+                    mkdir(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/', 0777, false);
+                }
+                $image =explode(',',$this->validData['image']);
+                for($i = 0;$i<count($image);$i++){
+                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/'.$image[$i]);
+                }
+                $video = explode(',',$this->validData['video']);
+                $hashVideo ='';
+                for($i = 0;$i<count($video);$i++){
+                    $buf = explode('=',$this->validData['video']);
+                    $hashVideo[] = end($buf);
+                }
+                $this->validData['video'] = implode(',',$hashVideo);
+//                var_dump($this->validData);
+//                exit;
+                $ProductModel->setAttributes($this->validData)->save();
+
+              $this->redirect()->toRoute('Royal',array(
+                  'controller'=>'admin',
+                  'action'=>'addProduct',
+                  'param1'=>$id_subcategories_product,
+              ));
+
+            }
+        }
+        return new ViewModel(array(
+            'formAdd'=>$formAddProduct,
+            'id_subcategories_product'=>$id_subcategories_product,
+            'categories_product_id'=>$categories['id_categories_product']
+
+
+        ));
+    }
+
+    public function getAllproductAction() {
+
+        $this->Page->setActivePage(array('admin'=>array(
+            'tab'=>'2',
+            'sub'=>'2.1'
+        )));
+        $id_categories_product = $this->params()->fromRoute('param1', 0);
+
+        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model()->findeByAttributes(array(
+            'id_categories_product'=> $id_categories_product
+        ));
+
+
+        $this->Page->addTab($subcategoriesData,$id_categories_product,true);
+
+        $categoryProduct = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK');
+
+        if($id_categories_product==0){
+            $id_subcategories_product = $categoryProduct[0]['id'];
+        }
+        $manufacturersData = \Royal\Models\ManufacturersModel::model()->findAllOrder('number DESK');
+
+        $productData = \Royal\Models\ProductModel::model()->findeByAttributes(array(
+            'id_categories_product'=> $id_categories_product
+        ));
+
+    }
+
+
+    public function editProductAction() {
+
+        $id_subcategories_product = $this->params()->fromRoute('param1', 0);
+        $id_subcategories_product = $this->params()->fromRoute('param2', 0);
+        $this->Page->setActivePage(array('admin'=>array(
+            'tab'=>'2',
+            'sub'=>'2.1'
+        )));
+        $SubcategoriesProductModel = new \Royal\Models\SubcategoriesProductModel();
+        $subcategoriesData =$SubcategoriesProductModel->findAllOrder('number DESK ');
+        $ManufacturersModel = new \Royal\Models\ManufacturersModel();
+        $ManufacturersModel= $ManufacturersModel::model(array('asArray'=>true));
+        $ProductModel = new \Royal\Models\ProductModel();
+        $ProductModel = $ProductModel::model(array('asArray'=>true));
+
+
+
+        $formAddProduct= new formGenerate('addProduct', 'category addProduct');
+        $formAddColor= new formGenerate('addColor', 'category addProduct color');
+        $rules =  $ProductModel->rules();
+
+        if($id_subcategories_product==0){
+            $id_subcategories_product = $subcategoriesData[0]['id'];
+        }
+        $this->Page->addTab($subcategoriesData,$id_subcategories_product,true);
+        $categories = array_pop(\Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByPk($id_subcategories_product));
 
         $manufacturers = $ManufacturersModel->findByAttributes(array(
             'id_subcategories_product'=>$id_subcategories_product
@@ -325,25 +454,36 @@ class adminController extends AbstractActionController
 
                 $this->validData= $formAddProduct->getData();
                 unset($this->validData['id']);
-
                 $manufacturerTitle =  array_pop($ManufacturersModel->findByPk($this->validData['id_manufacturers']));
                 $generalHelper  = new generalHelper();
-
                 if(!file_exists(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/')){
                     mkdir(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/', 0777, false);
                 }
-
                 $image =explode(',',$this->validData['image']);
                 for($i = 0;$i<count($image);$i++){
                     rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/'.$image[$i]);
                 }
-               \Royal\Models\ProductModel::model()->setAttributes($this->validData)->save();
+                $video = explode(',',$this->validData['video']);
+                $hashVideo ='';
+                for($i = 0;$i<count($video);$i++){
+                    $buf = explode('=',$this->validData['video']);
+                    $hashVideo[] = end($buf);
+                }
+                $this->validData['video'] = implode(',',$hashVideo);
+                $ProductModel->setAttributes($this->validData)->save();
+
+                $this->redirect()->toRoute('Royal',array(
+                    'controller'=>'admin',
+                    'action'=>'addProduct',
+                    'param1'=>$id_subcategories_product,
+                ));
+
             }
         }
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
             'id_subcategories_product'=>$id_subcategories_product,
-            'categories_product_id'=>$categories['id']
+            'categories_product_id'=>$categories['id_categories_product']
 
 
         ));
@@ -353,9 +493,12 @@ class adminController extends AbstractActionController
 
         $dataImage = $this->getRequest()->getPost()->toArray();
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
-        $imageHelper->resize($dataImage['width'],$dataImage['height']);
-        $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
+        if($dataImage['w']!=0 && $dataImage['h']!=0){
+            $imageHelper->resize($dataImage['width'],$dataImage['height']);
+            $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
+        }
         $imageHelper->save();
+        $imageHelper->watermark(SITE_DIR.'woterMark3.png');
         echo $dataImage['imageName'];
         exit;
 
@@ -397,8 +540,8 @@ class adminController extends AbstractActionController
         exit;
     }
 
-
-    public function uploadPdfAction() {
+// /tmp/<br /> <b>Warning</b>: imagecreatetruecolor(): Invalid image dimensions in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>138</b><br /> <br /> <b>Warning</b>: imagecolorallocate() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>140</b><br /> <br /> <b>Warning</b>: imagecolortransparent() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>140</b><br /> <br /> <b>Warning</b>: imagealphablending() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>141</b><br /> <br /> <b>Warning</b>: imagesavealpha() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>142</b><br /> <br /> <b>Warning</b>: imagecopy() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>144</b><br /> <br /> <b>Warning</b>: imagejpeg() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>46</b><br /> 383005-1366x768_530498b187e3a.jpg
+    public function uploadFileAction() {
 
         $this->Page = new Page();
         $this->layout()->setVariables(array('page'=>$this->Page));
@@ -407,7 +550,7 @@ class adminController extends AbstractActionController
 
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
-            $ext =   new \Zend\Validator\File\Extension(array('pdf'));
+            $ext =   new \Zend\Validator\File\Extension(array('pdf','xlsx','xls'));
             $httpadapter->setValidators(array($filesize,$ext));
 
             if($httpadapter->isValid()) {

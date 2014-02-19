@@ -412,10 +412,31 @@ button.addProduct{
 
 }
 
-.prewiew-defult-pdf .title{
+.prewiew-pdf{
+
+    width: 100px;
+    height: 100px;
+    background-size: 100%;
+    border: solid 1px #000000;
+    display: inline-block;
+    margin: 5px;
+    word-break: break-all;
+    vertical-align: top;
+}
 
 
 
+.pdf-title{
+    word-break: break-all;
+    display: block;
+    font-size: 10px;
+    width: 100px;
+    height: auto;
+}
+
+.pdf-fake{
+    display: inline-block;
+    vertical-align: middle;
 }
 
 

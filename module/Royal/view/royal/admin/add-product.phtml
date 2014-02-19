@@ -9,8 +9,12 @@
 <div class="left-content addProduct">
 <!--<iframe width="420" height="315" src="//www.youtube.com/embed/zccCTfN_b6Q" frameborder="0" allowfullscreen></iframe>-->
 <!--<div id="map"></div>-->
-    <?php echo $this->form()->openTag($formAdd);?>
 
+    <?php echo $this->form()->openTag($formAdd);?>
+<div class="test-color">
+
+
+</div>
                 <div class="group-form">
                     <div class="wrapper-input title">
                         <?php echo $this->formRow($formAdd->get('title')) ?>
@@ -21,11 +25,11 @@
                     <div class="wrapper-input price">
                         <?php echo $this->formRow($formAdd->get('price')) ?>
                     </div>
-                    <div class="wrapper-input count">
-                        <?php echo $this->formRow($formAdd->get('count')) ?>
-                    </div>
                     <div class="wrapper-input description">
                         <?php echo $this->formRow($formAdd->get('description')->setAttribute('class','ckeditor')) ?>
+                    </div>
+                    <div class="wrapper-input description">
+                        <?php echo $this->formRow($formAdd->get('technical_description')->setAttribute('class','ckeditor')) ?>
                     </div>
                     <?php echo $this->formRow($formAdd->get('image')) ?>
                     <div class="wrapper-input video">
@@ -47,10 +51,10 @@
                     <p>Добавить  PDF</p>
                     <hr>
                     <div class="wrapper-input file">
-                        <div class="wrapper-image file">
-                            <div class="prewiew-defult-pdf ">
-                                <span class="pdf-title">
-                                </span>
+                        <div class="wrapper-image inner">
+                            <div class="wrapper-image file-defoult" style="display: none">
+                                <span class="pdf-title"></span>
+                                <div class="prewiew-defult-pdf "></div>
                             </div>
                         </div>
                         <input  type="file" name="pdf-file[]"  multiple id="file-pdf" >
@@ -61,35 +65,7 @@
 
                     <p>Добавте цвет</p>
                     <hr>
-                    <div class="container palitra">
-                        <div class="wrraper-pallitra">
-                            <div class="preview"></div>
-                            <div class="colorpicker" style="display:none">
-                                <canvas id="picker" var="2" width="300" height="300"></canvas>
-                                <div class="controls">
-                                    <div><label>R</label> <input type="text" id="rVal" /></div>
-                                    <div><label>G</label> <input type="text" id="gVal" /></div>
-                                    <div><label>B</label> <input type="text" id="bVal" /></div>
-                                    <div><label>RGB</label> <input type="text" id="rgbVal" /></div>
-                                    <div><label>HEX</label> <input type="text" id="hexVal" /></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="wrraper-pallitra">
-                            <div class="preview"></div>
-                            <div class="colorpicker" style="display:none">
-                                <canvas id="picker" var="2" width="300" height="300"></canvas>
-                                <div class="controls">
-                                    <div><label>R</label> <input type="text" id="rVal" /></div>
-                                    <div><label>G</label> <input type="text" id="gVal" /></div>
-                                    <div><label>B</label> <input type="text" id="bVal" /></div>
-                                    <div><label>RGB</label> <input type="text" id="rgbVal" /></div>
-                                    <div><label>HEX</label> <input type="text" id="hexVal" /></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="green-cross"></div>
-                    </div>
+
         <button form="addProduct" class="addProduct" name="edit">Добавить продукт</button>
         <?php echo $this->form()->closeTag($formAdd);?>
 </div>
@@ -120,6 +96,55 @@ globalNameImage = [];
 globalNamePdf = [];
 globalK = 0;
 globalEvent = '';
+globalNamePdf.ext = [];
+
+
+function createPreview(){
+    $('.pdf-fake').remove();
+    var fileView = $('#file-pdf-input').val();
+    var url;
+    if(fileView !=''){
+        var arrfile = [];
+        arrfile = fileView.split(',');
+
+        if(arrfile.length==1){
+
+            var cloneElement = $(".wrapper-image.file-defoult").clone();
+            $(cloneElement).find('.pdf-title').text(fileView);
+            $(cloneElement).attr('class','pdf-fake');
+            $(cloneElement).css({'display':'block'});
+            var extFile = fileView.split('.')[fileView.split('.').length-1];
+            console.log(extFile);
+            if(extFile=='xls' || extFile=='xlsx'){
+                url = '/image/xls.jpg';
+            }else if(extFile=='pdf'){
+                url = '/image/pdf.png';
+            }
+            $(cloneElement).find('.prewiew-defult-pdf').css('background-image', 'url(' + url + ')');
+
+            $('.wrapper-image.inner').append(cloneElement);
+
+        }else{
+
+            for( var i= 0;i<arrfile.length;i++){
+
+                var cloneElement = $(".wrapper-image.file-defoult").clone();
+                $(cloneElement).find('.pdf-title').text(arrfile[i]);
+                $(cloneElement).attr('class','pdf-fake');
+                $(cloneElement).css({'display':'inline-block'});
+                var extFile = arrfile[i].split('.')[arrfile[i].split('.').length-1];
+                if(extFile=='xls' || extFile=='xlsx'){
+                    url = '/image/xls.jpg';
+                }else if(extFile=='pdf'){
+                    url = '/image/pdf.png';
+                }
+                $(cloneElement).find('.prewiew-defult-pdf').css('background-image', 'url(' + url + ')');
+                $('.wrapper-image.inner').append(cloneElement);
+            }
+        }
+    }
+}
+
 
 
     $(function() {
@@ -168,15 +193,22 @@ globalEvent = '';
 
 
          $('#file-pdf').fileupload({
-            url: '/admin/uploadPdf',
+            url: '/admin/uploadFile',
             dataType: 'json',
             multipart:true,
             done: function (e, data) {
-
                 globalNamePdf.push(data.result);
-                console.log(globalNamePdf.join(','));
                 if(data.originalFiles.length == globalNamePdf.length){
-                    $('.file').val(globalNamePdf.join(','));
+                    var value =  $('#file-pdf-input').val();
+                    if($('#file-pdf-input').val()==''){
+                        $('#file-pdf-input').val(globalNamePdf.join(','));
+                        createPreview();
+                        globalNamePdf= [];
+                    }else{
+                        $('#file-pdf-input').val(value+','+globalNamePdf.join(','));
+                        createPreview();
+                        globalNamePdf= [];
+                    }
                 }
             },
             progressall: function (e, data) {
@@ -209,37 +241,7 @@ $(document).ready(function(){
         }
     }
 
-    var fileView = $('#file-pdf-input').val();
-
-    if(fileView !=''){
-        var arrfile = [];
-        arrfile = fileView.split(',');
-
-        if(arrfile.length==1){
-
-            var cloneElement = $(".prewiew-defult-pdf").clone();
-            $(cloneElement).find('.pdf-title').text(fileView);
-            var url = '/image/pdf.png';
-            $(cloneElement).css('background-image', 'url(' + url + ')');
-
-            $('.wrapper-image.file').append(cloneElement);
-
-        }else{
-
-            for(var i= 0;i<arrfile.length;i++){
-
-                var cloneElement = $(".prewiew-defult-pdf").clone();
-                $(cloneElement).find('.pdf-title').text(arrfile[i]);
-                var url = '/image/pdf.png';
-                $(cloneElement).css('background-image', 'url(' + url + ')');
-    //            $(cloneElement).css({'background-image': 'url('+url+')'});
-                $('.wrapper-image.file').append(cloneElement);
-
-
-            }
-        }
-    }
-
+    createPreview();
 //           $.getJSON(
 //            'http://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent('Украина, г. Донецк, ул. Собинова 2а')+'&sensor=true',
 //            {
@@ -411,20 +413,18 @@ $(document).ready(function(){
 
 
         $('#target').imgAreaSelect({
-            x1: 0, y1: 0, x2: 50, y2: 50,
+            x1: 0, y1: 0, x2: 0, y2: 0,
             aspectRatio: '1:1',
             handles: true,
             zIndex: 1000000,
-            minHeight: 50,
-            minWidth: 50,
             onInit: function(img, selection) {
 
                 $("#x1").val(0);
                 $("#y1").val(0);
-                $("#x2").val(50);
-                $("#y2").val(50);
-                $("#w").val(50);
-                $("#h").val(50);
+                $("#x2").val(0);
+                $("#y2").val(0);
+                $("#w").val(0);
+                $("#h").val(0);
             },
             onSelectEnd: function(img, selection) {
 

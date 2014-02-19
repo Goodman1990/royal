@@ -181,7 +181,7 @@
             }));
 
             $('#target').imgAreaSelect({
-                x1: 0, y1: 0, x2: 50, y2: 50,
+                x1: 0, y1: 0, x2: 0, y2: 0,
                 aspectRatio: '1:1',
                 handles: true,
                 zIndex: 1000000,
@@ -191,10 +191,10 @@
 
                     $("#x1").val(0);
                     $("#y1").val(0);
-                    $("#x2").val(50);
-                    $("#y2").val(50);
-                    $("#w").val(50);
-                    $("#h").val(50);
+                    $("#x2").val(0);
+                    $("#y2").val(0);
+                    $("#w").val(0);
+                    $("#h").val(0);
                 },
                 onSelectEnd: function(img, selection) {
 
@@ -239,15 +239,11 @@
             .done(function(e,data){
 
                 if(typeof globalNameInput=="undefined"){
-
                     $('.prewiew').attr('src',"/tmp/"+e);
-
                 }else{
-
                     $('.prewiew_'+globalNameInput).attr('src',"/tmp/"+e);
-
                 }
-
+                $('#target').imgAreaSelect({remove: true});
                 $('.container-crop').bind('dialogclose', function(event) {
                     $('#target').imgAreaSelect({
                         'remove':true
