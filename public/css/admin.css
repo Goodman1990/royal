@@ -438,8 +438,22 @@ button.addProduct{
     display: inline-block;
     vertical-align: middle;
 }
+.all-product .wrapper-input{
+    display: inline-block;
+}
 
-
+.all-product .wrapper-input label{
+    font-size: 10px;
+}
+.all-product .wrapper-input select{
+    width: 200px;
+}
+.all-product .wrapper-input select{
+    font-size: 12px;
+}
+#limit{
+    width: 40px;
+}
 
 
 

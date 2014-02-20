@@ -182,7 +182,7 @@
 
             $('#target').imgAreaSelect({
                 x1: 0, y1: 0, x2: 0, y2: 0,
-                aspectRatio: '1:1',
+//                aspectRatio: '1:1',
                 handles: true,
                 zIndex: 1000000,
                 minHeight: 50,
@@ -234,6 +234,7 @@
         sendData.height  = $('#target').height();
         sendData.imageName  = $('.active-input').val();
         sendData.data  = $('#target').attr('data-cof');
+        sendData.marker = 0;
         $.post('/admin/crop',sendData)
 
             .done(function(e,data){

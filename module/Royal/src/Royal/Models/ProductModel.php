@@ -34,4 +34,14 @@ class ProductModel extends ProductModelEntity {
         );
     }
 
+
+    public function getProduct($options) {
+
+        $this->setCriteria(array(
+            'where'=>array("title LIKE '".mysql_real_escape_string($options->search)."'")));
+
+        return $this->findByCriteria();
+
+    }
+
 }

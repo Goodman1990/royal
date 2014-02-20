@@ -1,0 +1,112 @@
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+
+<div class="left-content all-product ">
+
+    <div class="select-box-wrapper">
+
+        <form  method="POST" name="findData">
+            <div class="wrapper-input" >
+                <label for="page">Лимит</label>
+                <select name="limit"  id="limit">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div class="wrapper-input" >
+                <label>Выбрать подкатегорию</label>
+                <select name="id_subcategories_product"  id="subcategories">
+                    <?php foreach ($subcategoriesData as $key ) { ?>
+                        <option value="<?php echo $key['id'] ?>"><?php echo $key['title'] ?></option>
+                    <?php }  ?>
+                </select>
+            </div>
+            <div class="wrapper-input manufacturers" >
+                <label for="page">Выбрать производителя</label>
+                <select name="id_manufacturers"  id="manufacturers">
+                    <option value="">Выберете категорию</option>
+                    <?php foreach ($manufacturersData as $key ) { ?>
+                        <option value="<?php echo $key['id'] ?>"><?php echo $key['title'] ?></option>
+                    <?php }  ?>
+                </select>
+            </div>
+            <div class="wrapper-input" >
+                <label>Поиск</label>
+                <input name="search-input" id="search-input" type="text" value="">
+            </div>
+            <div class="wrapper-input" >
+                <button id="search">Поиск</button>
+            </div>
+        </form>
+    </div>
+
+        <div class="product-data innerData">
+
+            <table class="admin-product">
+                <tr>
+                    <th>Название</th>
+                    <th>Изображение</th>
+                    <th>Действия</th>
+
+                </tr>
+                <?php foreach ($productData as $key ) { ?>
+                <tr>
+                    <td><?php echo $key['title'] ;  ?></td >
+                    <td><?php echo $key['image'] ;  ?></td >
+                    <td><a href="/admin/addProduct/<?php echo $key['id_subcategories_product'].'/'.$key['id']; ?>">Редактировать товар</a></td >
+                </tr>
+                <?php }  ?>
+            </table>
+
+
+
+
+        </div>
+</div>
+<script type="text/javascript">
+
+    $(document).on('change','#subcategories',function() {
+        var name = $(this).attr('name');
+        var value = $(this).val();
+        $.post(document.location.href,{name : name,value : value})
+            .done(function(data) {
+                $('.innerData').html($('.innerData',data).html());
+                $('.manufacturers').html($('.manufacturers',data).html());
+            });
+    });
+
+
+    $(document).on('change','#manufacturers',function() {
+        var name = $(this).attr('name');
+        var value = $(this).val();
+        $.post(document.location.href,{name : name,value : value})
+            .done(function(data) {
+                $('.innerData').html($('.innerData',data).html());
+
+            });
+    });
+
+    $(document).on('click','#search',function(e) {
+        e.preventDefault();
+        sendData = {};
+        sendData.limit  =  $( "#limit option:selected" ).text();
+        sendData.name  =  'id_subcategories_product';
+        sendData.value  =  $( "#subcategories option:selected" ).val();
+        sendData.search = $('#search-input').val();
+
+        $.post(document.location.href,sendData)
+            .done(function(data) {
+                $('.innerData').html($('.innerData',data).html());
+                $('.manufacturers').html($('.manufacturers',data).html());
+            });
+    });
+</script>
+
+
+
+
+
+
+

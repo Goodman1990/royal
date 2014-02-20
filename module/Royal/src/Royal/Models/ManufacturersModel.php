@@ -28,4 +28,17 @@ class ManufacturersModel extends ManufacturersModelEntity {
             'id_subcategories_product'=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')));
     }
 
+
+    public function getManufacturers($arrayId){
+
+        $this->setCriteria(array(
+            'where'=>array('id_subcategories_product in ('.implode(',',$arrayId).')')
+
+        ));
+        return $this->findByCriteria();
+
+
+
+    }
+
 }
