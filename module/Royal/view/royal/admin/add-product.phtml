@@ -100,6 +100,7 @@ globalNamePdf.ext = [];
 
 
 function createPreview(){
+
     $('.pdf-fake').remove();
     var fileView = $('#file-pdf-input').val();
     var url;
@@ -114,7 +115,7 @@ function createPreview(){
             $(cloneElement).attr('class','pdf-fake');
             $(cloneElement).css({'display':'block'});
             var extFile = fileView.split('.')[fileView.split('.').length-1];
-            console.log(extFile);
+
             if(extFile=='xls' || extFile=='xlsx'){
                 url = '/image/xls.jpg';
             }else if(extFile=='pdf'){
@@ -143,6 +144,7 @@ function createPreview(){
             }
         }
     }
+
 }
 
 
@@ -229,9 +231,11 @@ $(document).ready(function(){
 
     var imgView = $('.image').val();
     if(imgView !=''){
+
         var arrImg = [];
         arrImg = imgView.split(',');
         for(var i= 0;i<arrImg.length;i++){
+
             var cloneElement = $(".prewiew-defult").clone();
             $(cloneElement).attr('src',"/tmp/"+arrImg[i]);
             $(cloneElement).attr('class',"prewiew");

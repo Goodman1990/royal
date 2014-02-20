@@ -111,6 +111,11 @@ class GetNavigationHelper extends AbstractHelper {
                         'resource'=>'2.2',
                         'visible' =>1,
                     ),
+//                    array( 'label' => 'Список продуктов',
+//                        'uri'=>'/admin/editProduct',
+//                        'resource'=>'2.2',
+//                        'visible' =>1,
+//                    ),
                 ),
             ),
 

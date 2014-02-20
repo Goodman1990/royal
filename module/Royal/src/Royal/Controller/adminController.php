@@ -350,15 +350,9 @@ class adminController extends AbstractActionController
             if($formAddProduct->isValid()){
 
                 $this->validData = $formAddProduct->getData();
-
-                $manufacturerTitle =  array_pop($ManufacturersModel->findByPk($this->validData['id_manufacturers']));
-                $generalHelper  = new generalHelper();
-                if(!file_exists(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/')){
-                    mkdir(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/', 0777, false);
-                }
                 $image =explode(',',$this->validData['image']);
                 for($i = 0;$i<count($image);$i++){
-                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/'.$image[$i]);
+                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
                 }
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
@@ -367,8 +361,6 @@ class adminController extends AbstractActionController
                     $hashVideo[] = end($buf);
                 }
                 $this->validData['video'] = implode(',',$hashVideo);
-
-
                 $ProductModel->setAttributes($this->validData)->save();
 
               $this->redirect()->toRoute('Royal',array(
@@ -391,6 +383,15 @@ class adminController extends AbstractActionController
     public function editProductAction(){
 
         $id_product = $this->params()->fromRoute('param1', 0);
+
+        if($id_product==0){
+
+            $this->redirect()->toRoute('Royal',array(
+                'controller'=>'admin',
+                'action'=>'getAllproduct',
+            ));
+
+        }
 
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'2',
@@ -424,6 +425,9 @@ class adminController extends AbstractActionController
         $rules['id_categories_product']['setLabel'] = 'Категории';
         $rules['id_subcategories_product']['setLabel'] = 'Подкатегории';
 
+//        $ManufacturersModel->findByPk($ProductModel->id_manufacturers);
+
+
         $formAddProduct->setDataForm($rules);
 
         $formAddProduct->setData($ProductModel->getAttributes());
@@ -436,15 +440,9 @@ class adminController extends AbstractActionController
             if($formAddProduct->isValid()){
                 
                 $this->validData = $formAddProduct->getData();
-
-                $manufacturerTitle =  array_pop($ManufacturersModel->findByPk($this->validData['id_manufacturers']));
-                $generalHelper  = new generalHelper();
-                if(!file_exists(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/')){
-                    mkdir(SITE_DIR.'product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/', 0777, false);
-                }
                 $image =explode(',',$this->validData['image']);
                 for($i = 0;$i<count($image);$i++){
-                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$generalHelper->transliteration($manufacturerTitle['title']).'/'.$image[$i]);
+                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
                 }
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
@@ -453,7 +451,6 @@ class adminController extends AbstractActionController
                     $hashVideo[] = end($buf);
                 }
                 $this->validData['video'] = implode(',',$hashVideo);
-
                 $this->validData['id'] = $id_product;
                 $ProductModel->setAttributes($this->validData)->save();
 
@@ -461,6 +458,7 @@ class adminController extends AbstractActionController
         }
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
+            'productModel'=>$ProductModel
         ));
 
     }
