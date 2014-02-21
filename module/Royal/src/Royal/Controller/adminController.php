@@ -79,8 +79,8 @@ class adminController extends AbstractActionController
 
             $model = \Royal\Models\CategoryPagesModel::model();
             $this->Page->setActivePage(array('admin'=>array(
-                'tab'=>'1',
-                'sub'=>'1.2'
+                'tab'=>'3',
+                'sub'=>'3.1'
             )));
 
         }else if($id_page=='product'){
@@ -186,7 +186,7 @@ class adminController extends AbstractActionController
             $model = \Royal\Models\SubcategoriesProductModel::model();
             $this->Page->setActivePage(array('admin'=>array(
                 'tab'=>'1',
-                'sub'=>'1.3'
+                'sub'=>'1.2'
             )));
             $rowTable = 'id_categories_product';
 
@@ -204,7 +204,7 @@ class adminController extends AbstractActionController
             $model = \Royal\Models\ManufacturersModel::model();
             $this->Page->setActivePage(array('admin'=>array(
                 'tab'=>'1',
-                'sub'=>'1.4'
+                'sub'=>'1.3'
             )));
             $rowTable = 'id_subcategories_product';
 
@@ -380,6 +380,46 @@ class adminController extends AbstractActionController
         ));
     }
 
+    public function editPageAction() {
+
+        $id_page = $this->params()->fromRoute('param1', 0);
+
+        $this->Page->setActivePage(array('admin'=>array(
+            'tab'=>'3',
+            'sub'=>'3.2'
+        )));
+        $CategoryPagesModel =  \Royal\Models\CategoryPagesModel::model(array('asArray'=>true))->findAllOrder('number DESK');
+
+        if($id_page == 0){
+            $id_page  = $CategoryPagesModel[0]['id'];
+        }
+        $this->Page->addTab($CategoryPagesModel,$id_page,true);
+        $MainPagesModel =  \Royal\Models\MainPagesModel::model();
+        $formEditPage = new formGenerate('editPage', 'editPage');
+        $formEditPage->setDataForm($MainPagesModel->rules());
+        $dataPage = $MainPagesModel->findByAttributes(array('id_category_pages'=>$id_page));
+        $formEditPage->setData($MainPagesModel->getAttributes());
+        if($this->request->isPost()){
+            $post = $this->request->getPost();
+            $formEditPage->setData($post);
+            if($formEditPage->isValid()){
+                $this->validData = $formEditPage->getData();
+                if($dataPage==array()){
+                    unset($this->validData['id']);
+                }
+                $MainPagesModel->setAttributes($this->validData)->save();
+                $dataPage = $MainPagesModel->findByAttributes(array('id_category_pages'=>$id_page));
+            }
+        }
+
+        return new ViewModel(array(
+            'formEditPage'=>$formEditPage,
+            'MainPagesModel'=>$dataPage,
+            'id_page'=>$id_page
+        ));
+
+    }
+
     public function editProductAction(){
 
         $id_product = $this->params()->fromRoute('param1', 0);
@@ -425,7 +465,7 @@ class adminController extends AbstractActionController
         $rules['id_categories_product']['setLabel'] = 'Категории';
         $rules['id_subcategories_product']['setLabel'] = 'Подкатегории';
 
-//        $ManufacturersModel->findByPk($ProductModel->id_manufacturers);
+
 
 
         $formAddProduct->setDataForm($rules);
@@ -547,6 +587,14 @@ class adminController extends AbstractActionController
             $imageHelper->watermark(SITE_DIR.'woterMark3.png');
         }
         echo $dataImage['imageName'];
+        exit;
+
+    }
+
+    public function deletedProductAction() {
+
+        $id_product = $this->params()->fromRoute('param1', 0);
+        \Royal\Models\ProductModel::model(array('asArray'=>true))->delete(array('id'=>$id_product));
         exit;
 
     }

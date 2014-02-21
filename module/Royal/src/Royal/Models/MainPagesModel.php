@@ -19,7 +19,12 @@ class MainPagesModel extends MainPagesModelEntity {
 
     public function rules()
     {
-        return array();
+        return array(
+            "id"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
+            "id_category_pages"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
+            "decription"=>array('typeInput' => 'hidden','validators' =>false,'filters' =>false),
+            "content"=>array('required' => true,'typeInput'=>'textarea','validators' => false,'filters' => false, 'setLabel' => 'Содержимое'),
+        );
     }
 
 }

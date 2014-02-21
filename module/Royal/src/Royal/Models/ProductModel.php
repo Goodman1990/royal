@@ -20,8 +20,8 @@ class ProductModel extends ProductModelEntity {
     {
         return array(
             "title"=>array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'Название продукта'),
-            "description"=>array('required' => true,'typeInput'=>'textarea','validators' => false, 'setLabel' => 'Описание'),
-            "technical_description"=>array('required' => true,'typeInput'=>'textarea','validators' => false, 'setLabel' => 'Техническое описание'),
+            "description"=>array('required' => true,'typeInput'=>'textarea','validators' => false, 'setLabel' => 'Описание','filters' => false),
+            "technical_description"=>array('required' => true,'typeInput'=>'textarea','validators' => false,'filters' => false, 'setLabel' => 'Техническое описание'),
             "video"=>array('typeInput'=>'textarea','validators' => false, 'class'=>'video','setLabel' => 'Добавить ссылки на видео'),
             "addres_buy"=>array('typeInput'=>'textarea','validators' => array('regex' => 'numbers_letters',),'class'=>'addres_buy','setLabel' => 'Где купить'),
             "price"=>array('required' => true,'validators' => array('regex' => 'numbers',), 'setLabel' => 'Цена'),

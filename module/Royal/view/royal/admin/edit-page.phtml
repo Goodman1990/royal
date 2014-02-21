@@ -1,0 +1,30 @@
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"/>
+<link rel="stylesheet" type="text/css" href="/css/jInputFile.css"/>
+<link rel="stylesheet" type="text/css" href="/css/palitra.css"/>
+<script type="text/javascript" src="/js/ckeditor3/ckeditor.js"></script>
+<script type="text/javascript" src="/js/palitra.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+
+<div class="left-content">
+
+<?php echo $MainPagesModel->content; ?>
+<?php echo $this->form()->openTag($formEditPage); ?>
+    <div class="group-form">
+        <div class="wrapper-input content-page">
+            <?php echo $this->formRow($formEditPage->get('content')->setAttribute('class', 'ckeditor')); ?>
+        </div>
+        <div class="wrapper-input id_manufacturers">
+            <?php echo $this->formRow($formEditPage->get('id_category_pages')->setValue($id_page)) ?>
+        </div>
+        <div class="wrapper-input description">
+            <?php echo $this->formRow($formEditPage->get('decription')->setValue('23')) ?>
+        </div>
+        <div class="wrapper-input price">
+            <?php echo $this->formRow($formEditPage->get('id')) ?>
+        </div>
+    </div>
+    <button form="editPage" class="editPage" name="edit">Редактировать страницу</button>
+<?php echo $this->form()->closeTag($formEditPage); ?>
+
+

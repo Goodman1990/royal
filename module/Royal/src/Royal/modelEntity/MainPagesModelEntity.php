@@ -29,10 +29,9 @@ class MainPagesModelEntity extends ActiveRecordModel {
     {
         return array(
             "id",
-"id_category_pages",
-"decription",
-"content",
-
+            "id_category_pages",
+            "decription",
+            "content",
         );
     }
 

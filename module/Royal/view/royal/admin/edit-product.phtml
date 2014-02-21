@@ -6,6 +6,9 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
 
+
+
+
 <div class="left-content addProduct">
 <!--<iframe width="420" height="315" src="//www.youtube.com/embed/zccCTfN_b6Q" frameborder="0" allowfullscreen></iframe>-->
 <!--<div id="map"></div>-->
@@ -14,7 +17,7 @@
 <div class="test-color">
 
 
-</div>
+            </div>
                 <div class="group-form">
                     <div class="wrapper-input title">
                         <?php echo $this->formRow($formAdd->get('title')) ?>
@@ -52,9 +55,9 @@
                             <input  type="file" name="img-file[]" multiple class="image-file" >
                         </div>
                         <?php
-                        $img =  explode(',',$productModel->image);
-                        foreach($img as $key){?>
-
+                        $img =  explode(',',$formAdd->get('image')->getValue());
+                        foreach($img as $key=>$value){?>
+                            <img width="100" height="100" class="prewiew" src="/siteDir/product/<?php  echo $value ?>" style="margin: 5px; border: 2px solid black;">
                         <?php } ?>
                     </div>
                     <p>Добавить  PDF</p>
@@ -236,19 +239,19 @@ function createPreview(){
 $(document).ready(function(){
 
 
-    var imgView = $('.image').val();
-    if(imgView !=''){
-        var arrImg = [];
-        arrImg = imgView.split(',');
-        for(var i= 0;i<arrImg.length;i++){
-            var cloneElement = $(".prewiew-defult").clone();
-            $(cloneElement).attr('src',"/tmp/"+arrImg[i]);
-            $(cloneElement).attr('class',"prewiew");
-            $(cloneElement).css({margin:'5px',border:'solid 2px black'});
-            $('.wrapper-input.image').append(cloneElement);
-
-        }
-    }
+//    var imgView = $('.image').val();
+//    if(imgView !=''){
+//        var arrImg = [];
+//        arrImg = imgView.split(',');
+//        for(var i= 0;i<arrImg.length;i++){
+//            var cloneElement = $(".prewiew-defult").clone();
+//            $(cloneElement).attr('src',"/tmp/"+arrImg[i]);
+//            $(cloneElement).attr('class',"prewiew");
+//            $(cloneElement).css({margin:'5px',border:'solid 2px black'});
+//            $('.wrapper-input.image').append(cloneElement);
+//
+//        }
+//    }
 
     createPreview();
 //           $.getJSON(

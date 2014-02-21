@@ -455,5 +455,20 @@ button.addProduct{
     width: 40px;
 }
 
+.all-product table{
+    width: 95%;
+    margin: 0 auto;
+}
+
+all-product.title{
+    width: 200px;
+    text-align: center;
+}
+.all-product .prewiew{
+
+    display: block;
+    margin: 0 auto;
+}
+
 
 
