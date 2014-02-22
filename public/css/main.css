@@ -6,7 +6,7 @@ body{
 	list-style: none;
 	height: auto;
 }
-ul,li,p,span{
+p,span{
 	padding: 0;
 	margin: 0;
 }
@@ -18,31 +18,44 @@ ul,li,p,span{
          url(../fonts/agbengaly-roman_[allfont.ru].ttf) format("truetype"),
          url(../fonts/agbengaly-roman_[allfont.ru]) format("svg");
     font-weight: normal;
-    font-style: normal;	   
-}
-@font-face {
-	font-family: "agopus";
-    src: url(../fonts/AGOR____.eot);
-    src: url(../fonts/AGOR____) format("embedded-opentype"),
-         url(../fonts/AGOR____.woff) format("woff"),
-         url(../fonts/AGOR____.ttf) format("truetype"),
-         url(../fonts/AGOR____) format("svg");
-    font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
-	 font-family: "alegreto";
+    font-family: "alegreto";
     src: url(../fonts/iJeEfi8n.eot);
     src: url(../fonts/iJeEfi8n) format("embedded-opentype"),
-         url(../fonts/iJeEfi8n.woff) format("woff"),
-         url(../fonts/iJeEfi8n.ttf) format("truetype"),
-         url(../fonts/iJeEfi8n) format("svg");
+    url(../fonts/iJeEfi8n.woff) format("woff"),
+    url(../fonts/iJeEfi8n.ttf) format("truetype"),
+    url(../fonts/iJeEfi8n) format("svg");
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: "agopus";
+    src: url(../fonts/AGOR____.eot);
+    src: url(../fonts/AGOR____) format("embedded-opentype"),
+    url(../fonts/AGOR____.woff) format("woff"),
+    url(../fonts/AGOR____.ttf) format("truetype"),
+    url(../fonts/AGOR____) format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+/*@font-face {*/
+    /*font-family: "agopusob";*/
+    /*src: url(../fonts/AGOR____.eot);*/
+    /*src: url(../fonts/AGOR____) format("embedded-opentype"),*/
+    /*url(../fonts/AGOR____.woff) format("woff"),*/
+    /*url(../fonts/12499.ttf) format("truetype"),*/
+    /*url(../fonts/AGOR____) format("svg");*/
+    /*font-weight: normal;*/
+    /*font-style: normal;*/
+/*}*/
+
 .wrapper{
 	margin: 0 auto;
-	height:auto; 
+	height:auto;
 	max-width: 1200px;
 }
 	.alegreto-font{
@@ -62,14 +75,14 @@ ul,li,p,span{
 		}
 		#slides{
 			border:solid 2pt;
-			border-color: #b8c0e5; 
+			border-color: #b8c0e5;
 		}
 		.container{
 			padding: 1%;
 			outline: solid 1pt #0e1a3e;
 		}
 		.border-slyder{
-			
+
 			margin: 0 auto;
 			background-image: url(../image/border-slyder2.png);
 			background-size: 100%;
@@ -81,7 +94,7 @@ ul,li,p,span{
 			display: block;
 			cursor: pointer;
 			margin: 0 auto;
-			max-height: 171px; 
+			max-height: 171px;
 			height: auto;
 			width: 53%;
 		}
@@ -99,7 +112,7 @@ ul,li,p,span{
 			display: block;
 			margin-left: auto;
 			margin-right: auto;
-			margin-top: 20px; 
+			margin-top: 20px;
 			width: 53%;
 		}
 		.header-menu-bottom ul li:last-child , .header-menu-top ul li:last-child{
@@ -176,7 +189,7 @@ ul,li,p,span{
 				overflow: auto;
 				height: auto;
 			}
-		
+
 			.left-content{
 				font-weight: bolder;
 				position: relative;
@@ -188,11 +201,124 @@ ul,li,p,span{
 				height: inherit;
 				min-height: 100px;
 				width: 64%;
+                overflow: hidden ;
 			}
+            .left-content.manufacturers{
+                margin-left: 2%;
+            }
+            .border-content {
+                background-image: url(../image/frame.png);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 100%;
+                width: 176px;
+                height: 154px;
+                position: relative;
+                z-index: 2;
+                text-align: center;
+            }
+            .subcategories-image {
+                top: 8px;
+                left: 16px;
+                position: absolute;
+                z-index: 1;
+                display: block;
+                width: 145px;
+                height: 138px;
+                /* -webkit-border-radius: 10px; */
+                /*-moz-border-radius: 10px;*/
+                /* border-radius: 10px; */
+                cursor: pointer;
+            }
+            .desk-subcategories{
+                color: #293757;
+                font-family: 'agbengaly';
+                font-style: italic;
+                font-weight: 400;
+                font-size: 16px;
+                text-decoration: underline;
+                display: block;
+                margin: 0 auto;
+                width: 143px;
+                text-align: center;
+
+                
+            }
+            .left-content .warpper-subcategories{
+                display: inline-block;
+                width: 176px;
+                height: 154px;
+                vertical-align: top;
+                margin: 7%;
+
+            }.left-content .warpper-subcategories a {
+                 font-family: 'agbengaly';
+                 font-style: italic;
+                 font-weight: 400;
+                 font-size: 16px;
+                 text-decoration: underline;
+                 display: block;
+                 margin: 0 auto;
+                 width: 143px;
+                 color: #293757;
+                 text-align: center;
+
+            }
+             .warpper-subcategories{
+                 position: relative;
+             }
+
+            .manufacturers-image{
+                max-width: 150px;
+                max-height: 110px;
+
+
+            }
+            .warpper-manufacturers{
+                max-width: 150px;
+                max-height: 150px;
+                display: inline-block;
+                vertical-align: top;
+                margin: 30px;
+            }
+            .warpper-manufacturers-img{
+                display:table;
+                max-width: 150px;
+                max-height: 110px;
+            }
+            .calibration-center{
+                border:none;
+                height: 110px;
+                width: 110px;
+                display:table-cell;
+                vertical-align:middle;
+                text-align:center
+            }
+            .desk-manufacturers{
+                color: #4a5369;
+                font-family: 'agbengaly';
+                font-style: italic;
+                font-weight: 400;
+                font-size: 16px;
+                text-decoration: none;
+                display: block;
+                margin: 0 auto;
+                width: 110px;
+                text-align: center;
+            }
+            .warpper-manufacturers-desk{
+                max-width: 150px;
+                max-height: 200px;
+            }
+            .warpper{
+                position: relative;
+                width: 176px;
+                height: 154px;
+            }
 
 				.podpis{
 					position: relative;
-					right: 0; 
+					right: 0;
 					max-height: 73px;
 					max-width: 197px;
 					width: 36%;
@@ -205,7 +331,96 @@ ul,li,p,span{
 				width: 23%;
 				min-height: 500px;
 				height: inherit;
+                overflow: hidden;
 			}
+
+                .title-pays-hit{
+                    width: 73%;
+                    font-family: 'agbengaly';
+                    font-style: italic;
+                    display: block;
+                    margin: 0 auto;
+                }
+
+                .right-content .wrap-pays-item .pays-item{
+                    background-image: url(../image/frame-hit.png);
+                    background-repeat: no-repeat;
+                    position: relative;
+                    z-index: 2;
+                    width: 80px;
+                    height: 68px;
+
+                 }
+                .wrap-pays-item{
+                    display: inline-block;
+                    position: relative;
+                    width: 76px;
+                    height: 66px;
+                }
+                .wrap-pays-item  img{
+                    position: absolute;
+                    width: 71px;
+                    height: 63px;
+                    z-index: 1;
+                    top: 0;
+                }
+                .right-content .hit-pays{
+                    width: 89%;
+                    margin: 0 auto;
+                    height: auto;
+                }
+                .right-content .right-menu-sub {
+                    list-style-image: url(../image/rgb/arrow.png);
+                    font-family: 'agbengaly';
+                    font-style: italic;
+                    font-size: 17px;
+                    padding-left: 22px;
+                }
+                .right-menu{
+                    color:#0b1c40;
+                    padding-left: 0;
+                    width: 87%;
+                    word-wrap:break-word;
+                }
+                .right-menu a{
+                    color:#293757;
+                }
+                .title-menu{
+                    font-size: 20px;
+                    display: block;
+                    margin: 0 auto;
+                    margin-top: 50px;
+                    width: 37%
+                }
+                .title-menu .alegreto-font{
+                    font-size: 30px;
+                    font-weight: 700;
+                }
+                .title-menu-type{
+                    font-size: 22px;
+                    font-weight: 500;
+                    font-family: 'agbengaly';
+                    font-style: italic;
+                }
+                .right-content .right-menu-main {
+                    list-style: none;
+                    font-family: 'agbengaly';
+                    font-style: italic;
+
+                }
+                .right-content .right-menu-main span {
+                    text-decoration: underline;
+                    font-size: 16pt;
+                }
+                .right-content .right-menu-main span.active a,.right-content .right-menu-main span.active{
+                    color: #9f9f9f;
+                    text-decoration: none;
+                    font-size: 16pt;
+                }
+                .right-menu-sub-active b,.right-menu-sub-active{
+                    color: #9f9f9f;
+                    text-decoration: none;
+                }
 				.pero{
 					margin-left: 14%;
 					height: auto;
@@ -219,6 +434,8 @@ ul,li,p,span{
 					color: #0b1c40;
 					text-decoration: none;
 					margin-bottom: 20px;
+                    font-style: italic;
+
 				}
 				.contact-header{
 					font-weight: bold;
@@ -240,7 +457,7 @@ ul,li,p,span{
 				}
 					.portfollio{
 						height: auto;
-						width:73%; 
+						width:73%;
 						max-width: 135px;
 						max-height: 122px;
 						margin: 0 auto;
@@ -262,12 +479,17 @@ ul,li,p,span{
 						text-decoration: none;
 						color: #293757;
 						font-size: 12px;
-	    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
+	    				box-shadow: 0 0 5px rgba(0,0,0,0.5);
 						margin: 12px auto 10px auto;
 	    				box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Параметры тени */
 	    				padding: 5px;
+                        text-align: center;
 					}
-				
+                    .buttot-show.hit{
+                        margin-top: 0;
+                        margin-left: 27%;
+                    }
+
 		.uzor-down {
 			width: 47%;
 			margin-left: 16%;
@@ -283,47 +505,63 @@ ul,li,p,span{
 		width: 65%;
 	}
 /* All Smartphones in portrait and landscape ----------- */
-@media only 
-screen 
-and (min-width :380px ) 
+
+/*@media only*/
+/*screen*/
+/*and (min-width :380px )*/
+/*and (max-width :780px ){*/
+
+
+/*}*/
+
+
+
+@media only
+screen
+and (min-width :380px )
 and (max-width :780px ),
 screen
-and (min-device-width :380px ) 
+and (min-device-width :380px )
 and (max-device-width :780px )
 and (orientation : landscape),
 screen
-and (min-device-width :380px ) 
+and (min-device-width :380px )
 and (max-device-width :780px )
 and (orientation : portrait) {
 /* YOUR STYLE GOES HERE */
 	.right-content{
-		float: none;		
+        overflow: hidden;
+		float: none;
 		width: 90%;
 		height: auto;
 		min-height: 0;
 		margin: 0 auto;
 	}
 
-	.warpper-uzor-top{
-	    height: 27%;
-		max-height: 139px;
-	}
+    /*.right-content.page{*/
+        /*display: none;*/
+    /*}*/
+	/*.warpper-uzor-top{*/
+	    /*height: 27%;*/
+		/*max-height: 139px;*/
+	/*}*/
 
 	.left-content{
 		float: none;
 		width: 94%;
 		padding: 3%;
 	}
+
 	.warpper-content{
 		overflow: hidden;
 	}
-			
+
 	.pero{
 		display: none;
 	}
 	.contact{
 		margin :0;
-		margin-right:11%; 
+		margin-right:11%;
 		display: inline-block;
 		width: 55%;
 		list-style: none;
@@ -365,21 +603,25 @@ and (orientation : portrait) {
 		font-size: 12px;
 		box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	}
-					
+
 }
 
-@media only 
+@media only
 screen
 and (max-width: 379px),
-screen 
+screen
 and (max-device-width : 379px){
+
+    .right-content.page{
+        display: none;
+    }
 	.right-content{
 		min-height: 0;
-		float: none;		
+		float: none;
 		width: 90%;
 		margin: 0 ;
 		margin-left: 10px;
-		height: auto; 
+		height: auto;
 
 	}
 	.left-content{
@@ -387,28 +629,28 @@ and (max-device-width : 379px){
 		width: 94%;
 		padding: 3%;
 	}
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
+	/*.warpper-uzor-top{*/
+	    /*height: 14%;*/
+		/*max-height: 139px;*/
+	/*}*/
 	.warpper-content{
 		overflow: hidden;
 	}
-			
+
 	.pero{
 		display: none;
-		
+
 	}
 	.contact{
-		width: 100%;	
+		width: 100%;
 		margin: 0;
 		display: block;
-		
+
 		list-style: none;
 		color: #0b1c40;
 		text-decoration: none;
-		
-	}		
+
+	}
 	.uzor{
 		display: none;
 	}
@@ -436,327 +678,22 @@ and (max-device-width : 379px){
 		text-decoration: none;
 		color: #293757;
 		font-size: 12px;
-		box-shadow: 0 0 5px rgba(0,0,0,0.5); 
+		box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	}
 
 }
 
-/*@media only 
-screen 
-and (min-device-width :380px ) 
-and (max-device-width :780px ) {
 
-	.right-content{
-		float: none;		
-		width: 90%;
-		height: auto;
-		min-height: 0;
-		margin: 0 auto;
-	}
-
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					margin :0;
-					margin-right:11%; 
-					display: inline-block;
-					width: 55%;
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: inline-block;
-					margin-left: 20%;
-					width: 32%;
-					margin: 0;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-					
-}*/
-
-
-
-/*@media only screen
-and (max-device-width : 379px) {
-.right-content{
-		min-height: 0;
-		float: none;		
-		width: 90%;
-		margin: 0 ;
-		margin-left: 10px;
-		height: auto; 
-
-	}
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					width: 100%;	
-					margin: 0;
-					display: block;
-					
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: none;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-}*/
-
-
-
-/* iPad in landscape----------- */
-/*@media only screen 
-and (min-device-width :380px ) 
-and (max-device-width :780px ) 
-and (orientation : landscape) {
-.right-content{
-		float: none;		
-		width: 90%;
-		height: auto;
-		min-height: 0;
-		margin: 0 auto;
-	}
-
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					margin :0;
-					margin-right:11%; 
-					display: inline-block;
-					width: 55%;
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: inline-block;
-					margin-left: 20%;
-					width: 32%;
-					margin: 0;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-}*/
-
-/* iPad in portrait----------- */
-/*@media only screen 
-and (min-device-width :380px ) 
-and (max-device-width :780px )
-and (orientation : portrait){
-
-.right-content{
-		float: none;		
-		width: 90%;
-		height: auto;
-		min-height: 0;
-		margin: 0 auto;
-	}
-
-	.warpper-uzor-top{
-	    height: 14%;
-		max-height: 139px;
-	}
-
-	.left-content{
-		float: none;
-		width: 94%;
-		padding: 3%;
-	}
-	.warpper-content{
-		overflow: hidden;
-	}
-			
-				.pero{
-					display: none;
-					
-				}
-				.contact{
-					margin :0;
-					margin-right:11%; 
-					display: inline-block;
-					width: 55%;
-					list-style: none;
-					color: #0b1c40;
-					text-decoration: none;
-					
-				}
-				
-				.uzor{
-					display: none;
-				}
-				.portfolio-blok{
-					display: inline-block;
-					margin-left: 20%;
-					width: 32%;
-					margin: 0;
-				}
-					.portfollio{
-						width: 100%;
-						margin: 0 ;
-						height: auto;
-					}
-				.work{
-					width: 100%;
-					font-family: 'agopus';
-					font-size: 20px;
-					display: block;
-					text-align: center;
-					margin: 0;
-				}
-				.buttot-show{
-
-					width: 90%;
-					max-width: 70px;
-					height: auto;
-					display: block;
-					text-decoration: none;
-					color: #293757;
-					font-size: 12px;
-    				box-shadow: 0 0 5px rgba(0,0,0,0.5); 
-				}
-}*/
 
 
 /* All Smartphones in landscape ----------- */
-@media only screen 
+@media only screen
 and (min-width : 321px) {
 /* YOUR STYLE GOES HERE */
 }
 
 /* All Smartphones in portrait ----------- */
-@media only screen 
+@media only screen
 and (max-width : 479px) {
 /* YOUR STYLE GOES HERE */
 }
@@ -808,17 +745,17 @@ and (max-width: 1030px){
 
 
 /* iPad in landscape----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : landscape) {
 /* YOUR STYLE GOES HERE */
 }
 
 /* iPad in portrait----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : portrait){
 /* YOUR STYLE GOES HERE */
 }
@@ -828,8 +765,8 @@ and (orientation : portrait){
 /***** Retina IPAD 3 & 4*****/
 
 /* Retina iPad 3 & 4 in portrait and landscape----------- */
-@media only screen 
-and (min-device-width : 768px) 
+@media only screen
+and (min-device-width : 768px)
 and (max-device-width : 1024px)
 and (-webkit-min-device-pixel-ratio: 2){
 /* YOUR STYLE GOES HERE */
@@ -837,9 +774,9 @@ and (-webkit-min-device-pixel-ratio: 2){
 
 /* Retina iPad 3 & 4 in landscape----------- */
 
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : landscape)
 and (-webkit-min-device-pixel-ratio: 2){
 /* YOUR STYLE GOES HERE */
@@ -847,9 +784,9 @@ and (-webkit-min-device-pixel-ratio: 2){
 
 /* Retina iPad 3 & 4 in landscape----------- */
 
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : portrait)
 and (-webkit-min-device-pixel-ratio: 2){
 /* YOUR STYLE GOES HERE */
@@ -861,39 +798,39 @@ and (-webkit-min-device-pixel-ratio: 2){
 /***** IPAD 1 & 2 (ALSO IPAD MINI)*****/
 
 /* iPad 1 & 2 in portrait and landscape ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (-webkit-min-device-pixel-ratio: 1){
 /* YOUR STYLE GOES HERE */
 }
 
 /* iPad 1 & 2 in landscape ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
 and (orientation : landscape)
 and (-webkit-min-device-pixel-ratio: 1)  {
 /* YOUR STYLE GOES HERE */
 }
 
 /* iPad 1 & 2 in portrait ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : portrait) 
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait)
 and (-webkit-min-device-pixel-ratio: 1){
 /* YOUR STYLE GOES HERE */
 }
 
 /* Desktops and laptops ----------- */
-@media only screen 
+@media only screen
 and (min-width : 1224px) {
 /* YOUR STYLE GOES HERE */
 }
 
 /* Large screens ----------- */
-@media only screen 
+@media only screen
 and (min-width : 1824px) {
 /* YOUR STYLE GOES HERE */
 }

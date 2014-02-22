@@ -1,0 +1,42 @@
+<div class="left-content manufacturers">
+<?php foreach($productData as $key){  ?>
+    <a href="/page/productDescription/<?php echo $key['id'].'_'.$generalHelper->transliteration($key['title']); ?>"><div class="warpper-manufacturers">
+            <div class="warpper-manufacturers-img">
+                    <img  class="manufacturers-image" src="/siteDir/categories/<?php  echo $key['image'] ?>" alt=""/>
+                    <span class="desk-manufacturers"><?php  echo $key['title'] ?></span>
+            </div>
+    </div></a>
+<?php  } ?>
+</div>
+<div class="right-content  page">
+    <p class="title-pays-hit"><span class="alegreto-font">X</span>иты продаж</p>
+    <div class="hit-pays">
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+    </div>
+    <?php
+    if(isset($page->activePage['right'])){
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']),true)
+            ->findOneByResource($page->activePage['right'])->setActive(true)
+            ->findOneByResource($page->activePage['right_manufacturers'])->setActive(true);
+    }else{
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']));
+    }
+    echo $this->navigation()->menu()->setPartial('template/navigation_right')->render();
+    ?>
+</div>
+

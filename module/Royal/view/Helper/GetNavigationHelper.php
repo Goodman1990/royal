@@ -13,15 +13,73 @@ use Zend\Navigation\Navigation;
 
 class GetNavigationHelper extends AbstractHelper {
 
-    public function __invoke($navigationType){
-
+    public function __invoke($navigationType,$subcategories=null,$manifatories=null){
+        $navigation = array();
+        $generalHelper = new generalHelper();
         if($navigationType=='top'){
 
             $navigationInfo = \Royal\Models\CategoryPagesModel::model()->findAllOrder('number DESK ');
+            $page = '';
 
         }else if($navigationType=='bottom'){
 
             $navigationInfo = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
+            $page='/page/categories';
+
+        }else if($navigationType=='right'){
+
+            $navigationInfo = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
+            $page='/page/manufacturers';
+            if($subcategories){
+                $manufacturersData =  \Royal\Models\ManufacturersModel::model(array('asArray'=>true))->findByAttributes(array(
+                    'id_subcategories_product'=>$subcategories,
+                ));
+                $page2='/page/product';
+            }
+            $i = -1;
+            foreach ($navigationInfo as $key ) {
+                $i++;
+                $navigation[] =  array(
+                    'label' => $key['title'],
+                    'uri'=>$page.'/'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
+                    'resource'=>$key['id'],
+                    'visible' => $key['visible'],
+//                    'pages'=>array(
+//                    array(
+//                        'label' => $key['title'],
+//                        'uri'=>$page.'/'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
+//                        'resource'=>$key['id'],
+//                        'visible' => $key['visible'],
+//                    ),array(
+//                        'label' => $key['title'],
+//                        'uri'=>$page.''.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
+//                        'resource'=>$key['id'],
+//                        'visible' => $key['visible'],
+//                    )
+//                    )
+                );
+                if($key['id']==$subcategories){
+//                    echo'<pre>';
+//                    var_dump($manufacturersData);
+//                    exit;
+                    foreach ($manufacturersData as $keys ) {
+
+                        $navigation[$i]['pages'][] = array(
+                            'label' => $keys['title'],
+                            'uri'=>$page2.'/'.$keys['id'].'_'.$generalHelper->transliteration(trim($keys['title'])),
+                            'resource'=>$keys['id'].'_manufacturers',
+                            'visible' => $keys['visible'],
+                        );
+                        
+                       
+
+                    }
+                }
+            }
+
+            $container = new \Zend\Navigation\Navigation($navigation);
+            return $container;
+
 
         }else{
 //            echo 123;
@@ -30,27 +88,26 @@ class GetNavigationHelper extends AbstractHelper {
             return $container;
         }
 
-        $navigation = array();
-    	$generalHelper = new generalHelper();
+
 
         foreach ($navigationInfo as $key ) {
         	$navigation[] =  array(
                 'label' => $key['title'],
-                'uri'=>'    /'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
+                'uri'=>$page.'/'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
                 'resource'=>$key['id'],
                 'visible' => $key['visible'],
                 'pages'=>array(
-                    array(
-                        'label' => $key['title'],
-                        'uri'=>'    /'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
-                        'resource'=>$key['id'],
-                        'visible' => $key['visible'],
-                    ),array(
-                        'label' => $key['title'],
-                        'uri'=>'    /'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
-                        'resource'=>$key['id'],
-                        'visible' => $key['visible'],
-                    )
+//                    array(
+//                        'label' => $key['title'],
+//                        'uri'=>$page.'/'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
+//                        'resource'=>$key['id'],
+//                        'visible' => $key['visible'],
+//                    ),array(
+//                        'label' => $key['title'],
+//                        'uri'=>$page.''.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
+//                        'resource'=>$key['id'],
+//                        'visible' => $key['visible'],
+//                    )
                 )
             );
         }

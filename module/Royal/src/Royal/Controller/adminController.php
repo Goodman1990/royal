@@ -309,43 +309,58 @@ class adminController extends AbstractActionController
 
     }
 
-    public function addProductAction() {
+    public function indexAction() {
 
 
-        $id_subcategories_product = $this->params()->fromRoute('param1', 0);
+        $id_categories_product = $this->params()->fromRoute('param1', 0);
 
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'2',
             'sub'=>'2.1'
         )));
-        $SubcategoriesProductModel = new \Royal\Models\SubcategoriesProductModel();
-        $subcategoriesData =$SubcategoriesProductModel->findAllOrder('number DESK ');
-        $ManufacturersModel = new \Royal\Models\ManufacturersModel();
-        $ManufacturersModel= $ManufacturersModel::model(array('asArray'=>true));
-        $ProductModel = new \Royal\Models\ProductModel();
-        $ProductModel = $ProductModel::model();
+
+        $SubcategoriesProductModel =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true));
+        $CategoriesProductModel =  \Royal\Models\CategoriesProductModel::model(array('asArray'=>true));
+        $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
+        $ProductModel =  \Royal\Models\ProductModel::model();
+
+        $CategoriesProductData =  $CategoriesProductModel->findAllOrder('number DESK ');
 
         $formAddProduct= new formGenerate('addProduct', 'category addProduct');
         $formAddColor= new formGenerate('addColor', 'category addProduct color');
         $rules =  $ProductModel->rules();
 
-        if($id_subcategories_product==0){
-            $id_subcategories_product = $subcategoriesData[0]['id'];
+        if($id_categories_product==0){
+            $id_categories_product = $CategoriesProductData[0]['id'];
+        }
+        $SubcategoriesProductData = $SubcategoriesProductModel->findByAttributes(array(
+            'id_categories_product'=>$id_categories_product
+        ));
+       $this->Page->addTab($CategoriesProductData,$id_categories_product,true);
+
+
+        if($this->request->isPost()){
+            $manufacturers= $ManufacturersModel->findByAttributes(array(
+                'id_subcategories_product'=>(int) $this->request->getPost()->id_subcategories_product
+            ));
+            $rules['id_manufacturers']['selectInfo'] = $manufacturers;
+
+            $rules['id_manufacturers']['typeInput'] = 'select';
+
         }
 
-       $this->Page->addTab($subcategoriesData,$id_subcategories_product,true);
-       $categories = array_pop(\Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByPk($id_subcategories_product));
+            $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
+            $rules['id_subcategories_product']['typeInput'] = 'select';
+            $rules['id_manufacturers']['typeInput'] = 'select';
 
-       $manufacturers = $ManufacturersModel->findByAttributes(array(
-            'id_subcategories_product'=>$id_subcategories_product
-       ));
 
-        $rules['id_manufacturers']['selectInfo'] = $manufacturers;
+
 
         $formAddProduct->setDataForm($rules);
 
         if ($this->request->isPost()) {
             $Post = $this->request->getPost()->toArray();
+
             $formAddProduct->setData($Post);
             if($formAddProduct->isValid()){
 
@@ -354,27 +369,42 @@ class adminController extends AbstractActionController
                 for($i = 0;$i<count($image);$i++){
                     rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
                 }
+                $image =explode(',',$this->validData['file']);
+                for($i = 0;$i<count($image);$i++){
+                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/file/'.$image[$i]);
+                }
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
                 for($i = 0;$i<count($video);$i++){
                     $buf = explode('=',$this->validData['video']);
                     $hashVideo[] = end($buf);
                 }
+                unset($this->validData['id']);
                 $this->validData['video'] = implode(',',$hashVideo);
                 $ProductModel->setAttributes($this->validData)->save();
 
               $this->redirect()->toRoute('Royal',array(
                   'controller'=>'admin',
                   'action'=>'addProduct',
-                  'param1'=>$id_subcategories_product,
+                  'param1'=>$id_categories_product,
               ));
+
+            }else{
+
+              $ManufacturersData = $ManufacturersModel->findByAttributes(array(
+                    'id_subcategories_product'=>$Post['id_subcategories_product']
+                ));
+                $rules['id_manufacturers']['selectInfo'] = $ManufacturersData;
+                $rules['id_manufacturers']['typeInput'] = 'select';
+
+                $formAddProduct->setDataFormAdd(array('id_manufacturers'=>$rules['id_manufacturers']));
 
             }
         }
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
-            'id_subcategories_product'=>$id_subcategories_product,
-            'categories_product_id'=>$categories['id_categories_product']
+            'id_subcategories_product'=>$id_categories_product,
+            'categories_product_id'=>$id_categories_product
 
 
         ));
@@ -438,7 +468,7 @@ class adminController extends AbstractActionController
             'sub'=>'2.1'
         )));
 
-        $SubcategoriesProductData =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findAllOrder('number DESK ');
+
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
         $ProductModel =  \Royal\Models\ProductModel::model()->findByPk($id_product);
 
@@ -451,9 +481,26 @@ class adminController extends AbstractActionController
         $ProductModel->findByPk($id_product);
         $categories = \Royal\Models\CategoriesProductModel::model(array('asArray'=>true))->findAllOrder('number DESK ');
 
-        $manufacturers = $ManufacturersModel->findByAttributes(array(
-            'id_subcategories_product'=>$ProductModel->id_subcategories_product
-        ));
+        if($this->request->isPost()){
+
+            $SubcategoriesProductData =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array(
+                'id_categories_product'=>(int)$this->request->getPost()->id_categories_product,
+            ));
+            $manufacturers = $ManufacturersModel->findByAttributes(array(
+                'id_subcategories_product'=>(int)$this->request->getPost()->id_subcategories_product,
+            ));
+
+        }else{
+
+            $SubcategoriesProductData =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array(
+                'id_categories_product'=>$ProductModel->id_categories_product,
+            ));
+            $manufacturers = $ManufacturersModel->findByAttributes(array(
+                'id_subcategories_product'=>$ProductModel->id_subcategories_product
+            ));
+        }
+
+
 
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
         $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
@@ -465,9 +512,6 @@ class adminController extends AbstractActionController
         $rules['id_categories_product']['setLabel'] = 'Категории';
         $rules['id_subcategories_product']['setLabel'] = 'Подкатегории';
 
-
-
-
         $formAddProduct->setDataForm($rules);
 
         $formAddProduct->setData($ProductModel->getAttributes());
@@ -478,7 +522,7 @@ class adminController extends AbstractActionController
             $formAddProduct->setData($Post);
 
             if($formAddProduct->isValid()){
-                
+
                 $this->validData = $formAddProduct->getData();
                 $image =explode(',',$this->validData['image']);
                 for($i = 0;$i<count($image);$i++){
@@ -517,7 +561,7 @@ class adminController extends AbstractActionController
             $id_categories_product = $categoryProduct[0]['id'];
         }
 
-        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model()->findByAttributes(array(
+        $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array(
             'id_categories_product'=> $id_categories_product
         ));
 
@@ -552,6 +596,7 @@ class adminController extends AbstractActionController
             }
 
         }else{
+
 
             $manufacturersData = \Royal\Models\ManufacturersModel::model(array('asArray'=>true))
                 ->findByAttributes(array(
@@ -638,10 +683,14 @@ class adminController extends AbstractActionController
 // /tmp/<br /> <b>Warning</b>: imagecreatetruecolor(): Invalid image dimensions in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>138</b><br /> <br /> <b>Warning</b>: imagecolorallocate() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>140</b><br /> <br /> <b>Warning</b>: imagecolortransparent() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>140</b><br /> <br /> <b>Warning</b>: imagealphablending() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>141</b><br /> <br /> <b>Warning</b>: imagesavealpha() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>142</b><br /> <br /> <b>Warning</b>: imagecopy() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>144</b><br /> <br /> <b>Warning</b>: imagejpeg() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>46</b><br /> 383005-1366x768_530498b187e3a.jpg
     public function uploadFileAction() {
 
-        $this->Page = new Page();
         $this->layout()->setVariables(array('page'=>$this->Page));
         $request =new Request();
         if($request->isPost()){
+//            $helper = new generalHelper();
+//            $file = $request->getFiles();
+//            echo'<pre>';
+//            var_dump($file['pdf-file'][0]['name']);
+//            exit;
 
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
@@ -671,6 +720,61 @@ class adminController extends AbstractActionController
         }
 
         exit;
+    }
+
+
+    public function getManufacturersAction(){
+
+        if($this->request->isPost() &&$this->request->isXmlHttpRequest()){
+            $post = $this->request->getPost();
+                $ManufacturersData = \Royal\Models\ManufacturersModel::model(array('asArray'=>true))
+                ->findByAttributes(array(
+                        $post['name']=>$post['value']
+                ));
+            echo json_encode($ManufacturersData);
+            exit;
+        }
+
+    }
+
+    public function getSubcategoriesAction(){
+
+        if($this->request->isPost() &&$this->request->isXmlHttpRequest()){
+            $post = $this->request->getPost();
+            $ManufacturersData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
+                ->findByAttributes(array(
+                    $post['name']=>$post['value']
+                ));
+            echo json_encode($ManufacturersData);
+            exit;
+        }
+
+    }
+
+
+
+    public function deletedFilesAction(){
+        if($this->request->isPost() &&$this->request->isXmlHttpRequest()){
+            $post = $this->request->getPost();
+            unlink('public'.$post['src']);
+            exit;
+        }
+    }
+
+
+    public function setPopupCookie($popupParams){
+        $TTL = 360;
+        $cookieTime = time() + $TTL;
+        return setcookie(
+            'popup',
+            json_encode($popupParams),
+            $cookieTime,
+            '/'
+        //,$_SERVER['SERVER_NAME']
+        //$config->getCookieDomain(),
+        //$config->getCookieSecure(),
+        //$config->getCookieHttpOnly()
+        );
     }
 
 }

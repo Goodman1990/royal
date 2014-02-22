@@ -61,7 +61,7 @@ class formGenerate extends Form
             }
         $this->setInputFilter($this->inputFilter);
     }
-    protected  function setDataFormAdd($data){
+    public  function setDataFormAdd($data){
 
         foreach ($data as $key => $value) {
             $this->key = $key;
@@ -505,58 +505,6 @@ class formGenerate extends Form
     }
 
     protected function getLabelParam() {
-
-        $label= array(
-            'addTraining' => array(
-                'name' => 'Напишите короткое Главное название'  ,
-                'mailaddress' => 'Укажите E-mail адрес отправителя, от лица которого будет вестись E-mail рассылка',
-                'pay_page' => 'Укажите страницу оплаты',
-                'mailname' => 'Укажите имя отправителя писем, от лица которого будет вестись E-mail рассылка',
-                'note' => 'Напишите длинное Поясняющее название',
-                'image' => 'Загрузите картинку, которая будет символизировать тренинг',
-            ),
-
-            'addLesson' => array(
-                'name' => 'Название урока',
-                'additional' => 'Дополнительные материалы',
-                'homework' => 'Домашнее задание',
-                'example' => 'Образец хорошо выполненного ДЗ',
-                'note'=>'Запись урока'
-                //'2' => 'Новое дз открывается раз в сутки, независимо от проверки'
-            ),
-            'users'=>array(
-                'email'=>'E-mail адрес',
-                'username'=>'Имя',
-                'surname'=>'Фамилия',
-                'password'=>'Пароль',
-                'confirmPassword'=>'Подтверждение пароля ',
-                'isq'=>'ICQ',
-                'phone'=>'Контактный телефон',
-                'skype'=>'skype',
-                'image'=>'Загрузите картинку, которая будет символизировать тренинг',
-            ),
-            'fac' => array(
-                'question' => 'Вопрос',
-                'answer' => 'Ответ',
-                //'2' => 'Новое дз открывается раз в сутки, независимо от проверки'
-            ),
-            'homework'=>array(
-                'report'=>'Ваш отчет'
-
-            ),
-            'HomeworkMessage'=>array(
-                'message'=>'Напишите длинное Поясняющее название'
-
-            ),
-            'sendMessage'=>array(
-                'name'=>'Заголовок письма ',
-                'text'=>'Текст письма ',
-                'is_vebinar'=>'Это анонс вебинара',
-                'date_range'=>'Время проведения вебинара (МСК): ' ,
-
-            )
-        );
-
         if(isset($this->value['setLabel'])){
 
                 $this->label = $this->value['setLabel'];
@@ -591,15 +539,17 @@ class formGenerate extends Form
     public function getSelectElement() {
 
         $infoSelect = array();
-        foreach ($this->value['selectInfo'] as $key) {
-            $infoSelect[$key['id']] = $key['title'];
+        if(isset($this->value['selectInfo'])){
+                foreach ($this->value['selectInfo'] as $key) {
+                    $infoSelect[$key['id']] = $key['title'];
+                }
         }
         $this->element = array(
             'type' => $this->value['typeInput'],
             'name' => $this->key,
             'options' => array(
                 'label' => $this->value['setLabel'],
-                'empty_option' => 'Выберете категорию',
+                'empty_option' =>$this->value['empty_option'],
                 'value_options' =>$infoSelect,
             )
         );

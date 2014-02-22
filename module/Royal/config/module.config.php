@@ -54,7 +54,7 @@ return array(
                     ),
                     'defaults' => array(
                         '__NAMESPACE__' => 'Royal\Controller',
-                        'controller'    => 'Index',
+                        'controller'    => 'Page',
                         'action'        => 'index',
                     ),
                 ),
@@ -86,7 +86,7 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Royal\Controller\Index' => 'Royal\Controller\IndexController',
+            'Royal\Controller\Page' => 'Royal\Controller\PageController',
             'Royal\Controller\console\console' => 'Royal\Controller\console\consoleController',
             'Royal\Controller\admin' => 'Royal\Controller\adminController',
         ),

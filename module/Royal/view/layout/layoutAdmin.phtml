@@ -1,7 +1,7 @@
 <?php echo $this->doctype();?>
 <?php //  echo 123; exit;  ?>
 <meta charset="utf-8">
-<html lang="en">
+<html lang="ru">
     <head>
         <?php
             echo $this->headTitle('royal')->setSeparator(' - ')->setAutoEscape(false)
@@ -20,9 +20,10 @@
         <!-- Scripts -->
         <?php
             echo $this->headScript()
+                ->prependFile($this->basePath() . '/js/popup.js','text/javascript')
                 ->prependFile($this->basePath() . '/js/jquery.imgareaselect.js','text/javascript')
                 ->prependFile($this->basePath() . '/js/admin.js','text/javascript')
-                ->prependFile($this->basePath() . '/js/jquery.uploadify.js','text/javascript')
+//                ->prependFile($this->basePath() . '/js/jquery.uploadify.js','text/javascript')
                 ->prependFile($this->basePath() . '/js/jquery.fileupload.js','text/javascript')
                 ->prependFile($this->basePath() . '/js/jquery.slides.min.js',   'text/javascript')
                 ->prependFile($this->basePath() . '/js/jquery-ui.js','text/javascript')

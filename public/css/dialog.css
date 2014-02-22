@@ -1,0 +1,61 @@
+.prompt-wrap{
+    border: none;
+    border-radius: 0;
+    padding: 15px 30px 30px;
+    text-align: left;
+}
+.prompt-wrap .ui-dialog-titlebar{
+    border: none;
+    background: none;
+    font-size: 20px;
+    font-weight: 300;
+    color: #787878;
+    padding: 0;
+    margin-bottom: 15px;
+}
+.prompt-wrap .ui-dialog-content{
+    padding: 0;
+    margin-bottom: 20px;
+    color: #3F3F3F;
+    font-weight: 300;
+    font-size: 15px;
+    overflow: visible;
+}
+.prompt-wrap .ui-widget-header .ui-icon{
+    /*background: url("../images/close-pick.png");*/
+    width: 16px;
+    height: 16px;
+    -webkit-background-size: 16px 16px;
+    background-size: 16px 16px;
+}
+.prompt-wrap .ui-widget-header .ui-state-hover{
+    border: none;
+    background: none;
+}
+.prompt-wrap .ui-dialog-buttonpane{
+    border-top: none;
+}
+.prompt-wrap .ui-dialog-buttonpane{
+    padding: 0;
+}
+.prompt-wrap .ui-dialog-buttonpane .ui-dialog-buttonset{
+    float: none;
+    padding: 0;
+}
+.prompt-wrap .ui-dialog-buttonpane .ui-dialog-buttonset button{
+    width: 120px;
+    padding: 0;
+    height: 40px;
+    margin: 0;
+}
+.prompt-wrap .ui-dialog-buttonpane .ui-dialog-buttonset .green{
+    float: right;
+}
+.prompt-wrap .ui-dialog-titlebar-close{
+    right: -27px;
+    top: 1px;
+    padding: 0;
+}
+.ui-widget-overlay{
+    background: #000;
+}
