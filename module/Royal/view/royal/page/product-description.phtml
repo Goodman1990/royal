@@ -1,0 +1,80 @@
+
+<div class="left-content product-description">
+    <span class="title-product">asdasdasd asdads</span>
+    <div class="description-product" >
+        <img  class="img-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg"  style="float: left" alt=""/>
+        <p>dskaskdjaksjd asshdaksjhdashdj adhashgdasgd agdajsgda adsgjasgdhasg agdasgdjh gasdas dhgas dasgdhsagdhgas adgh asgsdjasgdhasgdjags djsag djasgdjhasgdjg asgdjhgasdjasgda sdhgasj dg</p>
+        <p>dasdaskhdj assdhjashdjkhaskkjdhasjhdjashjdhasdasdasl;jdlaskjdklajsdas</p>
+        <p style="margin-left: 40px;">asdasdasdasfklas</p>
+        <p> dasdkalskd;lkasl;dk;laskd;lkas;ldk;aslddasdasld;asl d;sla;dlas&nbsp;</p>
+        <p> &nbsp;</p>
+        <p>asd</p>
+        <p>asd</p>
+        <p>as</p>
+        <p>das</p>
+        <p>&nbsp;</p>
+    </div>
+    <div class="wrap-tabs-block">
+        <div class="item-tubs-product active">Цвет</div>
+        <div class="line">&nbsp;</div>
+        <div class="item-tubs-product">Техническая информация</div>
+        <div class="line">&nbsp;</div>
+        <div class="item-tubs-product">Видео</div>
+        <div class="line">&nbsp;</div>
+        <div class="item-tubs-product">Проэкты</div>
+        <div class="line">&nbsp;</div>
+        <div class="item-tubs-product">Где купить</div>
+        <div class="wrap-tab-content">
+            <div class="wrap-img-color-product">
+                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
+            </div>
+            <div class="wrap-img-color-product">
+                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
+            </div>
+            <div class="wrap-img-color-product">
+                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
+            </div>
+            <div class="page-circle">
+                <span class="circle active">&nbsp;</span>
+                <span class="circle">&nbsp;</span>
+                <span class="circle">&nbsp;</span>
+                <span class="circle">&nbsp;</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="right-content  page">
+    <p class="title-pays-hit"><span class="alegreto-font">X</span>иты продаж</p>
+    <div class="hit-pays">
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+        <div class="wrap-pays-item">
+            <div class="pays-item"></div>
+            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
+        </div>
+    </div>
+    <a class="buttot-show hit" href="#">посмотреть</a>
+    <?php
+    if(isset($page->activePage['right'])){
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']),true)
+            ->findOneByResource($page->activePage['right'])->setActive(true)
+            ->findOneByResource($page->activePage['right_manufacturers'])->setActive(true);
+    }else{
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']));
+    }
+    echo $this->navigation()->menu()->setPartial('template/navigation_right')->render();
+    ?>
+</div>
+
