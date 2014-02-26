@@ -46,7 +46,9 @@
     <hr>
     <div class="wrapper-input image">
         <div class="wrapper-image">
-            <img width="100" height="100" class="prewiew-defult" src=""/>
+            <div class="image-warrper-file">
+                <img width="100" height="100" class="prewiew-defult" src=""/>
+            </div>
             <input type="file" name="img-file[]" multiple class="image-file">
         </div>
     </div>
@@ -56,7 +58,6 @@
         <div class="wrapper-image inner">
             <div class="wrapper-image file-defoult" style="display: none">
                 <span class="pdf-title"></span>
-
                 <div class="prewiew-defult-pdf "></div>
             </div>
         </div>
@@ -157,9 +158,6 @@ $(document).on('click','.deleted-image',function(e) {
 
 
 $(document).on('click','.deleted-file',function(e) {
-
-
-
 
     var yesCollback = function(e){
 
@@ -300,10 +298,11 @@ $(document).ready(function () {
             arrImg = imgView.split(',');
             for (var i = 0; i < arrImg.length; i++) {
 
-                var cloneElement = $(".prewiew-defult").clone();
-                $(cloneElement).attr('src', "/tmp/" + arrImg[i]);
-                $(cloneElement).attr('class', "prewiew deleted-image");
-                $(cloneElement).css({margin: '5px', border: 'solid 2px black'});
+                var cloneElement = $(".image-warrper-file").clone();
+                $(cloneElement).find('.prewiew-defult').attr('src', "/tmp/" + arrImg[i]);
+                $(cloneElement).find('.prewiew-defult').attr('class', "prewiew deleted-image");
+                $(cloneElement).css({margin: '5px'});
+                $(cloneElement).css({display:'inline-block'});
                 $('.wrapper-input.image').append(cloneElement);
 
             }

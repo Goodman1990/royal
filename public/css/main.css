@@ -358,6 +358,9 @@ p,span{
                 width: 110px;
                 text-align: center;
             }
+            .secend-part-title{
+                font-size: 18px;
+            }
             .description-product{
                 text-align: justify;
                 overflow: auto;
@@ -429,6 +432,12 @@ p,span{
                 border-top-right-radius: 5px;
             }
             .wrap-tab-content{
+                display: none;
+            }
+            .wrap-tab-content.active{
+                display: block;
+            }
+            .wrap-tab-content{
                 width: 97%;
                 float: left;
                 font-family: 'agbengaly';
@@ -443,8 +452,11 @@ p,span{
                 border-top: none;
             }
             .item-tubs-product.active{
-               border-bottom: none;
+                border-bottom: none;
                 background: none;
+            }
+            .item-tubs-product.active>.wrap-tab-content{
+                display: block;
             }
 
 				.podpis{
@@ -466,11 +478,12 @@ p,span{
 			}
 
                 .title-pays-hit{
-                    width: 73%;
+                    width: 80%;
                     font-family: 'agbengaly';
                     font-style: italic;
                     display: block;
                     margin: 0 auto;
+                    margin-bottom: 10px;
                 }
 
                 .right-content .wrap-pays-item .pays-item{

@@ -359,28 +359,44 @@ class adminController extends AbstractActionController
         $formAddProduct->setDataForm($rules);
 
         if ($this->request->isPost()) {
+
             $Post = $this->request->getPost()->toArray();
 
             $formAddProduct->setData($Post);
+
             if($formAddProduct->isValid()){
 
                 $this->validData = $formAddProduct->getData();
                 $image =explode(',',$this->validData['image']);
+                $arrImage = '';
+
                 for($i = 0;$i<count($image);$i++){
                     rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
+                    $arrImage[] = '/siteDir/product/'.$image[$i];
                 }
-                $image =explode(',',$this->validData['file']);
-                for($i = 0;$i<count($image);$i++){
-                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/file/'.$image[$i]);
+
+                $this->validData['image'] = implode(',',$arrImage);
+                $file =explode(',',$this->validData['file']);
+                $arrFile = '';
+
+                for($i = 0;$i<count($file);$i++){
+                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/file/'.$file[$i]);
+                    $arrFile[] = '/siteDir/product/'.$file[$i];
                 }
+
+                $this->validData['file'] = implode(',',$arrFile);
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
+
                 for($i = 0;$i<count($video);$i++){
                     $buf = explode('=',$this->validData['video']);
                     $hashVideo[] = end($buf);
                 }
+
                 unset($this->validData['id']);
+
                 $this->validData['video'] = implode(',',$hashVideo);
+
                 $ProductModel->setAttributes($this->validData)->save();
 
               $this->redirect()->toRoute('Royal',array(
@@ -524,20 +540,59 @@ class adminController extends AbstractActionController
             if($formAddProduct->isValid()){
 
                 $this->validData = $formAddProduct->getData();
+
+
+//                $image =explode(',',$this->validData['image']);
+//                for($i = 0;$i<count($image);$i++){
+//                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
+//                }
+//                $video = explode(',',$this->validData['video']);
+//                $hashVideo ='';
+//                for($i = 0;$i<count($video);$i++){
+//                    $buf = explode('=',$this->validData['video']);
+//                    $hashVideo[] = end($buf);
+//                }
+//                $this->validData['video'] = implode(',',$hashVideo);
+
+
+
+
+
                 $image =explode(',',$this->validData['image']);
+                $arrImage = '';
+
                 for($i = 0;$i<count($image);$i++){
-                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
+
+                    if(file_exists(TMP_DIR.$image[$i])){
+                        rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
+                    }
+                    $arrImage[] = SITE_DIR.'/product/'.$image[$i];
                 }
+                $this->validData['image'] = implode(',',$arrImage);
+
+                $file =explode(',',$this->validData['file']);
+                $arrFile = '';
+
+                for($i = 0;$i<count($file);$i++){
+                    if(file_exists(TMP_DIR.$file[$i])){
+                        rename(TMP_DIR.$image[$i],SITE_DIR.'/product/file/'.$file[$i]);
+                    }
+                    $arrFile[] = SITE_DIR.'/product/'.$image[$i];
+                }
+                $this->validData['file'] = implode(',',$arrFile);
+
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
+
                 for($i = 0;$i<count($video);$i++){
                     $buf = explode('=',$this->validData['video']);
                     $hashVideo[] = end($buf);
                 }
                 $this->validData['video'] = implode(',',$hashVideo);
-                $this->validData['id'] = $id_product;
-                $ProductModel->setAttributes($this->validData)->save();
 
+                $this->validData['id'] = $id_product;
+
+                $ProductModel->setAttributes($this->validData)->save();
             }
         }
         return new ViewModel(array(

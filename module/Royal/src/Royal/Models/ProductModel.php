@@ -27,6 +27,7 @@ class ProductModel extends ProductModelEntity {
             "price"=>array('required' => true,'validators' => array('regex' => 'numbers',), 'setLabel' => 'Цена'),
             "file"=>array('validators' =>false,'typeInput' => 'hidden'),
             "image"=>array('validators' =>false,'typeInput' => 'hidden'),
+            "main_image"=>array('validators' =>false,'typeInput' => 'hidden'),
             "id"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
             "id_subcategories_product"=>array( 'required' => true,'typeInput' => 'select','validators' =>false,'filters' => array('trim','int'), 'empty_option'=>'Выберете подкатегорию','setLabel' => 'Выберете подкатегорию'),
             "id_categories_product"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),

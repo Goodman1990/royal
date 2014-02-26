@@ -29,6 +29,7 @@ class ProductModelEntity extends ActiveRecordModel {
     {
         return array(
             "title",
+            "main_image",
             "description",
             "technical_description",
             "video",

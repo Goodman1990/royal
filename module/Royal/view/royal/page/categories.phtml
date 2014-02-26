@@ -1,6 +1,5 @@
 <div class="left-content">
 
-
 <?php foreach($SubcategoriesProductData as $key){  ?>
     <a href="/page/manufacturers/<?php echo $key['id'].'_'.$generalHelper->transliteration($key['title']); ?>"><div class="warpper-subcategories">
         <div class="border-content">
@@ -9,11 +8,9 @@
         <span class="desk-subcategories"><?php  echo $key['title'] ?></span>
     </div></a>
 <?php  } ?>
-
-
 </div>
 <div class="right-content  page">
-    <p class="title-pays-hit"><span class="alegreto-font">X</span>иты продаж</p>
+    <p class="title-pays-hit"><span class="alegreto-font">X</span ><span class="secend-part-title" >иты продаж</span></p>
     <div class="hit-pays">
         <div class="wrap-pays-item">
             <div class="pays-item"></div>

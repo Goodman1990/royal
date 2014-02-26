@@ -1,4 +1,4 @@
-function PopUp(text, title, elementEvent, yesCallback, noCallback){
+function PopUp(text, title, elementEvent, yesCallback, noCallback,buttonYesText,buttonNoText){
     elementEvent.preventDefault();
     var yesText = 'Да';
     var noText = 'Нет';

@@ -2,14 +2,14 @@
 <?php foreach($productData as $key){  ?>
     <a href="/page/productDescription/<?php echo $key['id'].'_'.$generalHelper->transliteration($key['title']); ?>"><div class="warpper-manufacturers">
             <div class="warpper-manufacturers-img">
-                    <img  class="manufacturers-image" src="/siteDir/categories/<?php  echo $key['image'] ?>" alt=""/>
+                    <img  class="manufacturers-image" src="<?php  echo $key['image'] ?>" alt=""/>
                     <span class="desk-manufacturers"><?php  echo $key['title'] ?></span>
             </div>
     </div></a>
 <?php  } ?>
 </div>
 <div class="right-content  page">
-    <p class="title-pays-hit"><span class="alegreto-font">X</span>иты продаж</p>
+    <p class="title-pays-hit"><span class="alegreto-font">X</span ><span class="secend-part-title" >иты продаж</span></p>
     <div class="hit-pays">
         <div class="wrap-pays-item">
             <div class="pays-item"></div>
