@@ -361,7 +361,7 @@ form.addProduct p{
 button.addProduct{
     margin-top: 20px;
 }
-.wrapper-image{
+.wrapper-image,.wrapper-image-color{
     display: inline-block;
     align-content: center;
 }
@@ -423,9 +423,6 @@ button.addProduct{
     word-break: break-all;
     vertical-align: top;
 }
-
-
-
 .pdf-title{
     word-break: break-all;
     display: block;
@@ -465,13 +462,27 @@ all-product.title{
     text-align: center;
 }
 .all-product .prewiew{
-
     display: block;
     margin: 0 auto;
 }
-#main_image{
-
+.main-image{
+    border: 2px solid lime;
+    margin: 5px;
+}
+.prewiew.deleted-image{
+    margin: 5px;
+    border: solid 2px black;
+    cursor: pointer;
 }
 
+.prewiew.deleted-image-color{
+    margin: 5px;
+    border: solid 2px black;
+    cursor: pointer;
+}
+
+.prewiew.deleted-image.main-image{
+    border: solid 4px green;
+}
 
 

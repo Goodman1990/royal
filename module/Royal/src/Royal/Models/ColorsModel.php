@@ -21,9 +21,13 @@ class ColorsModel extends ColorsModelEntity {
     {
         return array(
             "id"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
-            'title'=>array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'название категории'),
-            "group"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
-            "typeImage"=>array('typeInput' => 'checkbox','validators' =>false,'setLabel' => 'видемость'),
+            "image_color"=>array('typeInput' => 'hidden','validators' =>false),
+            "color"=>array('validators' =>false,'typeInput' => 'hidden'),
+            "id_product"=>array('validators' =>false,'typeInput' => 'hidden','filters' => array('trim','int')),
+//            "id"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
+//            'title'=>array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'название категории'),
+//            "group"=>array('typeInput' => 'hidden','validators' =>false,'filters' => array('trim','int')),
+//            "typeImage"=>array('typeInput' => 'checkbox','validators' =>false,'setLabel' => 'видемость'),
         );
     }
 

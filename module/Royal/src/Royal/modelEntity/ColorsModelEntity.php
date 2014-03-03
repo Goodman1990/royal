@@ -29,10 +29,9 @@ class ColorsModelEntity extends ActiveRecordModel {
     {
         return array(
             "id",
-"title",
-"group",
-"typeImage",
-
+            "color",
+            "image_color",
+            "id_product",
         );
     }
 

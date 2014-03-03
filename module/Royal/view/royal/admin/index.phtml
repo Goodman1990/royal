@@ -10,6 +10,11 @@
 <!--<div id="map"></div>-->
 
 <?php echo $this->form()->openTag($formAdd); ?>
+<?php echo $this->formRow($formAdd->get('image')) ?>
+<?php echo $this->formRow($formAddColor->get('image_color')->setAttribute('id', 'image-color')) ?>
+<?php echo $this->formRow($formAddColor->get('color')->setAttribute('id', 'input-color')) ?>
+<?php echo $this->formRow($formAdd->get('file')->setAttribute('id', 'file-pdf-input')) ?>
+<?php echo $this->formRow($formAdd->get('main_image')->setAttribute('id','main_image')) ?>
 <div class="test-color">
 
 
@@ -33,7 +38,7 @@
     <div class="wrapper-input description">
         <?php echo $this->formRow($formAdd->get('technical_description')->setAttribute('class', 'ckeditor')) ?>
     </div>
-    <?php echo $this->formRow($formAdd->get('image')) ?>
+
     <div class="wrapper-input video">
         <?php echo $this->formRow($formAdd->get('video')) ?>
     </div>
@@ -64,12 +69,20 @@
         <input type="file" name="pdf-file[]" multiple id="file-pdf">
 
         <div class="wrapper-input file">
-            <?php echo $this->formRow($formAdd->get('file')->setAttribute('id', 'file-pdf-input')) ?>
+
         </div>
     </div>
 
     <p>Добавте цвет</p>
     <hr>
+    <div class="wrapper-input color">
+        <div class="wrapper-image">
+            <div class="image-warrper-color">
+                <img width="100" height="100" class="prewiew-defult-color" src=""/>
+            </div>
+            <input type="file" name="img-file-color[]" multiple class="image-file-color">
+        </div>
+    </div>
 
     <button form="addProduct" class="addProduct" name="edit">Добавить продукт</button>
     <?php echo $this->form()->closeTag($formAdd); ?>
@@ -101,6 +114,7 @@
 
 $(document).ready(function () {
     $('.image-file').jInputFile();
+    $('.image-file-color').jInputFile();
     $('#file-pdf').jInputFile();
 });
 
@@ -123,38 +137,106 @@ $(document).on('change','select[name="id_subcategories_product"]',function() {
 
 $(document).on('click','.deleted-image',function(e) {
 
-   var imaageName =  $(this).attr('src').split('/');
+    var imaageName =  $(this).attr('src').split('/');
     imaageName =  imaageName[imaageName.length-1];
 
-    var yesCollback = function(e){
+    var mainImageCollback = function(e){
 
-        var imaageName =  $(e.currentTarget).attr('src').split('/');
-        var src = $(e.currentTarget).attr('src');
-        imaageName =  imaageName[imaageName.length-1];
-
+        var imaageName = $(e.currentTarget).attr('src');
         var val = $('input[name="image"]').val();
-
-        var serchIndex = val./*replace(','+imaageName,'').*/split(',').indexOf(imaageName);
-
+        var serchIndex = val.split(',').indexOf(imaageName);
         var arr =  val.split(',');
         if(arr.length==1){
             $('input[name="image"]').val('');
         }else{
-            console.log(arr,serchIndex);
-         var buf =   arr.splice(serchIndex,1);
-            console.log(arr);
+            var buf =   arr.splice(serchIndex,1);
             $('input[name="image"]').val(arr.join(','));
         }
+
+        if($('#main_image').val()!=''){
+            if(arr.join(',')==''){
+                $('input[name="image"]').val($('input[name="image"]').val($('#main_image').val()));
+            }else{
+                $('input[name="image"]').val($('#main_image').val()+','+arr.join(','));
+            }
+        }
+        $('#main_image').val($(e.currentTarget).attr('src'));
+        $('.main-image').removeClass('main-image');
+        $(e.currentTarget).addClass('main-image');
+
+    };
+
+    var deleteCollback = function(e){
+
+        var imaageName = $(e.currentTarget).attr('src');
+        var val = $('input[name="image"]').val();
+        var serchIndex = val.split(',').indexOf(imaageName);
+        var arr =  val.split(',');
+
+        if(arr.length==1){
+
+            $('input[name="image"]').val('');
+
+        }else{
+
+            var buf =   arr.splice(serchIndex,1);
+            $('input[name="image"]').val(arr.join(','));
+
+        }
         $(e.currentTarget).remove();
+        $('.prompt').dialog('close');
         $.post('/admin/deletedFiles',{src : src})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });
 
     };
-    PopUp('вы хотите удалить эту картинку', 'сообщение',e , yesCollback);
+
+    PopUpMain('Выберете действее', 'сообщение',e , deleteCollback,mainImageCollback);
 
 });
+
+
+
+$(document).on('click','.deleted-color',function(e) {
+
+    var imaageName =  $(this).attr('src').split('/');
+    imaageName =  imaageName[imaageName.length-1];
+
+    var noCollback = function(e){
+        $('.prompt').dialog('close');
+    };
+
+    var yesCollback = function(e){
+
+        var imaageName = $(e.currentTarget).attr('src');
+        var valImage = $('#image-color').val();
+        var valColor = $('#input-color').val();
+        var serchIndex = valImage.split(',').indexOf(imaageName);
+        var arrImage =  valImage.split(',');
+        var arrColor =  valColor.split(',');
+
+        if(arrImage.length==1){
+            $('#image-color').val('');
+            $('#input-color').val('');
+        }else{
+            arrImage.splice(serchIndex,1);
+            arrColor.splice(serchIndex,1);
+            $('#image-color').val(arrImage.join(','));
+            $('#input-color').val(arrColor.join(','));
+
+        }
+        $(e.currentTarget).remove();
+        $.post('/admin/deletedFiles',{src : imaageName})
+            .done(function(data) {
+                $('.prompt').dialog('close');
+            });
+    };
+
+    PopUp('Выберете действее', 'сообщение',e , yesCollback,noCollback);
+
+});
+
 
 
 $(document).on('click','.deleted-file',function(e) {
@@ -162,9 +244,6 @@ $(document).on('click','.deleted-file',function(e) {
     var yesCollback = function(e){
 
         var imaageName =  $(e.currentTarget).find('.pdf-title').text();
-
-        console.log( this);
-//        imaageName =  imaageName[imaageName.length-1];
 
         var val = $('input[name="file"]').val();
 
@@ -186,6 +265,7 @@ $(document).on('click','.deleted-file',function(e) {
             });
 
     };
+
     PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
 
 });
@@ -197,6 +277,7 @@ globalNamePdf = [];
 globalK = 0;
 globalEvent = '';
 globalNamePdf.ext = [];
+globalType = 'image';
 
 
 function createPreviewFile() {
@@ -228,6 +309,60 @@ function createPreviewFile() {
 
 }
 
+
+function createPreviewImage(){
+
+    var imgView = $('.image').val();
+    if (imgView != '') {
+
+        var arrImg = [];
+        arrImg = imgView.split(',');
+        for (var i = 0; i < arrImg.length; i++) {
+
+            var cloneElement = $(".image-warrper-file").clone();
+            $(cloneElement).find('.prewiew-defult').attr('src',arrImg[i]);
+            $(cloneElement).find('.prewiew-defult').attr('class', "prewiew deleted-image");
+            $(cloneElement).attr('class','fake');
+            $(cloneElement).css({margin: '5px'});
+
+            $(cloneElement).css({display:'inline-block'});
+            $('.wrapper-input.image').append(cloneElement);
+
+        }
+    }
+    if($('.main_image').val()!=''){
+
+        var cloneElement = $(".image-warrper-file").clone();
+        $(cloneElement).find('.prewiew-defult').attr('src',$('.main_image').val());
+        $(cloneElement).find('.prewiew-defult').attr('class', "prewiew deleted-image main-image");
+        $(cloneElement).attr('class','fake');
+        $(cloneElement).css({display:'inline-block'});
+        $('.wrapper-input.image').append(cloneElement);
+
+    }
+
+}
+
+function createPreviewImageColor(){
+
+    var imgView = $('#image-color').val();
+    if (imgView != '') {
+
+        var arrImg = [];
+        arrImg = imgView.split(',');
+        for (var i = 0; i < arrImg.length; i++) {
+            var cloneElement = $(".image-warrper-color").clone();
+            $(cloneElement).find('.prewiew-defult-color').attr('src',arrImg[i]);
+            $(cloneElement).find('.prewiew-defult-color').attr('class', "prewiew deleted-color");
+            $(cloneElement).attr('class','fake-color');
+            $(cloneElement).css({margin: '5px'})
+            $(cloneElement).css({display:'inline-block'});
+            $('.wrapper-input.color').append(cloneElement);
+        }
+    }
+}
+
+
 $(function () {
 
     var image = $('.image-file').fileupload({
@@ -251,13 +386,38 @@ $(function () {
     });
 
 
+     $('.image-file-color').fileupload({
+        url: '/admin/uploadImageColor',
+        dataType: 'json',
+        multipart: true,
+        done: function (e, data) {
+            globalNameImage.push(data.result);
+            globalType = 'color';
+
+            if (data.originalFiles.length == globalNameImage.length) {
+                globalEvent = e;
+                cropImage(globalNameImage)
+            }
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('.progress').css(
+                'width',
+                progress + '%'
+            );
+        }
+    });
+
+
     $('#file-pdf').fileupload({
         url: '/admin/uploadFile',
         dataType: 'json',
         multipart: true,
         formAcceptCharset: 'utf-8',
         done: function (e, data) {
+
             globalNamePdf.push(data.result);
+
             if (data.originalFiles.length == globalNamePdf.length) {
 
                 var value = $('#file-pdf-input').val();
@@ -290,26 +450,10 @@ $(function () {
 
 $(document).ready(function () {
 
-    function createPreviewImage(){
-        var imgView = $('.image').val();
-        if (imgView != '') {
 
-            var arrImg = [];
-            arrImg = imgView.split(',');
-            for (var i = 0; i < arrImg.length; i++) {
-
-                var cloneElement = $(".image-warrper-file").clone();
-                $(cloneElement).find('.prewiew-defult').attr('src', "/tmp/" + arrImg[i]);
-                $(cloneElement).find('.prewiew-defult').attr('class', "prewiew deleted-image");
-                $(cloneElement).css({margin: '5px'});
-                $(cloneElement).css({display:'inline-block'});
-                $('.wrapper-input.image').append(cloneElement);
-
-            }
-        }
-    }
     createPreviewImage();
     createPreviewFile();
+    createPreviewImageColor();
 //           $.getJSON(
 //            'http://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent('Украина, г. Донецк, ул. Собинова 2а')+'&sensor=true',
 //            {
@@ -359,57 +503,10 @@ $(document).ready(function () {
 //
 //            });
 });
-
-$(document).on('click', '#crop-image', function () {
-
-    var sendData = {};
-    sendData.x1 = $('#x1').val();
-    sendData.x2 = $('#x2').val();
-    sendData.y2 = $('#y2').val();
-    sendData.y1 = $('#y1').val();
-    sendData.w = $('#w').val();
-    sendData.h = $('#h').val();
-    sendData.width = $('#target').width();
-    sendData.height = $('#target').height();
-    sendData.imageName = globalNameImage[globalK];
-    sendData.data = $('#target').attr('data-cof');
-    sendData.marker = 1;
-
-    $.post('/admin/crop', sendData)
-        .done(function (e, data) {
-            var cloneElement = $(".prewiew-defult").clone();
-            $(cloneElement).attr('src', "/tmp/" + e);
-            $(cloneElement).attr('class', "prewiew deleted-image");
-            $(cloneElement).css({margin: '5px', border: 'solid 2px black','cursor':'pointer'});
-            $(".container-crop").dialog("close");
-
-            if ($('input.image').val() == '') {
-                $('input.image').val(globalNameImage[globalK]);
-            } else {
-                $('input.image').val($('input.image').val() + ',' + globalNameImage[globalK]);
-            }
-
-            $('#target').imgAreaSelect({remove: true});
-            globalK++;
-            $('.wrapper-input.image').append(cloneElement);
-            if (globalLength > globalK) {
-                cropImage(globalNameImage)
-            } else {
-
-                globalNameImage = [];
-                globalK = 0;
-                globalEvent = '';
-                globalLength = '';
-            }
-
-        });
-
-});
-
-
 function cropImage(name) {
 
     globalLength = name.length;
+    console.log(name[globalK]);
     var i = $(globalEvent.target).attr('data-iterator');
     if (typeof i == 'undefined') {
         $('input').removeClass('active-input');
@@ -498,6 +595,86 @@ function cropImage(name) {
         }
     });
 }
+$(document).on('click', '#crop-image', function () {
+
+    var sendData = {};
+    sendData.x1 = $('#x1').val();
+    sendData.x2 = $('#x2').val();
+    sendData.y2 = $('#y2').val();
+    sendData.y1 = $('#y1').val();
+    sendData.w = $('#w').val();
+    sendData.h = $('#h').val();
+    sendData.width = $('#target').width();
+    sendData.height = $('#target').height();
+    sendData.imageName = globalNameImage[globalK];
+    sendData.data = $('#target').attr('data-cof');
+    sendData.marker = 1;
+    if(globalType=='color'){
+        sendData.mainColor = 1;
+    }
+    $.post('/admin/crop', sendData)
+        .done(function (e, data) {
+            e =JSON.parse(e);
+
+            if(globalType == 'image'){
+
+                var cloneElement = $(".prewiew-defult").clone();
+                $(cloneElement).attr('src', "/tmp/" + e.imageName);
+                $(cloneElement).attr('class', "prewiew deleted-image");
+
+            }else{
+
+                var cloneElement = $(".prewiew-defult-color").clone();
+                $(cloneElement).attr('src', "/tmp/" + e.imageName);
+                $(cloneElement).attr('class', "prewiew deleted-image-color");
+
+            }
+            $(".container-crop").dialog("close");
+            if ($('input.image').val() == '' && globalType =='image') {
+
+                $('input.image').val('/tmp/'+globalNameImage[globalK]);
+
+            } else if($('input.image').val() != ''&& globalType =='image'){
+
+                $('input.image').val($('input.image').val() + ',' + '/tmp/'+globalNameImage[globalK]);
+
+            } else if(typeof  e.color!="undefined" && $('#image-color').val()==''){
+
+                $('#image-color').val('/tmp/'+globalNameImage[globalK]);
+                $('#input-color').val(e.color);
+
+            }else if(typeof  e.color!="undefined" && $('#image-color').val()!=''){
+
+                $('#image-color').val($('#image-color').val()+','+'/tmp/'+globalNameImage[globalK]);
+                $('#input-color').val($('#input-color').val()+','+e.color);
+
+            }
+            $('#target').imgAreaSelect({remove: true});
+            globalK++;
+            if(globalType == 'image'){
+                $('.wrapper-input.image').append(cloneElement);
+            }else{
+                $('.wrapper-input.color').append(cloneElement);
+            }
+            if (globalLength > globalK) {
+
+                cropImage(globalNameImage);
+
+            } else {
+
+                globalNameImage = [];
+                globalK = 0;
+                globalEvent = '';
+                globalLength = '';
+                globalType = 'image';
+            }
+
+        });
+
+});
+
+
+
 </script>
 
 

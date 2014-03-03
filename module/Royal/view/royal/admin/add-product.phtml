@@ -65,7 +65,7 @@
 
         <div class="wrapper-input file">
             <?php echo $this->formRow($formAdd->get('file')->setAttribute('id', 'file-pdf-input')) ?>
-            <?php echo $this->formRow($formAdd->get('main_image')->setAttribute('id','main_image')) ?>
+
         </div>
     </div>
 
@@ -113,6 +113,7 @@ $(document).on('change','select[name="id_subcategories_product"]',function() {
         .done(function(data) {
             data = JSON.parse(data);
             var options = "<option value>Выберете производителя</option>";
+
             for(var i=0;i<data.length;i++){
                 options += '<option value="' + data[i].id + '">' + data[i].title + '</option>';
             }
@@ -127,24 +128,48 @@ $(document).on('click','.deleted-image',function(e) {
    var imaageName =  $(this).attr('src').split('/');
     imaageName =  imaageName[imaageName.length-1];
 
-    var yesCollback = function(e){
+    var mainImageCollback = function(e){
 
         var imaageName =  $(e.currentTarget).attr('src').split('/');
         var src = $(e.currentTarget).attr('src');
         imaageName =  imaageName[imaageName.length-1];
-
         var val = $('input[name="image"]').val();
-
-        var serchIndex = val./*replace(','+imaageName,'').*/split(',').indexOf(imaageName);
-
+        var serchIndex = val.split(',').indexOf(imaageName);
         var arr =  val.split(',');
+
         if(arr.length==1){
+
             $('input[name="image"]').val('');
+
         }else{
-            console.log(arr,serchIndex);
-         var buf =   arr.splice(serchIndex,1);
-            console.log(arr);
+
+            var buf =   arr.splice(serchIndex,1);
             $('input[name="image"]').val(arr.join(','));
+
+        }
+        $('#main_image').val($(e.currentTarget).attr('src'));
+        $(e.currentTarget).css({margin: '5px', border: '2px solid lime'});
+
+    };
+
+    var deleteCollback = function(e){
+
+        var imaageName =  $(e.currentTarget).attr('src').split('/');
+        var src = $(e.currentTarget).attr('src');
+        imaageName =  imaageName[imaageName.length-1];
+        var val = $('input[name="image"]').val();
+        var serchIndex = val.split(',').indexOf(imaageName);
+        var arr =  val.split(',');
+
+        if(arr.length==1){
+
+            $('input[name="image"]').val('');
+
+        }else{
+
+            var buf =   arr.splice(serchIndex,1);
+            $('input[name="image"]').val(arr.join(','));
+
         }
         $(e.currentTarget).remove();
         $.post('/admin/deletedFiles',{src : src})
@@ -153,9 +178,8 @@ $(document).on('click','.deleted-image',function(e) {
             });
 
     };
-    PopUp('Вы хотите удалить эту картинку', 'сообщение',e , yesCollback,function(){
 
-    });
+    PopUpMain('Выберете действее', 'сообщение',e , deleteCollback,mainImageCollback);
 
 });
 
@@ -208,6 +232,7 @@ function createPreviewFile() {
     var fileView = $('#file-pdf-input').val();
     var url;
     if (fileView != '') {
+
         var arrfile = [];
         arrfile = fileView.split(',');
             for (var i = 0; i < arrfile.length; i++) {
@@ -229,6 +254,28 @@ function createPreviewFile() {
     }
 
 }
+
+
+function createPreviewImage(){
+
+    var imgView = $('.image').val();
+    if (imgView != '') {
+
+        var arrImg = [];
+        arrImg = imgView.split(',');
+
+        for (var i = 0; i < arrImg.length; i++) {
+            alert(1);
+            var cloneElement = $(".image-warrper-file").clone();
+            $(cloneElement).attr('src', "/tmp/" + arrImg[i]);
+            $(cloneElement).attr('class', "prewiew deleted-image");
+            $(cloneElement).css({margin: '5px', border: 'solid 2px black'});
+            $('.wrapper-input.image').append(cloneElement);
+
+        }
+    }
+}
+
 
 $(function () {
 
@@ -292,23 +339,7 @@ $(function () {
 
 $(document).ready(function () {
 
-    function createPreviewImage(){
-        var imgView = $('.image').val();
-        if (imgView != '') {
 
-            var arrImg = [];
-            arrImg = imgView.split(',');
-            for (var i = 0; i < arrImg.length; i++) {
-
-                var cloneElement = $(".image-warrper-file").clone();
-                $(cloneElement).attr('src', "/tmp/" + arrImg[i]);
-                $(cloneElement).attr('class', "prewiew deleted-image");
-                $(cloneElement).css({margin: '5px', border: 'solid 2px black'});
-                $('.wrapper-input.image').append(cloneElement);
-
-            }
-        }
-    }
     createPreviewImage();
     createPreviewFile();
 //           $.getJSON(

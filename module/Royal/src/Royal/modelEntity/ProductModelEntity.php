@@ -28,19 +28,21 @@ class ProductModelEntity extends ActiveRecordModel {
     public function attributeNames()
     {
         return array(
-            "title",
-            "main_image",
-            "description",
-            "technical_description",
-            "video",
-            "addres_buy",
-            "price",
-            "file",
-            "image",
             "id",
-            "id_subcategories_product",
-            "id_categories_product",
-            "id_manufacturers",
+"id_subcategories_product",
+"id_categories_product",
+"id_manufacturers",
+"title",
+"description",
+"technical_description",
+"price",
+"addres_buy",
+"video",
+"date_create",
+"file",
+"image",
+"main_image",
+
         );
     }
 

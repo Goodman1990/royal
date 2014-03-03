@@ -323,6 +323,7 @@ class adminController extends AbstractActionController
         $CategoriesProductModel =  \Royal\Models\CategoriesProductModel::model(array('asArray'=>true));
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
         $ProductModel =  \Royal\Models\ProductModel::model();
+        $colorsModel = \Royal\Models\ColorsModel::model();
 
         $CategoriesProductData =  $CategoriesProductModel->findAllOrder('number DESK ');
 
@@ -344,44 +345,46 @@ class adminController extends AbstractActionController
                 'id_subcategories_product'=>(int) $this->request->getPost()->id_subcategories_product
             ));
             $rules['id_manufacturers']['selectInfo'] = $manufacturers;
-
             $rules['id_manufacturers']['typeInput'] = 'select';
-
         }
-
             $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
             $rules['id_subcategories_product']['typeInput'] = 'select';
             $rules['id_manufacturers']['typeInput'] = 'select';
 
-
-
-
         $formAddProduct->setDataForm($rules);
+        $formAddColor->setDataForm($colorsModel->rules());
 
         if ($this->request->isPost()) {
 
             $Post = $this->request->getPost()->toArray();
 
             $formAddProduct->setData($Post);
+            $formAddColor->setData($Post);
 
-            if($formAddProduct->isValid()){
+            if($formAddProduct->isValid() && $formAddColor->isValid()){
+
+
+
 
                 $this->validData = $formAddProduct->getData();
+                $color  = $formAddColor->getData();
+
                 $image =explode(',',$this->validData['image']);
                 $arrImage = '';
 
                 for($i = 0;$i<count($image);$i++){
-                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
-                    $arrImage[] = '/siteDir/product/'.$image[$i];
+                    rename('public'.$image[$i],SITE_DIR.'/product/'.basename($image[$i]));
+                    $arrImage[] = '/siteDir/product/'.basename($image[$i]);
                 }
 
                 $this->validData['image'] = implode(',',$arrImage);
                 $file =explode(',',$this->validData['file']);
                 $arrFile = '';
-
+//                var_dump($file);
+//                exit;
                 for($i = 0;$i<count($file);$i++){
-                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/file/'.$file[$i]);
-                    $arrFile[] = '/siteDir/product/'.$file[$i];
+                    rename(TMP_DIR.$file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
+                    $arrFile[] = '/siteDir/product/file/'.basename($file[$i]);
                 }
 
                 $this->validData['file'] = implode(',',$arrFile);
@@ -392,17 +395,29 @@ class adminController extends AbstractActionController
                     $buf = explode('=',$this->validData['video']);
                     $hashVideo[] = end($buf);
                 }
-
-                unset($this->validData['id']);
-
+                
                 $this->validData['video'] = implode(',',$hashVideo);
-
+                unset($this->validData['id']);
                 $ProductModel->setAttributes($this->validData)->save();
+                $id_product = $ProductModel->getLastInsertValue();
 
+                $colorValue = explode(',',$color['color']);
+                $colorImageValue = explode(',',$color['image_color']);
+
+                for($i = 0;$i<count($colorImageValue);$i++){
+                    rename('public'.$colorImageValue[$i],SITE_DIR.'/product/color/'.basename($colorImageValue[$i]));
+                    $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
+                    $colorsModel->setAttributes(
+                        array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
+                    )->save();
+                }
+
+                 echo'<pre>';
+                 var_dump($Post);
+                 exit;
               $this->redirect()->toRoute('Royal',array(
                   'controller'=>'admin',
-                  'action'=>'addProduct',
-                  'param1'=>$id_categories_product,
+                  'action'=>'index',
               ));
 
             }else{
@@ -419,6 +434,7 @@ class adminController extends AbstractActionController
         }
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
+            'formAddColor'=>$formAddColor,
             'id_subcategories_product'=>$id_categories_product,
             'categories_product_id'=>$id_categories_product
 
@@ -685,8 +701,13 @@ class adminController extends AbstractActionController
         $imageHelper->save();
         if($dataImage['marker']=='1'){
             $imageHelper->watermark(SITE_DIR.'woterMark3.png');
+        }if($dataImage['marker']=='1'){
+          $color = $imageHelper->getMainColorImage();
+             echo json_encode(array('color'=>$color,'imageName'=>$dataImage['imageName']));
+            exit;
         }
-        echo $dataImage['imageName'];
+
+        echo json_encode($dataImage['imageName']);
         exit;
 
     }
@@ -776,6 +797,42 @@ class adminController extends AbstractActionController
 
         exit;
     }
+
+
+
+
+    public function uploadImageColorAction() {
+
+        $this->layout()->setVariables(array('page'=>$this->Page));
+        $request =new Request();
+        if($request->isPost()){
+
+            $httpadapter = new \Zend\File\Transfer\Adapter\Http();
+            $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
+            $ext =   new \Zend\Validator\File\Extension(array('png', 'jpg','jpeg'));
+            $httpadapter->setValidators(array($filesize,$ext));
+
+            if($httpadapter->isValid()) {
+
+                $httpadapter->setDestination(TMP_DIR);
+
+                if($httpadapter->receive()) {
+
+                    $filterRaname = new \Zend\Filter\File\Rename(array(
+                        "randomize" => true,
+                    ));
+                    echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
+                }else{
+                    exit;
+                }
+            }
+
+            exit;
+        }
+
+        exit;
+    }
+
 
 
     public function getManufacturersAction(){

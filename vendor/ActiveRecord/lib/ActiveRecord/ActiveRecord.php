@@ -311,7 +311,7 @@ abstract class ActiveRecord extends AbstractTableGateway
         if ($status) {
 			$id = $this->getInsertId();
 			if (preg_match('/^\d+$/', $id) && $id != '0') {
-				$this->setAttributes(compact('id'));
+//				$this->setAttributes(compact('id'));
 			}
 		} else {
 			$this->addError($this->$this->tablePrimaryKey, 'User not created!');
