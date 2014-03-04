@@ -19,11 +19,12 @@ use Zend\Mvc\MvcEvent;
 use Zend\Http\PhpEnvironment\Request;
 use Royal\helpers\imageHelper;
 use watermark\watermark;
-use Royal\helpers\paginationHelpers;
+use Royal\helpers\PaginationHelpers;
 
 
 class adminController extends AbstractActionController
 {
+
     public $adapter;
     public $request;
     public $validData;
@@ -76,6 +77,7 @@ class adminController extends AbstractActionController
         $this->getRouteParam();
 
         if($id_page=='page'){
+
 
             $model = \Royal\Models\CategoryPagesModel::model();
             $this->Page->setActivePage(array('admin'=>array(
@@ -363,25 +365,40 @@ class adminController extends AbstractActionController
 
             if($formAddProduct->isValid() && $formAddColor->isValid()){
 
-
-
-
                 $this->validData = $formAddProduct->getData();
                 $color  = $formAddColor->getData();
 
                 $image =explode(',',$this->validData['image']);
-                $arrImage = '';
 
-                for($i = 0;$i<count($image);$i++){
-                    rename('public'.$image[$i],SITE_DIR.'/product/'.basename($image[$i]));
-                    $arrImage[] = '/siteDir/product/'.basename($image[$i]);
+                if($this->validData['main_image']==''){
+
+                    rename('public'.$image[0],SITE_DIR.'/product/'.basename($image[0]));
+                    rename('public/tmp/large/'.basename($image[0]),SITE_DIR.'product/large/'.basename($image[0]));
+                    $this->validData['main_image']= '/siteDir/product/'.basename($image[0]);
+                    unset($image[0]);
+                    $image = array_values($image);
+
                 }
 
-                $this->validData['image'] = implode(',',$arrImage);
+                if($image!=Null){
+
+                    for($i = 0;$i<count($image);$i++){
+
+                        rename('public'.$image[$i],SITE_DIR.'/product/'.basename($image[$i]));
+                        rename('public/tmp/large/'.basename($image[$i]),SITE_DIR.'product/large/'.basename($image[0]));
+                        $arrImage[] = '/siteDir/product/'.basename($image[$i]);
+                    }
+                    $this->validData['image'] = implode(',',$arrImage);
+
+                }else{
+
+                    $this->validData['image'] ='';
+
+                }
+
                 $file =explode(',',$this->validData['file']);
                 $arrFile = '';
-//                var_dump($file);
-//                exit;
+
                 for($i = 0;$i<count($file);$i++){
                     rename(TMP_DIR.$file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
                     $arrFile[] = '/siteDir/product/file/'.basename($file[$i]);
@@ -405,20 +422,19 @@ class adminController extends AbstractActionController
                 $colorImageValue = explode(',',$color['image_color']);
 
                 for($i = 0;$i<count($colorImageValue);$i++){
+
                     rename('public'.$colorImageValue[$i],SITE_DIR.'/product/color/'.basename($colorImageValue[$i]));
+
                     $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
                     $colorsModel->setAttributes(
                         array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
                     )->save();
                 }
 
-                 echo'<pre>';
-                 var_dump($Post);
-                 exit;
-              $this->redirect()->toRoute('Royal',array(
-                  'controller'=>'admin',
-                  'action'=>'index',
-              ));
+                $this->redirect()->toRoute('Royal',array(
+                    'controller'=>'admin',
+                    'action'=>'index',
+                ));
 
             }else{
 
@@ -637,7 +653,8 @@ class adminController extends AbstractActionController
         ));
 
         $this->Page->addTab($categoryProduct,$id_categories_product,true);
-        $paginationHelper = new paginationHelpers($this->request->getPost());
+        $paginationHelper = new PaginationHelpers($this->request->getPost());
+
         if($this->request->isPost()){
 
             $post  = $this->request->getPost();
@@ -661,9 +678,8 @@ class adminController extends AbstractActionController
                 }
                     $productData = \Royal\Models\ProductModel::model(array('asArray'=>true))
                         ->findByAttributes(array( $post['name']=> $post['value']));
-//                echo'<pre>';
-//                var_dump($productData);
-//                exit;
+
+
             }
 
         }else{
@@ -694,6 +710,7 @@ class adminController extends AbstractActionController
 
         $dataImage = $this->getRequest()->getPost()->toArray();
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
+        $imageHelper->save(TMP_DIR.'large/'.$dataImage['imageName']);
         if($dataImage['w']!=0 && $dataImage['h']!=0){
             $imageHelper->resize($dataImage['width'],$dataImage['height']);
             $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
@@ -716,6 +733,7 @@ class adminController extends AbstractActionController
 
         $id_product = $this->params()->fromRoute('param1', 0);
         \Royal\Models\ProductModel::model(array('asArray'=>true))->delete(array('id'=>$id_product));
+        echo 1;
         exit;
 
     }
@@ -756,17 +774,13 @@ class adminController extends AbstractActionController
         exit;
     }
 
-// /tmp/<br /> <b>Warning</b>: imagecreatetruecolor(): Invalid image dimensions in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>138</b><br /> <br /> <b>Warning</b>: imagecolorallocate() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>140</b><br /> <br /> <b>Warning</b>: imagecolortransparent() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>140</b><br /> <br /> <b>Warning</b>: imagealphablending() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>141</b><br /> <br /> <b>Warning</b>: imagesavealpha() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>142</b><br /> <br /> <b>Warning</b>: imagecopy() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>144</b><br /> <br /> <b>Warning</b>: imagejpeg() expects parameter 1 to be resource, boolean given in <b>E:\phpProject\royalBRG\module\Royal\src\Royal\helpers\imageHelper.php</b> on line <b>46</b><br /> 383005-1366x768_530498b187e3a.jpg
+
     public function uploadFileAction() {
 
         $this->layout()->setVariables(array('page'=>$this->Page));
         $request =new Request();
+
         if($request->isPost()){
-//            $helper = new generalHelper();
-//            $file = $request->getFiles();
-//            echo'<pre>';
-//            var_dump($file['pdf-file'][0]['name']);
-//            exit;
 
             $httpadapter = new \Zend\File\Transfer\Adapter\Http();
             $filesize  = new \Zend\Validator\File\Size(array('min' => 1 ));
@@ -797,9 +811,6 @@ class adminController extends AbstractActionController
 
         exit;
     }
-
-
-
 
     public function uploadImageColorAction() {
 
@@ -832,8 +843,6 @@ class adminController extends AbstractActionController
 
         exit;
     }
-
-
 
     public function getManufacturersAction(){
 

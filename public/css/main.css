@@ -1,8 +1,8 @@
 body{
 	margin: 0;
 	padding: 0;
-	background-image: url(../image/fon.png);
-	background-repeat: repeat-y repeat-x;
+	background-image: url(../image/fon.png) !important;
+	background-repeat: repeat-y repeat-x !important;
 	list-style: none;
 	height: auto;
 }
@@ -77,7 +77,7 @@ p,span{
 			border:solid 2pt;
 			border-color: #b8c0e5;
 		}
-		.container{
+		.container-slider{
 			padding: 1%;
 			outline: solid 1pt #0e1a3e;
 		}
@@ -412,15 +412,19 @@ p,span{
                 width: 100%;
                 height: auto;
             }
+
             .item-tubs-product{
+                cursor: pointer;
+                position: relative;
+                margin-right: 14px;
                 background-color: #f2f1f1;
-                font-size: 16px;
+                font-size: 12px;
                 font-style: normal;
                 padding-left: 1%;
                 padding-right: 1%;
                 padding-top: 5px;
                 padding-bottom: 5px;
-                float: left;
+                display: inline-block;
                 border: solid;
                 border-color: #c7cbd7;
                 border-width: 1px;
@@ -431,6 +435,11 @@ p,span{
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
             }
+            .item-tubs-product.bays{
+
+                margin-right: 0;
+            }
+
             .wrap-tab-content{
                 display: none;
             }
@@ -438,25 +447,40 @@ p,span{
                 display: block;
             }
             .wrap-tab-content{
+                position: relative;
+                z-index: 0;
+                margin-top: -1px;
                 width: 97%;
                 float: left;
                 font-family: 'agbengaly';
                 font-size: 12px;
                 color: #707686;
                 font-style: normal;
-                font-weight: 600 ;
+                font-weight: 600;
                 border: solid;
-                border-color:#c7cbd7 ;
+                border-color: #c7cbd7;
                 border-width: 1px;
                 padding: 5px;
-                border-top: none;
+
             }
             .item-tubs-product.active{
+                z-index: 5;
                 border-bottom: none;
                 background: none;
+                background-color: white;
+                padding-bottom: 6px;
             }
             .item-tubs-product.active>.wrap-tab-content{
                 display: block;
+            }
+            .wrap-tab-content .video-frame{
+                width: inherit;
+
+                min-height: 315px ;
+
+                height: inherit;
+                display: block;
+                margin: 10px auto;
             }
 
 				.podpis{
@@ -512,6 +536,9 @@ p,span{
                     width: 89%;
                     margin: 0 auto;
                     height: auto;
+                }
+                .right-content .hit-pays a{
+                  text-decoration: none;
                 }
                 .right-content .right-menu-sub {
                     list-style-image: url(../image/rgb/arrow.png);

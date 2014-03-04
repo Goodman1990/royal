@@ -16,6 +16,8 @@ use Zend\Db\TableGateway\Feature;
 use Zend\Mvc\MvcEvent;
 use Royal\Models;
 use Royal\helpers\generalHelper;
+use Zend\Http\Headers;
+use Zend\Http\Response\Stream;
 
 
 class PageController extends AbstractActionController
@@ -71,6 +73,7 @@ class PageController extends AbstractActionController
 
     public function categoriesAction() {
 
+        $this->getHitProduct();
         $this->id_page = $this->parseParam($this->params()->fromRoute('param1', 0));
 
 
@@ -97,6 +100,7 @@ class PageController extends AbstractActionController
     }
     public function manufacturersAction() {
 
+        $this->getHitProduct();
         $this->id_page = $this->parseParam($this->params()->fromRoute('param1', 0));
         $SubcategoriesProductModel = \Royal\Models\SubcategoriesProductModel::model()->findByPk($this->id_page);
 
@@ -112,10 +116,6 @@ class PageController extends AbstractActionController
 
         $this->Page->setActivePage(array('bottom'=>$SubcategoriesProductModel->id_categories_product,'right'=>$SubcategoriesProductModel->id));
         $generalHelper = new generalHelper();
-        
-//        echo'<pre>';
-//        var_dump($manufacturersData);
-//        exit;
         return new ViewModel(array(
             'page'=>$this->Page,
             'manufacturersData'=>$manufacturersData,
@@ -126,13 +126,9 @@ class PageController extends AbstractActionController
     }
     public function productAction() {
 
+        $this->getHitProduct();
         $this->id_page = $this->parseParam($this->params()->fromRoute('param1', 0));
-
-
         $ManufacturersModel =  \Royal\Models\ManufacturersModel::model()->findByPk($this->id_page);
-
-
-
         $ProductModel =  \Royal\Models\ProductModel::model(array('asArray'=>true));
         $productData = $ProductModel->findByAttributes(array(
             'id_manufacturers'=> $this->id_page
@@ -154,7 +150,6 @@ class PageController extends AbstractActionController
                 'right_manufacturers'=>$ManufacturersModel->id.'_manufacturers'
             ));
         $generalHelper = new generalHelper();
-
         return new ViewModel(array(
             'page'=>$this->Page,
             'generalHelper'=>$generalHelper,
@@ -168,12 +163,12 @@ class PageController extends AbstractActionController
 
     public function productDescriptionAction() {
 
+        $this->getHitProduct();
         $this->id_page = $this->parseParam($this->params()->fromRoute('param1', 0));
-        $ProductModel =  \Royal\Models\ProductModel::model()->findByPk($this->id_page);
+        $ColorModel =  \Royal\Models\ColorsModel::model(array('asArray'=>true));
+        $ProductModel = \Royal\Models\ProductModel::model()->findByPk($this->id_page);
+        $colorData = $ColorModel->findByAttributes(array('id_product'=>$this->id_page));
 
-        $productData = $ProductModel->findByAttributes(array(
-            'id_manufacturers'=> $this->id_page
-        ));
         $SubcategoriesProductModel = \Royal\Models\SubcategoriesProductModel::model()->findByAttributes(array(
             'id'=> $ProductModel->id_subcategories_product
         ));
@@ -192,9 +187,44 @@ class PageController extends AbstractActionController
         return new ViewModel(array(
             'page'=>$this->Page,
             'generalHelper'=>$generalHelper,
-            'productData'=>$productData
+            'ProductModel'=>$ProductModel,
+            'colorData'=>$colorData
 
         ));
+
+    }
+
+    private function getHitProduct(){
+      $hitProduct =   \Royal\Models\ProductModel::model(array('asArray'=>true))->getHitProduct();
+        if(count($hitProduct)<4){
+            while(count($hitProduct)<4){
+                $hitProduct[]=$hitProduct[0];
+            }
+        }
+        $this->Page->setData(array('hitProduct'=>$hitProduct));
+    }
+
+    public function downloadAction() {
+
+           $file = $this->params()->fromQuery('file');
+           $name = basename($file);
+           $response = new Stream();
+           $response->setStream(fopen('public/'.$file, 'r'));
+           $response->setStatusCode(200);
+           $response->setStreamName($name);
+           $headers = new Headers();
+           $headers->addHeaders(array(
+               'Content-Disposition' => 'attachment; filename="' . basename($file) . '"',
+               'Content-Type' => 'application/octet-stream',
+               'Content-Length' => filesize('public/'.$file)
+           ));
+
+           $response->setHeaders($headers);
+
+           return $response;
+           exit;
+
+
 
     }
 

@@ -333,15 +333,21 @@ abstract class ActiveRecord extends AbstractTableGateway
         $select = $this->getSql()->select();
         foreach ($criteria as $operation => $options) {
             if ($operation == 'join') {
+
                 call_user_func_array(array($select,$operation), $options);
+
             } else {
+
                 if (is_array($options)) {
+
                     foreach ($options as $option) {
+
                         if ($operation == 'multijoin') {
                             call_user_func_array(array($select, 'join'), $option);
                         } else {
                             $select->$operation($option);
                         }
+
                     }
                 } else {
                     $select->$operation($options);

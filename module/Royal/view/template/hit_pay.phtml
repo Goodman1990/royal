@@ -1,0 +1,24 @@
+
+    <p class="title-pays-hit"><span class="alegreto-font">X</span ><span class="secend-part-title" >иты продаж</span></p>
+    <div class="hit-pays">
+        <?php  foreach($page->hitProduct as $key){ ?>
+            <a href="/page/productDescription/<?php echo $key['id'].'_'.$generalHelper->transliteration($key['title']); ?>">
+            <div class="wrap-pays-item">
+                <div class="pays-item"></div>
+                <img src="<?php  echo $key['main_image'] ?>" alt=""/>
+            </div>
+            </a>
+        <?php } ?>
+<!--        <div class="wrap-pays-item">-->
+<!--            <div class="pays-item"></div>-->
+<!--            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>-->
+<!--        </div>-->
+<!--        <div class="wrap-pays-item">-->
+<!--            <div class="pays-item"></div>-->
+<!--            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>-->
+<!--        </div>-->
+<!--        <div class="wrap-pays-item">-->
+<!--            <div class="pays-item"></div>-->
+<!--            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>-->
+<!--        </div>-->
+    </div>

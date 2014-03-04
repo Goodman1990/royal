@@ -41,14 +41,19 @@ class imageHelper
 
     }
 
-    public function save()
+    public function save($destination=null)
     {
+        if(null!=$destination){
+            $fileName = $destination;
+        }else{
+            $fileName = $this->fileName;
+        }
         if ($this->image_type == IMAGETYPE_JPEG) {
-            imagejpeg($this->image, $this->fileName);
+            imagejpeg($this->image, $fileName);
         } elseif ($this->image_type == IMAGETYPE_GIF) {
-            imagegif($this->image, $this->fileName);
+            imagegif($this->image, $fileName);
         } elseif ($this->image_type == IMAGETYPE_PNG) {
-            imagepng($this->image, $this->fileName);
+            imagepng($this->image, $fileName);
         }
 //        chmod($this->fileName, '777');
 
@@ -186,9 +191,7 @@ class imageHelper
     }
 
     public function cropImage($request){
-//        imagecolortransparent($this->image, imagecolorallocate($this->image, 0, 0, 0));
-//        imagealphablending($this->image, false);
-//        imagesavealpha($this->image, true);
+
         $dst_r =   ImageCreateTrueColor(320,320);
         imagecopyresampled ($dst_r, $this->image, 0, 0, $request['x1'], $request['y1'], 320, 320, $request['w'], $request['h']);
 
@@ -217,9 +220,9 @@ class imageHelper
                 endfor;
             endfor;
 
-            $rSrednee = dechex(round($rVsego/$vsego));
-            $gSrednee = dechex(round($gVsego/$vsego));
-            $bSrednee = dechex(round($bVsego/$vsego));
+            $rSrednee = round($rVsego/$vsego);
+            $gSrednee = round($gVsego/$vsego);
+            $bSrednee = round($bVsego/$vsego);
 
         return $rSrednee.$gSrednee.$bSrednee;
     }

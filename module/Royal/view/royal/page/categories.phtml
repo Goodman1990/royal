@@ -10,26 +10,27 @@
 <?php  } ?>
 </div>
 <div class="right-content  page">
-    <p class="title-pays-hit"><span class="alegreto-font">X</span ><span class="secend-part-title" >иты продаж</span></p>
-    <div class="hit-pays">
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-    </div>
-    <a class="buttot-show hit" href="#">посмотреть</a>
+    <?php echo $this->render('template/hit_pay.phtml') ?>
+<!--<div class="right-content  page">-->
+<!--    <p class="title-pays-hit"><span class="alegreto-font">X</span ><span class="secend-part-title" >иты продаж</span></p>-->
+<!--    <div class="hit-pays">-->
+<!--        <div class="wrap-pays-item">-->
+<!--            <div class="pays-item"></div>-->
+<!--            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>-->
+<!--        </div>-->
+<!--        <div class="wrap-pays-item">-->
+<!--            <div class="pays-item"></div>-->
+<!--            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>-->
+<!--        </div>-->
+<!--        <div class="wrap-pays-item">-->
+<!--            <div class="pays-item"></div>-->
+<!--            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>-->
+<!--        </div>-->
+<!--        <div class="wrap-pays-item">-->
+<!--            <div class="pays-item"></div>-->
+<!--            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>-->
+<!--        </div>-->
+<!--    </div>-->
     <?php
     if(isset($page->activePage['right'])) {
         $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']))

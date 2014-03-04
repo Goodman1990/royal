@@ -1,143 +1,95 @@
 
+
+<!--<link rel="stylesheet" type="text/css" href="/css/bootstraGallery/bootstrap-image-gallery.min.css"/>-->
+
+<link rel="stylesheet" href="/css/bootstraGallery/magnific-popup.css">
+
+<!-- jQuery 1.7.2+ or Zepto.js 1.0+ -->
+
+
+<!-- Magnific Popup core JS file -->
+
+
+
+
 <div class="left-content product-description">
-    <span class="title-product">asdasdasd asdads</span>
+    <span class="title-product"><?php  echo $ProductModel->title ?></span>
     <div class="description-product" >
-        <img  class="img-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg"  style="float: left" alt=""/>
-        <p>dskaskdjaksjd asshdaksjhdashdj adhashgdasgd agdajsgda adsgjasgdhasg agdasgdjh gasdas dhgas dasgdhsagdhgas adgh asgsdjasgdhasgdjags djsag djasgdjhasgdjg asgdjhgasdjasgda sdhgasj dg</p>
-        <p>dasdaskhdj assdhjashdjkhaskkjdhasjhdjashjdhasdasdasl;jdlaskjdklajsdas</p>
-        <p style="margin-left: 40px;">asdasdasdasfklas</p>
-        <p> dasdkalskd;lkasl;dk;laskd;lkas;ldk;aslddasdasld;asl d;sla;dlas&nbsp;</p>
-        <p> &nbsp;</p>
-        <p>asd</p>
-        <p>asd</p>
-        <p>as</p>
-        <p>das</p>
-        <p>&nbsp;</p>
+        <img  class="img-product" src="<?php  echo $ProductModel->main_image ?>"  style="float: left" alt=""/>
+        <?php echo $ProductModel->description ?>
     </div>
     <div class="wrap-tabs-block">
         <div class="item-tubs-product active color">Цвет</div>
-        <div class="line">&nbsp;</div>
         <div class="item-tubs-product technical-information">Техническая информация</div>
-        <div class="line">&nbsp;</div>
         <div class="item-tubs-product video">Видео</div>
-        <div class="line">&nbsp;</div>
         <div class="item-tubs-product project">Проэкты</div>
-        <div class="line">&nbsp;</div>
         <div class="item-tubs-product bays">Где купить</div>
 
+
         <div class="wrap-tab-content color active">
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
+            <div class="popup-gallery">
+                <?php foreach($colorData as $key) { ?>
+                    <div class="wrap-img-color-product">
+                        <a   href="<?php  echo $key['image_color'] ?>">
+                            <img class="img-color-product" src="<?php  echo $key['image_color'] ?>" alt=""/>
+                        </a>
+                    </div>
+                <?php } ?>
             </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
+
             <div class="page-circle">
                 <span class="circle active">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
             </div>
         </div>
+
 
         <div class="wrap-tab-content technical-information">
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="page-circle">
-                <span class="circle active">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-            </div>
-        </div>
-        <div class="wrap-tab-content video">
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="page-circle">
-                <span class="circle active">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-            </div>
+            <a href="/page/download/?file=<?php echo $ProductModel->file ?>">asdasdasdas</a>
+            <?php echo $ProductModel->technical_description ?>
         </div>
 
+
+        <div class="wrap-tab-content video">
+            <?php $videoData =explode(',',$ProductModel->video);
+            if(!empty($videoData[0])){
+                for($i=0;$i<count($videoData);$i++){ ?>
+                <iframe class="video-frame" src="//www.youtube.com/embed/<?php echo $videoData[$i] ?>" frameborder="0" allowfullscreen></iframe>
+            <?php }} ?>
+        </div>
+
+
         <div class="wrap-tab-content project">
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="page-circle">
-                <span class="circle active">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
+            <div class="popup-gallery-project">
+               <div class="wrap-img-color-product">
+                    <a   href="<?php  echo '/siteDir/product/large/'.basename($ProductModel->main_image) ?>">
+                        <img class="img-color-product" src="<?php  echo $ProductModel->main_image ?>" alt=""/>
+                    </a>
+                </div>
+
+                <?php $imageData =explode(',',$ProductModel->image);
+                if(!empty($imageData[0])){
+                foreach($imageData as $key=>$value) { ?>
+                    <div class="wrap-img-color-product">
+                        <a   href="<?php  echo '/siteDir/product/large/'.basename($value) ?>">
+                            <img class="img-color-product" src="<?php  echo $value ?>" alt=""/>
+                        </a>
+                    </div>
+                <?php }} ?>
             </div>
         </div>
 
         <div class="wrap-tab-content bays">
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="wrap-img-color-product">
-                <a href="/page/productDescription/<?php /*echo $key['id'].'_'.$generalHelper->transliteration($key['title']);*/ ?>"><img class="img-color-product" src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/></a>
-            </div>
-            <div class="page-circle">
-                <span class="circle active">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-                <span class="circle">&nbsp;</span>
-            </div>
+
         </div>
 
     </div>
 
 </div>
+
 <div class="right-content  page">
-    <p class="title-pays-hit"><span class="alegreto-font">X</span ><span class="secend-part-title" >иты продаж</span></p>
-    <div class="hit-pays">
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-        <div class="wrap-pays-item">
-            <div class="pays-item"></div>
-            <img src="/siteDir/product/149-1280x1024_530670699e8f4.jpg" alt=""/>
-        </div>
-    </div>
-    <a class="buttot-show hit" href="#">посмотреть</a>
+
+        <?php echo $this->render('template/hit_pay.phtml') ?>
+
     <?php
     if(isset($page->activePage['right'])){
         $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']),true)
@@ -149,4 +101,66 @@
     echo $this->navigation()->menu()->setPartial('template/navigation_right')->render();
     ?>
 </div>
+
+
+<script src="/js/bootstraGallery/jquery.magnific-popup.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $(document).on('click','.item-tubs-product',function(){
+            var classActiveBlock = $(this).attr('class').split(' ')[1];
+            $('.item-tubs-product.active').removeClass('active');
+            $('.wrap-tab-content.active').removeClass('active');
+            $('.'+classActiveBlock).addClass('active');
+        })
+
+        $(document).ready(function() {
+            $('.popup-gallery').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                tLoading: 'Loading image #%curr%...',
+                mainClass: 'mfp-img-mobile',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                    preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+                },
+                image: {
+                    tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+                    titleSrc: function(item) {
+                        return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';
+                    }
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $('.popup-gallery-project').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                tLoading: 'Loading image #%curr%...',
+                mainClass: 'mfp-img-mobile',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                    preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+                },
+                image: {
+                    tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+                    titleSrc: function(item) {
+                        return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';
+                    }
+                }
+            });
+        });
+
+    })
+</script>
+
+<!--<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>-->
+<!--<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>-->
+<!--<script type="text/javascript" src="/js/bootstraGallery/bootstrap-image-gallery.min.js"></script>-->
+
+
+
 

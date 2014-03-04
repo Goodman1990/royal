@@ -1,7 +1,7 @@
 <?php
 namespace Royal\helpers;
 
-class paginationHelpers
+class PaginationHelpers
 {
     public $search = '';
     public $page = 1;

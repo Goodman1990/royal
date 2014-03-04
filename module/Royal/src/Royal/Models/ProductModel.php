@@ -50,4 +50,16 @@ class ProductModel extends ProductModelEntity {
 
     }
 
+    public function getHitProduct(){
+
+        $this->setCriteria(array(
+            'where'=>array('1'),
+            'order' =>'count_buy desc',
+            'limit'=>4,
+
+        ));
+//        return $this->getSQLByCriteria();
+        return $this->findByCriteria();
+    }
+
 }

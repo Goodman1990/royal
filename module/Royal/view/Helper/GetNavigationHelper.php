@@ -170,9 +170,16 @@ class GetNavigationHelper extends AbstractHelper {
                 'resource'=>'3',
                 'visible' =>1,
                 'pages'=>array(
-                    array( 'label' => 'Редактировать Страницу',
+                    array(
+                        'label' => 'Редактировать Страницу',
                         'uri'=>'/admin/editPage',
                         'resource'=>'3.2',
+                        'visible' =>1,
+                    ),
+                    array(
+                        'label' => 'Добавить стнраницу',
+                        'uri'=>'/admin/editCategory/page',
+                        'resource'=>'3.1',
                         'visible' =>1,
                     ),
                 ),

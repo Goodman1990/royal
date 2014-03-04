@@ -35,6 +35,7 @@ class ManufacturersModel extends ManufacturersModelEntity {
             'where'=>array('id_subcategories_product in ('.implode(',',$arrayId).')')
 
         ));
+
         return $this->findByCriteria();
 
 

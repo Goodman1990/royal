@@ -19,6 +19,16 @@ class Page
     public $controller;
     public $action;
     public $paramRoute;
+    public $attributes;
+
+
+    public function __set($name, $value) {
+
+
+            $this->$name = $value;
+
+
+    }
 
     public function setClasses($classes){
         $this->classes = $classes;
@@ -59,6 +69,14 @@ class Page
 
         }
         return $data;
+    }
+
+    public  function setData($data) {
+
+        foreach($data as $key=>$value){
+            $this->$key = $value;
+        }
+
     }
 
 

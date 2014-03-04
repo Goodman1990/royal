@@ -8,7 +8,7 @@
 
 <div class="left-content">
 
-<?php echo $MainPagesModel->content; ?>
+<?php if(isset($MainPagesModel->content)) echo $MainPagesModel->content; ?>
 <?php echo $this->form()->openTag($formEditPage); ?>
     <div class="group-form">
         <div class="wrapper-input content-page">
