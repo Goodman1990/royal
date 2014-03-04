@@ -112,6 +112,13 @@
 
 <script type="text/javascript">
 
+globalNameImage = [];
+globalNamePdf = [];
+globalK = 0;
+globalEvent = '';
+globalNamePdf.ext = [];
+globalType = 'image';
+
 $(document).ready(function () {
     $('.image-file').jInputFile();
     $('.image-file-color').jInputFile();
@@ -269,15 +276,6 @@ $(document).on('click','.deleted-file',function(e) {
     PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
 
 });
-
-
-
-globalNameImage = [];
-globalNamePdf = [];
-globalK = 0;
-globalEvent = '';
-globalNamePdf.ext = [];
-globalType = 'image';
 
 
 function createPreviewFile() {

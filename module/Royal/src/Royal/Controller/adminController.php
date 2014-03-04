@@ -519,6 +519,9 @@ class adminController extends AbstractActionController
 
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
         $ProductModel =  \Royal\Models\ProductModel::model()->findByPk($id_product);
+        $colorsModel = \Royal\Models\ColorsModel::model(array('asArray'=>true));
+        $colorData = $colorsModel
+            ->findByAttributes(array('id_product'=>$id_product));
 
         $formAddProduct= new formGenerate('addProduct', 'category addProduct');
         $formAddColor= new formGenerate('addColor', 'category addProduct color');
@@ -561,75 +564,117 @@ class adminController extends AbstractActionController
         $rules['id_subcategories_product']['setLabel'] = 'Подкатегории';
 
         $formAddProduct->setDataForm($rules);
+        $formAddColor->setDataForm($colorsModel->rules());
 
+
+
+        foreach ($colorData as $key) {
+            $colorForm['color'][] = $key['color'];
+            $colorForm['image_color'][] = $key['image_color'];
+        }
+
+        $colorForm['color'] = implode(',',$colorForm['color']);
+        $colorForm['image_color'] = implode(',',$colorForm['image_color']);
+        $colorForm['id_product'] = $id_product;
+
+//        echo'<pre>';
+//        var_dump($colorForm);
+//        exit;
+        $formAddColor->setData($colorForm);
         $formAddProduct->setData($ProductModel->getAttributes());
 
         if ($this->request->isPost()) {
 
             $Post = $this->request->getPost()->toArray();
             $formAddProduct->setData($Post);
+            $formAddColor->setData($Post);
 
-            if($formAddProduct->isValid()){
+
+            if($formAddProduct->isValid() && $formAddColor->isValid()){
 
                 $this->validData = $formAddProduct->getData();
-
-
-//                $image =explode(',',$this->validData['image']);
-//                for($i = 0;$i<count($image);$i++){
-//                    rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
-//                }
-//                $video = explode(',',$this->validData['video']);
-//                $hashVideo ='';
-//                for($i = 0;$i<count($video);$i++){
-//                    $buf = explode('=',$this->validData['video']);
-//                    $hashVideo[] = end($buf);
-//                }
-//                $this->validData['video'] = implode(',',$hashVideo);
-
-
-
-
+                $color  = $formAddColor->getData();
 
                 $image =explode(',',$this->validData['image']);
-                $arrImage = '';
 
-                for($i = 0;$i<count($image);$i++){
+                if($this->validData['main_image']==''){
 
-                    if(file_exists(TMP_DIR.$image[$i])){
-                        rename(TMP_DIR.$image[$i],SITE_DIR.'/product/'.$image[$i]);
+                    if(file_exists('public/tmp/'.basename($image[0]))){
+                        rename('public'.$image[0],SITE_DIR.'/product/'.basename($image[0]));
+                        rename('public/tmp/large/'.basename($image[0]),SITE_DIR.'product/large/'.basename($image[0]));
                     }
-                    $arrImage[] = SITE_DIR.'/product/'.$image[$i];
+                    $this->validData['main_image'] = '/siteDir/product/'.basename($image[0]);
+                    unset($image[0]);
+                    $image = array_values($image);
+
                 }
-                $this->validData['image'] = implode(',',$arrImage);
+
+                if($image!=Null){
+
+                    for($i = 0;$i<count($image);$i++){
+
+                        if(file_exists('public/tmp/'.basename($image[$i]))){
+                            rename('public'.$image[$i],SITE_DIR.'/product/'.basename($image[$i]));
+                            rename('public/tmp/large/'.basename($image[$i]),SITE_DIR.'product/large/'.basename($image[$i]));
+                        }
+                        $arrImage[] = '/siteDir/product/'.basename($image[$i]);
+                    }
+
+                    $this->validData['image'] = implode(',',$arrImage);
+
+                }else{
+
+                    $this->validData['image'] ='';
+
+                }
 
                 $file =explode(',',$this->validData['file']);
                 $arrFile = '';
 
                 for($i = 0;$i<count($file);$i++){
-                    if(file_exists(TMP_DIR.$file[$i])){
-                        rename(TMP_DIR.$image[$i],SITE_DIR.'/product/file/'.$file[$i]);
-                    }
-                    $arrFile[] = SITE_DIR.'/product/'.$image[$i];
-                }
-                $this->validData['file'] = implode(',',$arrFile);
 
+                    if(file_exists('public/tmp/'.basename($file[$i]))){
+                        rename(TMP_DIR.$file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
+                    }
+
+                    $arrFile[] = '/siteDir/product/file/'.basename($file[$i]);
+                }
+
+                $this->validData['file'] = implode(',',$arrFile);
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
 
                 for($i = 0;$i<count($video);$i++){
+
                     $buf = explode('=',$this->validData['video']);
                     $hashVideo[] = end($buf);
                 }
+
                 $this->validData['video'] = implode(',',$hashVideo);
-
-                $this->validData['id'] = $id_product;
-
+                unset($this->validData['id']);
                 $ProductModel->setAttributes($this->validData)->save();
+                $id_product = $ProductModel->getLastInsertValue();
+
+                $colorValue = explode(',',$color['color']);
+                $colorImageValue = explode(',',$color['image_color']);
+
+                for($i = 0;$i<count($colorImageValue);$i++){
+
+                    if(file_exists('public/tmp/'.basename($file[$i]))){
+                        rename($file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
+                    }
+                    $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
+                    $colorsModel->setAttributes(
+                        array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
+                    )->save();
+
+                }
             }
         }
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
-            'productModel'=>$ProductModel
+            'productModel'=>$ProductModel,
+            'formAddColor'=>$formAddColor
         ));
 
     }
@@ -875,10 +920,15 @@ class adminController extends AbstractActionController
 
 
     public function deletedFilesAction(){
-        if($this->request->isPost() &&$this->request->isXmlHttpRequest()){
+
+        if($this->request->isPost() && $this->request->isXmlHttpRequest()){
+
             $post = $this->request->getPost();
             unlink('public'.$post['src']);
+
+
             exit;
+
         }
     }
 

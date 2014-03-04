@@ -50,8 +50,10 @@
 
 
         <div class="wrap-tab-content video">
-            <?php $videoData =explode(',',$ProductModel->video);
+            <?php $videoData = explode(',',$ProductModel->video);
+
             if(!empty($videoData[0])){
+
                 for($i=0;$i<count($videoData);$i++){ ?>
                 <iframe class="video-frame" src="//www.youtube.com/embed/<?php echo $videoData[$i] ?>" frameborder="0" allowfullscreen></iframe>
             <?php }} ?>

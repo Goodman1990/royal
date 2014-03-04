@@ -42,7 +42,7 @@ class ProductModelEntity extends ActiveRecordModel {
             "file",
             "image",
             "main_image",
-
+            "count_buy"
         );
     }
 
