@@ -22,4 +22,11 @@ class UsersModel extends UsersModelEntity {
         return array();
     }
 
+    public static function hashPassword($password)
+    {
+
+        $salt = sha1(md5($password));
+        return md5($password . $salt);
+    }
+
 }

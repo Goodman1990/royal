@@ -13,9 +13,11 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Db\TableGateway\Feature;
-use Zend\Db\ResultSet\ResultSet;
 use Royal\view\Helper\GetNavigation;
-use Royal\helpers\generalHelper;
+use Zend\Session\SessionManager;
+use Zend\Session\Container;
+
+
 
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface,
@@ -40,10 +42,30 @@ class Module implements ServiceProviderInterface,
 
 
         Feature\GlobalAdapterFeature::setStaticAdapter($dbAdapter);
-
+        $this->bootstrapSession($e);
        
 
-    }   
+    }
+
+
+
+    public function bootstrapSession($e) {
+
+        $session = $e->getApplication()
+            ->getServiceManager()
+            ->get('Zend\Session\SessionManager');
+        $session->start();
+
+        $container = new Container('initialized');
+        if (!isset($container->init)) {
+
+            $session->regenerateId(true);
+            $container->init = 1;
+        }
+    }
+
+
+
 
     public function getConfig()
     {
@@ -89,45 +111,54 @@ class Module implements ServiceProviderInterface,
 //        echo 123;
 //        exit;
         return array(
-//            'factories' => array(
-//                'GetNavigationHelper' => function($sm) {
-//                        $this->getServiceConfig();
-//                        $helper =new \Helper\GetNavigationHelper();
-////                        $helper->sm = $sm;
-////                         var_dump($sm->get('router'));
-////                        exit;
-//
-//                        return $helper;
-//                    },
-//
-//            ),
+
             'factories' => array(
                 'nav' => 'Navigation\MyNavigationFactory',
-//                'nav1' => function($sm) {
-//                        $helper =new \Navigation\MyNavigation($sm);
-//                        return $helper;
-//                    },
-            )
-//            'navigation' => array(
-//                    'default' => array(
-//                        array(
-//                            'label' => 'Home',
-//                            'route' => 'home',
-//                        ),
-//                        array(
-//                            'label' => 'Album',
-//                            'route' => 'Royal',
-//                            'pages' => array(
-//                                array(
-//                                    'label' => 'Add',
-//                                    'route' => 'Royal',
-//                                    'action' => 'Index',
-//                                ),
-//
-//                            ),
-//                        ),
-//                    ),
-//                ),
+                'Zend\Session\SessionManager' => function ($sm) {
+                        $config = $sm->get('config');
+//                       var_dump($config);
+//                        exit;
+                        if (isset($config['session'])) {
+                            $session = $config['session'];
+                            $sessionConfig = null;
+                            if (isset($session['config'])) {
+                                $class = isset($session['config']['class'])  ? $session['config']['class'] : 'Zend\Session\Config\SessionConfig';
+                                $options = isset($session['config']['options']) ? $session['config']['options'] : array();
+                                $sessionConfig = new $class();
+                                $sessionConfig->setOptions($options);
+                            }
+
+                            $sessionStorage = null;
+                            if (isset($session['storage'])) {
+                                $class = $session['storage'];
+                                $sessionStorage = new $class();
+                            }
+
+                            $sessionSaveHandler = null;
+                            if (isset($session['save_handler'])) {
+                                // class should be fetched from service manager since it will require constructor arguments
+                                $sessionSaveHandler = $sm->get($session['save_handler']);
+                            }
+
+                            $sessionManager = new SessionManager($sessionConfig, $sessionStorage, $sessionSaveHandler);
+
+                            if (isset($session['validators'])) {
+                                $chain = $sessionManager->getValidatorChain();
+
+                                foreach ($session['validators'] as $validator) {
+                                    $validator = new $validator();
+                                    $chain->attach('session.validate', array($validator, 'isValid'));
+                                }
+                            }
+                        } else {
+                            $sessionManager = new SessionManager();
+                        }
+                        Container::setDefaultManager($sessionManager);
+                        return $sessionManager;
+                    },
+            ),
+
+
         );
     }
 

@@ -17,6 +17,7 @@
 <?php echo $this->formRow($formAddColor->get('color')->setAttribute('id', 'input-color')) ?>
 <?php echo $this->formRow($formAdd->get('file')->setAttribute('id', 'file-pdf-input')) ?>
 <?php echo $this->formRow($formAdd->get('main_image')->setAttribute('id','main_image')) ?>
+<?php echo $this->formRow($formAdd->get('id')->setAttribute('id','id_product')) ?>
 
 <div class="group-form">
     <div class="wrapper-input title">
@@ -383,32 +384,68 @@ $(document).on('click', '#crop-image', function () {
     sendData.imageName = globalNameImage[globalK];
     sendData.data = $('#target').attr('data-cof');
     sendData.marker = 1;
+    if(globalType=='color'){
+        sendData.mainColor = 1;
+        sendData.large =0;
+    }else{
+        sendData.large = 1;
+        sendData.mainColor = 0;
+    }
+    $.post('/admin/crop', sendData)
+        .done(function (e, data) {
+            e =JSON.parse(e);
+           alert(e);
+            if(globalType == 'image'){
 
-    $.post('/admin/crop', sendData).done(function (e, data) {
-        
-            var cloneElement = $(".prewiew-defult").clone();
-            $(cloneElement).attr('src',e);
-            $(cloneElement).attr('class', "prewiew deleted-image");
-            $(cloneElement).css({margin: '5px', border: 'solid 2px black','cursor':'pointer'});
-            $(".container-crop").dialog("close");
+                var cloneElement = $(".prewiew-defult").clone();
+                $(cloneElement).attr('src', "/tmp/" + e.imageName);
+                $(cloneElement).attr('class', "prewiew deleted-image");
 
-            if ($('input.image').val() == '') {
-                $('input.image').val(globalNameImage[globalK]);
-            } else {
-                $('input.image').val($('input.image').val() + ',' + globalNameImage[globalK]);
+            }else{
+
+                var cloneElement = $(".prewiew-defult-color").clone();
+                $(cloneElement).attr('src', "/tmp/" + e.imageName);
+                $(cloneElement).attr('class', "prewiew deleted-image-color");
+
             }
+            $(".container-crop").dialog("close");
+            if ($('input.image').val() == '' && globalType =='image') {
 
+                $('input.image').val('/tmp/'+globalNameImage[globalK]);
+
+            } else if($('input.image').val() != ''&& globalType =='image'){
+
+                $('input.image').val($('input.image').val() + ',' + '/tmp/'+globalNameImage[globalK]);
+
+            } else if(typeof  e.color!="undefined" && $('#image-color').val()==''){
+
+                $('#image-color').val('/tmp/'+globalNameImage[globalK]);
+                $('#input-color').val(e.color);
+
+            }else if(typeof  e.color!="undefined" && $('#image-color').val()!=''){
+
+                $('#image-color').val($('#image-color').val()+','+'/tmp/'+globalNameImage[globalK]);
+                $('#input-color').val($('#input-color').val()+','+e.color);
+
+            }
             $('#target').imgAreaSelect({remove: true});
             globalK++;
-            $('.wrapper-input.image').append(cloneElement);
+            if(globalType == 'image'){
+                $('.wrapper-input.image').append(cloneElement);
+            }else{
+                $('.wrapper-input.color').append(cloneElement);
+            }
             if (globalLength > globalK) {
-                cropImage(globalNameImage)
+
+                cropImage(globalNameImage);
+
             } else {
 
                 globalNameImage = [];
                 globalK = 0;
                 globalEvent = '';
                 globalLength = '';
+                globalType = 'image';
             }
 
         });
@@ -573,13 +610,15 @@ $(document).on('click','.deleted-image',function(e) {
 
         if(arr.length==1){
             $('input[name="image"]').val('');
+            arr='';
         }else{
             var buf =   arr.splice(serchIndex,1);
             $('input[name="image"]').val(arr.join(','));
         }
+
         $(e.currentTarget).remove();
         $('.prompt').dialog('close');
-        $.post('/admin/deletedFiles',{src : arr.join(','),table:'product',row : 'image'})
+        $.post('/admin/deletedFiles',{src : imaageName,table:'Product',row : 'image',data:arr.join(','),id_product:$('#id_product').val()})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });
@@ -606,12 +645,15 @@ $(document).on('click','.deleted-color',function(e) {
         var valImage = $('#image-color').val();
         var valColor = $('#input-color').val();
         var serchIndex = valImage.split(',').indexOf(imaageName);
+        var colorName = valColor.split(',')[serchIndex];
+        alert(imaageName);
         var arrImage =  valImage.split(',');
         var arrColor =  valColor.split(',');
 
         if(arrImage.length==1){
             $('#image-color').val('');
             $('#input-color').val('');
+
         }else{
             arrImage.splice(serchIndex,1);
             arrColor.splice(serchIndex,1);
@@ -621,13 +663,13 @@ $(document).on('click','.deleted-color',function(e) {
 
         $(e.currentTarget).remove();
 
-        $.post('/admin/deletedFiles',{src : arrImage.join(',')+"||"+arrColor.join(',') , table : 'colors',row:'image_color'})
+        $.post('/admin/deletedFiles',{src :imaageName , table : 'Colors' , row:'image_color' , id_product:$('#id_product').val(),color:colorName})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });
     };
 
-    PopUp('Выберете действее', 'сообщение',e , yesCollback,noCollback);
+    PopUp('Удалить цвет', 'сообщение',e , yesCollback,noCollback);
 
 });
 
@@ -645,12 +687,13 @@ $(document).on('click','.deleted-file',function(e) {
         var arr =  val.split(',');
         if(arr.length==1){
             $('input[name="file"]').val('');
+            arr=[];
         }else{
             var buf =   arr.splice(serchIndex,1);
             $('input[name="file"]').val(arr.join(','));
         }
         $(e.currentTarget).remove();
-        $.post('/admin/deletedFiles',{src : '/tmp/'+imaageName})
+        $.post('/admin/deletedFiles',{src : imaageName,id_product:$('#id_product').val(),table:'Product',row:'file',data:arr.join(',')})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });

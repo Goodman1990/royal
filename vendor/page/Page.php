@@ -20,6 +20,7 @@ class Page
     public $action;
     public $paramRoute;
     public $attributes;
+    public $renderMenu = true;
 
 
     public function __set($name, $value) {
@@ -44,6 +45,9 @@ class Page
 
     public function setActivePage($page){
         $this->activePage=$page;
+    }
+    public function setRenderMenu($flag){
+        $this->renderMenu =$flag;
     }
 
     public function addTab($tabs,$activeTab,$format=false) {

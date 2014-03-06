@@ -137,6 +137,7 @@ class RemoteAddr implements SessionValidator
      */
     public function getData()
     {
+
         return $this->data;
     }
 

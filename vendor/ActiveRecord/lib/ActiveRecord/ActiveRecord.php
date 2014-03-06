@@ -157,6 +157,7 @@ abstract class ActiveRecord extends AbstractTableGateway
      */
     public function setAttributes($attributes, $fromDataBase = false)
     {
+
         $arrayOfAttributes = (array) $attributes;
         if ($fromDataBase) {
             $this->attributes = $attributes;
@@ -165,6 +166,7 @@ abstract class ActiveRecord extends AbstractTableGateway
             foreach ($arrayOfAttributes as $key => $value) {
                 if (in_array($key, $this->attributeNames())) {
                     if ($arrayOfAttributes[$key] === null) {
+
                         throw new \Exception('Attribute ' . $key . ' in model ' . get_class($this) . ' is NULL');
                     }
                     $this->attributes[$key] = $value;
@@ -303,6 +305,8 @@ abstract class ActiveRecord extends AbstractTableGateway
 //            exit;
             $status = $this->insert($this->getAttributes());
         } else {
+//            var_dump($this->getAttributes());
+//            exit;
             return $this->update($this->getAttributes(), array(
             'id'=>$this->id
             ));

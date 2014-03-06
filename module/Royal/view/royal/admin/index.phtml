@@ -15,6 +15,7 @@
 <?php echo $this->formRow($formAddColor->get('color')->setAttribute('id', 'input-color')) ?>
 <?php echo $this->formRow($formAdd->get('file')->setAttribute('id', 'file-pdf-input')) ?>
 <?php echo $this->formRow($formAdd->get('main_image')->setAttribute('id','main_image')) ?>
+
 <div class="test-color">
 
 
@@ -192,7 +193,7 @@ $(document).on('click','.deleted-image',function(e) {
         }
         $(e.currentTarget).remove();
         $('.prompt').dialog('close');
-        $.post('/admin/deletedFiles',{src : src})
+        $.post('/admin/deletedFiles',{src : src,table:'product',row:'image',data:arr.join(',')})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });

@@ -20,6 +20,11 @@ use Zend\Http\PhpEnvironment\Request;
 use Royal\helpers\imageHelper;
 use watermark\watermark;
 use Royal\helpers\PaginationHelpers;
+use Royal\helpers\AuthHelper;
+use Zend\Session\Container;
+use Zend\Session\SessionManager;
+;
+use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 
 
 class adminController extends AbstractActionController
@@ -41,17 +46,12 @@ class adminController extends AbstractActionController
     }
     public function preDispatch (MvcEvent $e){
 
-//        $this->action = $this->getAction();
-//        $this->controller = $this->getController();
-
         $this->request = $this->getRequest();
         $this->Page = new Page();
         $route = $this->getParamsCustom();
 
         $this->Page->controller = $route['__CONTROLLER__'];
         $this->Page->action = $route['action'];
-
-
         $this->layout('layout/layoutAdmin');
 
         $this->layout()->setVariables(array('page'=>$this->Page));
@@ -63,6 +63,10 @@ class adminController extends AbstractActionController
 
         return  $route = $this->getEvent()->getRouteMatch()->getParams();
     }
+    private function getAdapter(){
+
+        return $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+    }
 
     private function getRouteParam() {
         $routeParam = explode('/',$this->getRequest()->getUri()->toString());
@@ -71,8 +75,53 @@ class adminController extends AbstractActionController
         }
     }
 
+
+
+    public function loginAction(){
+
+
+
+        $this->Page->setRenderMenu(false);
+
+        $form = new formGenerate('loginUser','loginUser',array(
+            'password'=>array('validators'=>false, 'required' => true,'typeInput'=>'password', 'setLabel' => 'Пароль'),
+            'email'=>array('validators'=>array('email'), 'required' => true,'setLabel' => 'Логин'),
+        ));
+        if($this->request->isPost()){
+            $post =  $this->request->getPost();
+            $form->setData($post);
+
+            if($form->isValid()){
+
+
+            }
+        }
+
+
+//
+//        $this->adapter = $this->getAdapter();
+//        $authAdapter = new AuthAdapter( $this->adapter);
+//        $authAdapter
+//            ->setTableName('users')
+//            ->setIdentityColumn('email')
+//            ->setCredentialColumn('password');
+//        $authAdapter = new AuthAdapter($this->adapter,
+//            'users',
+//            'email',
+//            'password'
+//        );
+
+
+
+        return new ViewModel(array(
+            'form' => $form,
+        ));
+
+    }
+
     public function editCategoryAction()
     {
+
         $id_page = $this->params()->fromRoute('param1', 0);
         $this->getRouteParam();
 
@@ -405,14 +454,16 @@ class adminController extends AbstractActionController
                 }
 
                 $this->validData['file'] = implode(',',$arrFile);
+
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
 
                 for($i = 0;$i<count($video);$i++){
-                    $buf = explode('=',$this->validData['video']);
-                    $hashVideo[] = end($buf);
+
+                    $buf = explode('=',$video[$i]);
+                    $hashVideo[] = array_pop($buf);
                 }
-                
+
                 $this->validData['video'] = implode(',',$hashVideo);
                 unset($this->validData['id']);
                 $ProductModel->setAttributes($this->validData)->save();
@@ -423,7 +474,7 @@ class adminController extends AbstractActionController
 
                 for($i = 0;$i<count($colorImageValue);$i++){
 
-                    rename('public'.$colorImageValue[$i],SITE_DIR.'/product/color/'.basename($colorImageValue[$i]));
+                    rename('public'.$colorImageValue[$i],SITE_DIR.'product/color/'.basename($colorImageValue[$i]));
 
                     $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
                     $colorsModel->setAttributes(
@@ -500,6 +551,8 @@ class adminController extends AbstractActionController
 
     public function editProductAction(){
 
+
+
         $id_product = $this->params()->fromRoute('param1', 0);
 
         if($id_product==0){
@@ -520,14 +573,13 @@ class adminController extends AbstractActionController
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
         $ProductModel =  \Royal\Models\ProductModel::model()->findByPk($id_product);
         $colorsModel = \Royal\Models\ColorsModel::model(array('asArray'=>true));
+
         $colorData = $colorsModel
             ->findByAttributes(array('id_product'=>$id_product));
 
         $formAddProduct= new formGenerate('addProduct', 'category addProduct');
         $formAddColor= new formGenerate('addColor', 'category addProduct color');
         $rules =  $ProductModel->rules();
-
-
 
         $ProductModel->findByPk($id_product);
         $categories = \Royal\Models\CategoriesProductModel::model(array('asArray'=>true))->findAllOrder('number DESK ');
@@ -552,7 +604,6 @@ class adminController extends AbstractActionController
         }
 
 
-
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
         $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
         $rules['id_categories_product']['selectInfo'] = $categories;
@@ -566,8 +617,6 @@ class adminController extends AbstractActionController
         $formAddProduct->setDataForm($rules);
         $formAddColor->setDataForm($colorsModel->rules());
 
-
-
         foreach ($colorData as $key) {
             $colorForm['color'][] = $key['color'];
             $colorForm['image_color'][] = $key['image_color'];
@@ -577,14 +626,12 @@ class adminController extends AbstractActionController
         $colorForm['image_color'] = implode(',',$colorForm['image_color']);
         $colorForm['id_product'] = $id_product;
 
-//        echo'<pre>';
-//        var_dump($colorForm);
-//        exit;
         $formAddColor->setData($colorForm);
         $formAddProduct->setData($ProductModel->getAttributes());
 
         if ($this->request->isPost()) {
 
+            $arrImage= '';
             $Post = $this->request->getPost()->toArray();
             $formAddProduct->setData($Post);
             $formAddColor->setData($Post);
@@ -614,7 +661,7 @@ class adminController extends AbstractActionController
                     for($i = 0;$i<count($image);$i++){
 
                         if(file_exists('public/tmp/'.basename($image[$i]))){
-                            rename('public'.$image[$i],SITE_DIR.'/product/'.basename($image[$i]));
+                            rename('public'.$image[$i],SITE_DIR.'product/'.basename($image[$i]));
                             rename('public/tmp/large/'.basename($image[$i]),SITE_DIR.'product/large/'.basename($image[$i]));
                         }
                         $arrImage[] = '/siteDir/product/'.basename($image[$i]);
@@ -651,24 +698,32 @@ class adminController extends AbstractActionController
                 }
 
                 $this->validData['video'] = implode(',',$hashVideo);
-                unset($this->validData['id']);
+                $this->validData['id']=$id_product;
                 $ProductModel->setAttributes($this->validData)->save();
-                $id_product = $ProductModel->getLastInsertValue();
+//                $id_product = $ProductModel->getLastInsertValue();
 
                 $colorValue = explode(',',$color['color']);
                 $colorImageValue = explode(',',$color['image_color']);
-
+                $arrImageValue='';
                 for($i = 0;$i<count($colorImageValue);$i++){
 
-                    if(file_exists('public/tmp/'.basename($file[$i]))){
-                        rename($file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
+                    if(file_exists('public/tmp/'.basename($colorImageValue[$i]))){
+
+                        rename('public/tmp/'.basename($colorImageValue[$i]),SITE_DIR.'product/color/'.basename($colorImageValue[$i]));
+                        $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
+                        $colorsModel->setAttributes(
+                            array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
+                        )->save();
+
+                    }else{
+                        $arrImageValue[$i] = $colorImageValue[$i];
                     }
-                    $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
-                    $colorsModel->setAttributes(
-                        array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
-                    )->save();
 
                 }
+
+                $formAddProduct->get('image')->setValue($this->validData['image']);
+                $formAddColor->get('image_color')->setValue(implode(',',$arrImageValue));
+
             }
         }
         return new ViewModel(array(
@@ -755,21 +810,29 @@ class adminController extends AbstractActionController
 
         $dataImage = $this->getRequest()->getPost()->toArray();
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
-        $imageHelper->save(TMP_DIR.'large/'.$dataImage['imageName']);
+
+        if(!isset($dataImage['large']))
+            $imageHelper->save(TMP_DIR.'large/'.$dataImage['imageName']);
+
         if($dataImage['w']!=0 && $dataImage['h']!=0){
             $imageHelper->resize($dataImage['width'],$dataImage['height']);
             $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
         }
+
         $imageHelper->save();
+
         if($dataImage['marker']=='1'){
+
             $imageHelper->watermark(SITE_DIR.'woterMark3.png');
-        }if($dataImage['marker']=='1'){
-          $color = $imageHelper->getMainColorImage();
+
+        }if($dataImage['mainColor']=='1'){
+
+             $color = $imageHelper->getMainColorImage();
              echo json_encode(array('color'=>$color,'imageName'=>$dataImage['imageName']));
-            exit;
+             exit;
         }
 
-        echo json_encode($dataImage['imageName']);
+        echo json_encode(array('imageName'=>$dataImage['imageName']));
         exit;
 
     }
@@ -922,14 +985,22 @@ class adminController extends AbstractActionController
     public function deletedFilesAction(){
 
         if($this->request->isPost() && $this->request->isXmlHttpRequest()){
+           $post =  $this->request->getPost()->toArray();
+            if(isset($post['table']) && $post['table'] !='Colors'){
+                $model = '\Royal\Models\\'.$post['table'].'Model';
+                $currentModel = $model::model()->setAttributes(array('id'=>$post['id_product'],$post['row']=>$post['data']))->save();
 
-            $post = $this->request->getPost();
+            }else if(isset($post['table']) && $post['table'] =='Colors'){
+
+                $model = '\Royal\Models\\'.$post['table'].'Model';
+                $currentModel = $model::model()->delete(array('id_product'=>$post['id_product'],'image_color'=>$post['src'],'color'=>$post['color']));
+
+            }
             unlink('public'.$post['src']);
-
-
-            exit;
-
         }
+        echo 1;
+        exit;
+
     }
 
 
