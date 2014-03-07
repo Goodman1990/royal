@@ -248,7 +248,7 @@ p,span{
             .left-content .warpper-subcategories{
                 display: inline-block;
                 width: 176px;
-                height: 154px;
+                height: 180px;
                 vertical-align: top;
                 margin: 7%;
 
@@ -309,7 +309,11 @@ p,span{
                 max-height: 150px;
                 display: inline-block;
                 vertical-align: top;
-                margin: 30px;
+                margin: 15px;
+            }
+            .desk-manufacturers {
+                text-decoration: none;
+                color: #293757;
             }
             .warpper-manufacturers-img{
                 display:table;

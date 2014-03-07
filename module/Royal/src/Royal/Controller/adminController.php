@@ -311,8 +311,12 @@ class adminController extends AbstractActionController
 
                     for ($i = 0; $i < $formEdit->countInput; $i++) {
 
-                        unlink(SITE_DIR.'categories/'.$oldData['image_'.$i]);
-                        rename(TMP_DIR.$this->validData['image_' . $i],SITE_DIR.'/categories/'.$this->validData['image_' . $i]);
+                        if(file_exists( TMP_DIR.$this->validData['image_' . $i])){
+                            rename(TMP_DIR.$this->validData['image_' . $i],SITE_DIR.'categories/'.$this->validData['image_' . $i]);
+                            unlink(SITE_DIR.'categories/'.$oldData['image_' . $i]);
+                        }
+
+
 
                         $model::model()
                             ->setAttributes(array(

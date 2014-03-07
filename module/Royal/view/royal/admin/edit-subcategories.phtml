@@ -1,7 +1,9 @@
 <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 <div class="left-content">
-    Редактировать категории
+
+    <span class="toggle-edit">Редактировать категории</span>
     <hr>
+    <div class="wrap-edit-block" style="display: none">
     <?php echo $this->form()->openTag($formEdit);?>
     <div id="sort-form">
         <?php  for($i=0;$i<$formEdit->countInput;$i++){ ?>
@@ -39,6 +41,8 @@
 
     <button form="editSubCategory" name="edit">Редактировать</button>
     <?php echo $this->form()->closeTag($formEdit);?>
+        </div>
+    </div>
     <br />
     <p>Добавить категорию</p>
     <hr>
@@ -235,14 +239,19 @@
         sendData.imageName  = $('.active-input').val();
         sendData.data  = $('#target').attr('data-cof');
         sendData.marker = 0;
+        sendData.mainColor = 0;
+        sendData.large =0;
+        sendData.mainColor = 0;
+
         $.post('/admin/crop',sendData)
 
             .done(function(e,data){
+                e = JSON.parse(e);
 
                 if(typeof globalNameInput=="undefined"){
-                    $('.prewiew').attr('src',"/tmp/"+e);
+                    $('.prewiew').attr('src',"/tmp/"+ e.imageName);
                 }else{
-                    $('.prewiew_'+globalNameInput).attr('src',"/tmp/"+e);
+                    $('.prewiew_'+globalNameInput).attr('src',"/tmp/"+ e.imageName);
                 }
                 $('#target').imgAreaSelect({remove: true});
                 $('.container-crop').bind('dialogclose', function(event) {
@@ -254,6 +263,12 @@
             });
 
     });
+
+    $(document).on('click','.toggle-edit',function(){
+        $('.wrap-edit-block').toggle();
+    });
+
+
 
 </script>
 

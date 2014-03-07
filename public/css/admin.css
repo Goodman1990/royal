@@ -489,6 +489,9 @@ all-product.title{
     width: 200px;
     padding: 20px;
 }
+.toggle-edit{
+    cursor: pointer;
+}
 
 
 
