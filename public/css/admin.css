@@ -484,6 +484,13 @@ all-product.title{
 .prewiew.deleted-image.main-image{
     border: solid 4px green;
 }
+.loginForm{
+    margin: 0 auto;
+    width: 200px;
+    padding: 20px;
+}
+
+
 
 
 

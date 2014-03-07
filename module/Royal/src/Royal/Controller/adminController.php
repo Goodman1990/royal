@@ -23,8 +23,7 @@ use Royal\helpers\PaginationHelpers;
 use Royal\helpers\AuthHelper;
 use Zend\Session\Container;
 use Zend\Session\SessionManager;
-;
-use Zend\Authentication\Adapter\DbTable as AuthAdapter;
+//use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 
 
 class adminController extends AbstractActionController
@@ -36,6 +35,7 @@ class adminController extends AbstractActionController
     public $Page;
     public $action;
     public $controller;
+    public $AuthHelper;
 
 
     protected function attachDefaultListeners()
@@ -49,11 +49,20 @@ class adminController extends AbstractActionController
         $this->request = $this->getRequest();
         $this->Page = new Page();
         $route = $this->getParamsCustom();
-
         $this->Page->controller = $route['__CONTROLLER__'];
         $this->Page->action = $route['action'];
-        $this->layout('layout/layoutAdmin');
+        $this->AuthHelper =  new AuthHelper($this->getServiceLocator()->get('Zend\Session\SessionManager'));
 
+
+        if(!$this->AuthHelper->isLogin() && $this->Page->action!='index'){
+
+            $this->redirect()->toRoute('Royal',array(
+                'controller'=>'admin',
+                'action'=>'index',
+            ));
+
+        }
+        $this->layout('layout/layoutAdmin');
         $this->layout()->setVariables(array('page'=>$this->Page));
 
 
@@ -77,41 +86,41 @@ class adminController extends AbstractActionController
 
 
 
-    public function loginAction(){
+    public function indexAction() {
 
 
+        if($this->AuthHelper->isLogin()){
 
+            $this->redirect()->toRoute('Royal',array(
+                'controller'=>'admin',
+                'action'=>'addProduct',
+            ));
+
+        }
         $this->Page->setRenderMenu(false);
-
         $form = new formGenerate('loginUser','loginUser',array(
-            'password'=>array('validators'=>false, 'required' => true,'typeInput'=>'password', 'setLabel' => 'Пароль'),
             'email'=>array('validators'=>array('email'), 'required' => true,'setLabel' => 'Логин'),
+            'password'=>array('validators'=>false, 'required' => true,'typeInput'=>'password', 'setLabel' => 'Пароль'),
+
         ));
+
         if($this->request->isPost()){
+
             $post =  $this->request->getPost();
             $form->setData($post);
 
             if($form->isValid()){
 
+                if($this->AuthHelper->auth($post)){
 
+                    $this->redirect()->toRoute('Royal',array(
+                        'controller'=>'admin',
+                        'action'=>'index',
+                    ));
+
+                }
             }
         }
-
-
-//
-//        $this->adapter = $this->getAdapter();
-//        $authAdapter = new AuthAdapter( $this->adapter);
-//        $authAdapter
-//            ->setTableName('users')
-//            ->setIdentityColumn('email')
-//            ->setCredentialColumn('password');
-//        $authAdapter = new AuthAdapter($this->adapter,
-//            'users',
-//            'email',
-//            'password'
-//        );
-
-
 
         return new ViewModel(array(
             'form' => $form,
@@ -250,7 +259,9 @@ class adminController extends AbstractActionController
                 ));
 
             }
+
         }else{
+
             $categoryData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
             $model = \Royal\Models\ManufacturersModel::model();
             $this->Page->setActivePage(array('admin'=>array(
@@ -327,8 +338,6 @@ class adminController extends AbstractActionController
                 if ($formAdd->isValid()) {
                     $this->validData = $formAdd->getData();
                     unset($this->validData['id']);
-//                    $generalHelper  = new generalHelper();
-//                    mkdir(SITE_DIR.'categories/'.$generalHelper->transliteration($this->validData['title'].'/'), 0766, true);
                     rename(TMP_DIR.$this->validData['image'],SITE_DIR.'categories/'.$this->validData['image']);
                     $id = $model::model()
                         ->setAttributes($this->validData)->save();
@@ -360,8 +369,7 @@ class adminController extends AbstractActionController
 
     }
 
-    public function indexAction() {
-
+    public function addProductAction() {
 
         $id_categories_product = $this->params()->fromRoute('param1', 0);
 
@@ -380,27 +388,44 @@ class adminController extends AbstractActionController
 
         $formAddProduct= new formGenerate('addProduct', 'category addProduct');
         $formAddColor= new formGenerate('addColor', 'category addProduct color');
+
         $rules =  $ProductModel->rules();
 
-        if($id_categories_product==0){
-            $id_categories_product = $CategoriesProductData[0]['id'];
-        }
-        $SubcategoriesProductData = $SubcategoriesProductModel->findByAttributes(array(
-            'id_categories_product'=>$id_categories_product
-        ));
-       $this->Page->addTab($CategoriesProductData,$id_categories_product,true);
+        $categoriesData = $CategoriesProductModel->findAllOrder('number DESK ');
 
 
         if($this->request->isPost()){
-            $manufacturers= $ManufacturersModel->findByAttributes(array(
-                'id_subcategories_product'=>(int) $this->request->getPost()->id_subcategories_product
+
+            $SubcategoriesProductData =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array(
+                'id_categories_product'=>(int)$this->request->getPost()->id_categories_product,
             ));
-            $rules['id_manufacturers']['selectInfo'] = $manufacturers;
-            $rules['id_manufacturers']['typeInput'] = 'select';
+            $manufacturers = $ManufacturersModel->findByAttributes(array(
+                'id_subcategories_product'=>(int)$this->request->getPost()->id_subcategories_product,
+            ));
+
+        }else{
+
+            $SubcategoriesProductData =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array(
+                'id_categories_product'=>$categoriesData[0]['id'],
+            ));
+
+            $manufacturers = $ManufacturersModel->findByAttributes(array(
+                'id_subcategories_product'=>$SubcategoriesProductData['id']
+            ));
         }
-            $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
-            $rules['id_subcategories_product']['typeInput'] = 'select';
-            $rules['id_manufacturers']['typeInput'] = 'select';
+
+
+        $rules['id_manufacturers']['selectInfo'] = $manufacturers;
+        $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
+        $rules['id_categories_product']['selectInfo'] = $categoriesData;
+        $rules['id_manufacturers']['typeInput'] = 'select';
+        $rules['id_categories_product']['typeInput'] = 'select';
+        $rules['id_subcategories_product']['typeInput'] = 'select';
+        $rules['id_manufacturers']['setLabel'] = 'Производитель';
+        $rules['id_categories_product']['setLabel'] = 'Категории';
+        $rules['id_subcategories_product']['setLabel'] = 'Подкатегории';
+
+
 
         $formAddProduct->setDataForm($rules);
         $formAddColor->setDataForm($colorsModel->rules());
@@ -437,6 +462,7 @@ class adminController extends AbstractActionController
                         rename('public/tmp/large/'.basename($image[$i]),SITE_DIR.'product/large/'.basename($image[0]));
                         $arrImage[] = '/siteDir/product/'.basename($image[$i]);
                     }
+
                     $this->validData['image'] = implode(',',$arrImage);
 
                 }else{
@@ -484,26 +510,16 @@ class adminController extends AbstractActionController
 
                 $this->redirect()->toRoute('Royal',array(
                     'controller'=>'admin',
-                    'action'=>'index',
+                    'action'=>'addProduct',
                 ));
-
-            }else{
-
-              $ManufacturersData = $ManufacturersModel->findByAttributes(array(
-                    'id_subcategories_product'=>$Post['id_subcategories_product']
-                ));
-                $rules['id_manufacturers']['selectInfo'] = $ManufacturersData;
-                $rules['id_manufacturers']['typeInput'] = 'select';
-
-                $formAddProduct->setDataFormAdd(array('id_manufacturers'=>$rules['id_manufacturers']));
 
             }
         }
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
             'formAddColor'=>$formAddColor,
-            'id_subcategories_product'=>$id_categories_product,
-            'categories_product_id'=>$id_categories_product
+//            'id_subcategories_product'=>$id_categories_product,
+//            'categories_product_id'=>$id_categories_product
 
 
         ));
@@ -550,7 +566,6 @@ class adminController extends AbstractActionController
     }
 
     public function editProductAction(){
-
 
 
         $id_product = $this->params()->fromRoute('param1', 0);
@@ -811,7 +826,7 @@ class adminController extends AbstractActionController
         $dataImage = $this->getRequest()->getPost()->toArray();
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
 
-        if(!isset($dataImage['large']))
+        if(isset($dataImage['large']))
             $imageHelper->save(TMP_DIR.'large/'.$dataImage['imageName']);
 
         if($dataImage['w']!=0 && $dataImage['h']!=0){

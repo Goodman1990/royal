@@ -28,7 +28,7 @@
 
         <div class="wrap-tab-content color active">
             <div class="popup-gallery">
-                <?php foreach($colorData as $key) { ?>
+                <?php  foreach($colorData as $key) { ?>
                     <div class="wrap-img-color-product">
                         <a   href="<?php  echo $key['image_color'] ?>">
                             <img class="img-color-product" src="<?php  echo $key['image_color'] ?>" alt=""/>
@@ -44,7 +44,7 @@
 
 
         <div class="wrap-tab-content technical-information">
-            <a href="/page/download/?file=<?php echo $ProductModel->file ?>">asdasdasdas</a>
+            <a href="/page/download/?file=<?php echo $ProductModel->file ?>">Скачать</a>
             <?php echo $ProductModel->technical_description ?>
         </div>
 
@@ -162,7 +162,4 @@
 <!--<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>-->
 <!--<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>-->
 <!--<script type="text/javascript" src="/js/bootstraGallery/bootstrap-image-gallery.min.js"></script>-->
-
-
-
 

@@ -23,7 +23,6 @@ class AuthHelper
 
     public function isLogin(){
 
-
         $this->sessionManager->isValid();
 
         if($this->conteiner->offsetGet('auth')){
@@ -48,20 +47,21 @@ class AuthHelper
 
     }
 
-
     public function auth($data){
+
         $UserModel = \Royal\Models\UsersModel::model();
         $data['password'] = $UserModel::hashPassword($data['password']);
-        $UserModel = $UserModel::model()->findByAttributes(array($data));
+
+        $UserModel = $UserModel::model()->findByAttributes($data);
 
         if( $UserModel != array() ) {
 
             foreach($UserModel->getAttributes() as $key=>$value){
                 $this->conteiner->offsetSet($key,$value);
             }
-            $this->conteiner->ofsetSet('auth',true);
-            $this->conteiner->ofsetSet('ip',$_SERVER['REMOTE_ADDR']);
-            $this->conteiner->ofsetSet('agent',$_SERVER['HTTP_USER_AGENT']);
+            $this->conteiner->offsetSet('auth',true);
+            $this->conteiner->offsetSet('ip',$_SERVER['REMOTE_ADDR']);
+            $this->conteiner->offsetSet('agent',$_SERVER['HTTP_USER_AGENT']);
 
             return $UserModel;
 

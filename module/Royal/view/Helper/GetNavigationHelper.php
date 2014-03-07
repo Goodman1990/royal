@@ -44,19 +44,6 @@ class GetNavigationHelper extends AbstractHelper {
                     'uri'=>$page.'/'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
                     'resource'=>$key['id'],
                     'visible' => $key['visible'],
-//                    'pages'=>array(
-//                    array(
-//                        'label' => $key['title'],
-//                        'uri'=>$page.'/'.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
-//                        'resource'=>$key['id'],
-//                        'visible' => $key['visible'],
-//                    ),array(
-//                        'label' => $key['title'],
-//                        'uri'=>$page.''.$key['id'].'_'.$generalHelper->transliteration(trim($key['title'])),
-//                        'resource'=>$key['id'],
-//                        'visible' => $key['visible'],
-//                    )
-//                    )
                 );
                 if($key['id']==$subcategories){
 //                    echo'<pre>';
@@ -152,7 +139,7 @@ class GetNavigationHelper extends AbstractHelper {
                 'visible' =>1,
                 'pages'=>array(
                     array( 'label' => 'Добавить продукт',
-                        'uri'=>'/admin/index',
+                        'uri'=>'/admin/addProduct',
                         'resource'=>'2.1',
                         'visible' =>1,
                     ),

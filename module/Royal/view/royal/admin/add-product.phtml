@@ -10,13 +10,19 @@
 <!--<div id="map"></div>-->
 
 <?php echo $this->form()->openTag($formAdd); ?>
-<div class="test-color">
+<?php echo $this->formRow($formAdd->get('image')) ?>
+<?php echo $this->formRow($formAddColor->get('image_color')->setAttribute('id', 'image-color')) ?>
+<?php echo $this->formRow($formAddColor->get('color')->setAttribute('id', 'input-color')) ?>
+<?php echo $this->formRow($formAdd->get('file')->setAttribute('id', 'file-pdf-input')) ?>
+<?php echo $this->formRow($formAdd->get('main_image')->setAttribute('id','main_image')) ?>
 
 
-</div>
 <div class="group-form">
     <div class="wrapper-input title">
         <?php echo $this->formRow($formAdd->get('title')) ?>
+    </div>
+    <div class="wrapper-input id_categories_product">
+        <?php echo $this->formRow($formAdd->get('id_categories_product')); ?>
     </div>
     <div class="wrapper-input id_subcategories_product">
         <?php echo $this->formRow($formAdd->get('id_subcategories_product')); ?>
@@ -33,15 +39,13 @@
     <div class="wrapper-input description">
         <?php echo $this->formRow($formAdd->get('technical_description')->setAttribute('class', 'ckeditor')) ?>
     </div>
-    <?php echo $this->formRow($formAdd->get('image')) ?>
+
     <div class="wrapper-input video">
         <?php echo $this->formRow($formAdd->get('video')) ?>
     </div>
     <div class="wrapper-input addres_buy">
         <?php echo $this->formRow($formAdd->get('addres_buy')) ?>
     </div>
-    <?php echo $this->formRow($formAdd->get('id_categories_product')->setValue($categories_product_id)); ?>
-    <!--                    --><?php //echo $this->formRow($formAdd->get('id_subcategories_product')->setValue($id_subcategories_product)); ?>
     <p>Добавить изображение</p>
     <hr>
     <div class="wrapper-input image">
@@ -64,13 +68,20 @@
         <input type="file" name="pdf-file[]" multiple id="file-pdf">
 
         <div class="wrapper-input file">
-            <?php echo $this->formRow($formAdd->get('file')->setAttribute('id', 'file-pdf-input')) ?>
 
         </div>
     </div>
 
     <p>Добавте цвет</p>
     <hr>
+    <div class="wrapper-input color">
+        <div class="wrapper-image">
+            <div class="image-warrper-color">
+                <img width="100" height="100" class="prewiew-defult-color" src=""/>
+            </div>
+            <input type="file" name="img-file-color[]" multiple class="image-file-color">
+        </div>
+    </div>
 
     <button form="addProduct" class="addProduct" name="edit">Добавить продукт</button>
     <?php echo $this->form()->closeTag($formAdd); ?>
@@ -100,9 +111,38 @@
 
 <script type="text/javascript">
 
+globalNameImage = [];
+globalNamePdf = [];
+globalK = 0;
+globalEvent = '';
+globalNamePdf.ext = [];
+globalType = 'image';
+
 $(document).ready(function () {
     $('.image-file').jInputFile();
+    $('.image-file-color').jInputFile();
     $('#file-pdf').jInputFile();
+});
+
+
+$(document).on('change','select[name="id_categories_product"]',function() {
+
+    var name = $(this).attr('name');
+    var value = $(this).val();
+
+    $.post('/admin/getSubcategories',{name : name,value : value})
+        .done(function(data) {
+
+            data = JSON.parse(data);
+            var options = "<option value>Выберете подкатегорию</option>";
+            for(var i=0;i<data.length;i++){
+                options += '<option value="' + data[i].id + '">' + data[i].title + '</option>';
+            }
+            $('select[name="id_subcategories_product"]').html(options);
+            $('select[name="id_manufacturers"]').html("<option value>Выберете подкатегорию</option>");
+
+
+        });
 });
 
 
@@ -113,7 +153,6 @@ $(document).on('change','select[name="id_subcategories_product"]',function() {
         .done(function(data) {
             data = JSON.parse(data);
             var options = "<option value>Выберете производителя</option>";
-
             for(var i=0;i<data.length;i++){
                 options += '<option value="' + data[i].id + '">' + data[i].title + '</option>';
             }
@@ -125,38 +164,38 @@ $(document).on('change','select[name="id_subcategories_product"]',function() {
 
 $(document).on('click','.deleted-image',function(e) {
 
-   var imaageName =  $(this).attr('src').split('/');
+    var imaageName =  $(this).attr('src').split('/');
     imaageName =  imaageName[imaageName.length-1];
 
     var mainImageCollback = function(e){
 
-        var imaageName =  $(e.currentTarget).attr('src').split('/');
-        var src = $(e.currentTarget).attr('src');
-        imaageName =  imaageName[imaageName.length-1];
+        var imaageName = $(e.currentTarget).attr('src');
         var val = $('input[name="image"]').val();
         var serchIndex = val.split(',').indexOf(imaageName);
         var arr =  val.split(',');
-
         if(arr.length==1){
-
             $('input[name="image"]').val('');
-
         }else{
-
             var buf =   arr.splice(serchIndex,1);
             $('input[name="image"]').val(arr.join(','));
+        }
 
+        if($('#main_image').val()!=''){
+            if(arr.join(',')==''){
+                $('input[name="image"]').val($('input[name="image"]').val($('#main_image').val()));
+            }else{
+                $('input[name="image"]').val($('#main_image').val()+','+arr.join(','));
+            }
         }
         $('#main_image').val($(e.currentTarget).attr('src'));
-        $(e.currentTarget).css({margin: '5px', border: '2px solid lime'});
+        $('.main-image').removeClass('main-image');
+        $(e.currentTarget).addClass('main-image');
 
     };
 
     var deleteCollback = function(e){
 
-        var imaageName =  $(e.currentTarget).attr('src').split('/');
-        var src = $(e.currentTarget).attr('src');
-        imaageName =  imaageName[imaageName.length-1];
+        var imaageName = $(e.currentTarget).attr('src');
         var val = $('input[name="image"]').val();
         var serchIndex = val.split(',').indexOf(imaageName);
         var arr =  val.split(',');
@@ -172,7 +211,8 @@ $(document).on('click','.deleted-image',function(e) {
 
         }
         $(e.currentTarget).remove();
-        $.post('/admin/deletedFiles',{src : src})
+        $('.prompt').dialog('close');
+        $.post('/admin/deletedFiles',{src : src,table:'product',row:'image',data:arr.join(',')})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });
@@ -184,46 +224,78 @@ $(document).on('click','.deleted-image',function(e) {
 });
 
 
-$(document).on('click','.deleted-file',function(e) {
+
+$(document).on('click','.deleted-color',function(e) {
+
+    var imaageName =  $(this).attr('src').split('/');
+    imaageName =  imaageName[imaageName.length-1];
+
+    var noCollback = function(e){
+        $('.prompt').dialog('close');
+    };
 
     var yesCollback = function(e){
 
-        var imaageName =  $(e.currentTarget).find('.pdf-title').text();
-        var val = $('input[name="file"]').val();
-        var serchIndex = val.split(',').indexOf(imaageName);
-        var arr =  val.split(',');
+        var imaageName = $(e.currentTarget).attr('src');
+        var valImage = $('#image-color').val();
+        var valColor = $('#input-color').val();
+        var serchIndex = valImage.split(',').indexOf(imaageName);
+        var arrImage =  valImage.split(',');
+        var arrColor =  valColor.split(',');
 
-        if(arr.length==1){
-
-            $('#file-pdf').val('');
-
+        if(arrImage.length==1){
+            $('#image-color').val('');
+            $('#input-color').val('');
         }else{
-
-            console.log(arr,serchIndex);
-            var buf =   arr.splice(serchIndex,1);
-            console.log(arr);
-            $('#file-pdf').val(arr.join(','));
+            arrImage.splice(serchIndex,1);
+            arrColor.splice(serchIndex,1);
+            $('#image-color').val(arrImage.join(','));
+            $('#input-color').val(arrColor.join(','));
 
         }
-
         $(e.currentTarget).remove();
-
         $.post('/admin/deletedFiles',{src : imaageName})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });
     };
-    PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
+
+    PopUp('Выберете действее', 'сообщение',e , yesCollback,noCollback);
 
 });
 
 
 
-globalNameImage = [];
-globalNamePdf = [];
-globalK = 0;
-globalEvent = '';
-globalNamePdf.ext = [];
+$(document).on('click','.deleted-file',function(e) {
+
+    var yesCollback = function(e){
+
+        var imaageName =  $(e.currentTarget).find('.pdf-title').text();
+
+        var val = $('input[name="file"]').val();
+
+        var serchIndex = val.split(',').indexOf(imaageName);
+
+        var arr =  val.split(',');
+        if(arr.length==1){
+            $('input[name="file"]').val('');
+        }else{
+            console.log(arr,serchIndex);
+            var buf =   arr.splice(serchIndex,1);
+            console.log(arr);
+            $('input[name="file"]').val(arr.join(','));
+        }
+        $(e.currentTarget).remove();
+        $.post('/admin/deletedFiles',{src : '/tmp/'+imaageName})
+            .done(function(data) {
+                $('.prompt').dialog('close');
+            });
+
+    };
+
+    PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
+
+});
 
 
 function createPreviewFile() {
@@ -232,7 +304,6 @@ function createPreviewFile() {
     var fileView = $('#file-pdf-input').val();
     var url;
     if (fileView != '') {
-
         var arrfile = [];
         arrfile = fileView.split(',');
             for (var i = 0; i < arrfile.length; i++) {
@@ -250,6 +321,7 @@ function createPreviewFile() {
                 }
                 $(cloneElement).find('.prewiew-defult-pdf').css('background-image', 'url(' + url + ')');
                 $('.wrapper-image.inner').append(cloneElement);
+
         }
     }
 
@@ -263,15 +335,47 @@ function createPreviewImage(){
 
         var arrImg = [];
         arrImg = imgView.split(',');
-
         for (var i = 0; i < arrImg.length; i++) {
-            alert(1);
+
             var cloneElement = $(".image-warrper-file").clone();
-            $(cloneElement).attr('src', "/tmp/" + arrImg[i]);
-            $(cloneElement).attr('class', "prewiew deleted-image");
-            $(cloneElement).css({margin: '5px', border: 'solid 2px black'});
+            $(cloneElement).find('.prewiew-defult').attr('src',arrImg[i]);
+            $(cloneElement).find('.prewiew-defult').attr('class', "prewiew deleted-image");
+            $(cloneElement).attr('class','fake');
+            $(cloneElement).css({margin: '5px'});
+
+            $(cloneElement).css({display:'inline-block'});
             $('.wrapper-input.image').append(cloneElement);
 
+        }
+    }
+    if($('.main_image').val()!=''){
+
+        var cloneElement = $(".image-warrper-file").clone();
+        $(cloneElement).find('.prewiew-defult').attr('src',$('.main_image').val());
+        $(cloneElement).find('.prewiew-defult').attr('class', "prewiew deleted-image main-image");
+        $(cloneElement).attr('class','fake');
+        $(cloneElement).css({display:'inline-block'});
+        $('.wrapper-input.image').append(cloneElement);
+
+    }
+
+}
+
+function createPreviewImageColor(){
+
+    var imgView = $('#image-color').val();
+    if (imgView != '') {
+
+        var arrImg = [];
+        arrImg = imgView.split(',');
+        for (var i = 0; i < arrImg.length; i++) {
+            var cloneElement = $(".image-warrper-color").clone();
+            $(cloneElement).find('.prewiew-defult-color').attr('src',arrImg[i]);
+            $(cloneElement).find('.prewiew-defult-color').attr('class', "prewiew deleted-color");
+            $(cloneElement).attr('class','fake-color');
+            $(cloneElement).css({margin: '5px'});
+            $(cloneElement).css({display:'inline-block'});
+            $('.wrapper-input.color').append(cloneElement);
         }
     }
 }
@@ -300,13 +404,38 @@ $(function () {
     });
 
 
+     $('.image-file-color').fileupload({
+        url: '/admin/uploadImageColor',
+        dataType: 'json',
+        multipart: true,
+        done: function (e, data) {
+            globalNameImage.push(data.result);
+            globalType = 'color';
+
+            if (data.originalFiles.length == globalNameImage.length) {
+                globalEvent = e;
+                cropImage(globalNameImage)
+            }
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('.progress').css(
+                'width',
+                progress + '%'
+            );
+        }
+    });
+
+
     $('#file-pdf').fileupload({
         url: '/admin/uploadFile',
         dataType: 'json',
         multipart: true,
         formAcceptCharset: 'utf-8',
         done: function (e, data) {
+
             globalNamePdf.push(data.result);
+
             if (data.originalFiles.length == globalNamePdf.length) {
 
                 var value = $('#file-pdf-input').val();
@@ -342,6 +471,7 @@ $(document).ready(function () {
 
     createPreviewImage();
     createPreviewFile();
+    createPreviewImageColor();
 //           $.getJSON(
 //            'http://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent('Украина, г. Донецк, ул. Собинова 2а')+'&sensor=true',
 //            {
@@ -391,57 +521,10 @@ $(document).ready(function () {
 //
 //            });
 });
-
-$(document).on('click', '#crop-image', function () {
-
-    var sendData = {};
-    sendData.x1 = $('#x1').val();
-    sendData.x2 = $('#x2').val();
-    sendData.y2 = $('#y2').val();
-    sendData.y1 = $('#y1').val();
-    sendData.w = $('#w').val();
-    sendData.h = $('#h').val();
-    sendData.width = $('#target').width();
-    sendData.height = $('#target').height();
-    sendData.imageName = globalNameImage[globalK];
-    sendData.data = $('#target').attr('data-cof');
-    sendData.marker = 1;
-
-    $.post('/admin/crop', sendData)
-        .done(function (e, data) {
-            var cloneElement = $(".prewiew-defult").clone();
-            $(cloneElement).attr('src', "/tmp/" + e);
-            $(cloneElement).attr('class', "prewiew deleted-image");
-            $(cloneElement).css({margin: '5px', border: 'solid 2px black','cursor':'pointer'});
-            $(".container-crop").dialog("close");
-
-            if ($('input.image').val() == '') {
-                $('input.image').val(globalNameImage[globalK]);
-            } else {
-                $('input.image').val($('input.image').val() + ',' + globalNameImage[globalK]);
-            }
-
-            $('#target').imgAreaSelect({remove: true});
-            globalK++;
-            $('.wrapper-input.image').append(cloneElement);
-            if (globalLength > globalK) {
-                cropImage(globalNameImage)
-            } else {
-
-                globalNameImage = [];
-                globalK = 0;
-                globalEvent = '';
-                globalLength = '';
-            }
-
-        });
-
-});
-
-
 function cropImage(name) {
 
     globalLength = name.length;
+    console.log(name[globalK]);
     var i = $(globalEvent.target).attr('data-iterator');
     if (typeof i == 'undefined') {
         $('input').removeClass('active-input');
@@ -530,6 +613,92 @@ function cropImage(name) {
         }
     });
 }
+$(document).on('click', '#crop-image', function () {
+
+    var sendData = {};
+    sendData.x1 = $('#x1').val();
+    sendData.x2 = $('#x2').val();
+    sendData.y2 = $('#y2').val();
+    sendData.y1 = $('#y1').val();
+    sendData.w = $('#w').val();
+    sendData.h = $('#h').val();
+    sendData.width = $('#target').width();
+    sendData.height = $('#target').height();
+    sendData.imageName = globalNameImage[globalK];
+    sendData.data = $('#target').attr('data-cof');
+    sendData.marker = 1;
+    if(globalType=='color'){
+        sendData.mainColor = 1;
+        sendData.large =0;
+    }else{
+        sendData.large = 1;
+        sendData.mainColor = 0;
+    }
+    alert(globalNameImage[globalK]);
+    $.post('/admin/crop', sendData)
+        .done(function (e, data) {
+
+            e =JSON.parse(e);
+
+            if(globalType == 'image'){
+
+                var cloneElement = $(".prewiew-defult").clone();
+                $(cloneElement).attr('src', "/tmp/" + e.imageName);
+                $(cloneElement).attr('class', "prewiew deleted-image");
+
+            }else{
+
+                var cloneElement = $(".prewiew-defult-color").clone();
+                $(cloneElement).attr('src', "/tmp/" + e.imageName);
+                $(cloneElement).attr('class', "prewiew deleted-image-color");
+
+            }
+            $(".container-crop").dialog("close");
+            if ($('input.image').val() == '' && globalType =='image') {
+
+                $('input.image').val('/tmp/'+globalNameImage[globalK]);
+
+            } else if($('input.image').val() != ''&& globalType =='image'){
+
+                $('input.image').val($('input.image').val() + ',' + '/tmp/'+globalNameImage[globalK]);
+
+            } else if(typeof  e.color!="undefined" && $('#image-color').val()==''){
+
+                $('#image-color').val('/tmp/'+globalNameImage[globalK]);
+                $('#input-color').val(e.color);
+
+            }else if(typeof  e.color!="undefined" && $('#image-color').val()!=''){
+
+                $('#image-color').val($('#image-color').val()+','+'/tmp/'+globalNameImage[globalK]);
+                $('#input-color').val($('#input-color').val()+','+e.color);
+
+            }
+            $('#target').imgAreaSelect({remove: true});
+            globalK++;
+            if(globalType == 'image'){
+                $('.wrapper-input.image').append(cloneElement);
+            }else{
+                $('.wrapper-input.color').append(cloneElement);
+            }
+            if (globalLength > globalK) {
+
+                cropImage(globalNameImage);
+
+            } else {
+
+                globalNameImage = [];
+                globalK = 0;
+                globalEvent = '';
+                globalLength = '';
+                globalType = 'image';
+            }
+
+        });
+
+});
+
+
+
 </script>
 
 

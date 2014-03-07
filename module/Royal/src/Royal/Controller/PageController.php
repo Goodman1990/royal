@@ -76,7 +76,6 @@ class PageController extends AbstractActionController
         $this->getHitProduct();
         $this->id_page = $this->parseParam($this->params()->fromRoute('param1', 0));
 
-
         if($this->id_page==0){
             $elementCategory =   \Royal\Models\CategoryPagesModel::model(array('asArray'=>true))->findAll();
             $this->id_page = $elementCategory[0]['id'];
