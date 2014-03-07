@@ -755,6 +755,7 @@ class adminController extends AbstractActionController
 
     public function getAllproductAction() {
 
+
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'2',
             'sub'=>'2.2'
@@ -770,6 +771,9 @@ class adminController extends AbstractActionController
         $subcategoriesData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))->findByAttributes(array(
             'id_categories_product'=> $id_categories_product
         ));
+
+//        var_dump($subcategoriesData);
+//        exit;
 
         $this->Page->addTab($categoryProduct,$id_categories_product,true);
         $paginationHelper = new PaginationHelpers($this->request->getPost());
@@ -827,10 +831,11 @@ class adminController extends AbstractActionController
 
     public function cropAction() {
 
+
         $dataImage = $this->getRequest()->getPost()->toArray();
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
 
-        if(isset($dataImage['large']))
+        if(isset($dataImage['large']) && $dataImage['large']=='1')
             $imageHelper->save(TMP_DIR.'large/'.$dataImage['imageName']);
 
         if($dataImage['w']!=0 && $dataImage['h']!=0){
@@ -840,11 +845,11 @@ class adminController extends AbstractActionController
 
         $imageHelper->save();
 
-        if($dataImage['marker']=='1'){
+        if(isset($dataImage['marker']) && $dataImage['marker']=='1'){
 
             $imageHelper->watermark(SITE_DIR.'woterMark3.png');
 
-        }if($dataImage['mainColor']=='1'){
+        }if(isset($dataImage['mainColor']) && $dataImage['mainColor']=='1'){
 
              $color = $imageHelper->getMainColorImage();
              echo json_encode(array('color'=>$color,'imageName'=>$dataImage['imageName']));
@@ -867,6 +872,7 @@ class adminController extends AbstractActionController
 
     public function uploadImageAction() {
 
+
         $this->Page = new Page();
         $this->layout()->setVariables(array('page'=>$this->Page));
         $request =new Request();
@@ -886,7 +892,7 @@ class adminController extends AbstractActionController
                         "randomize" => true,
                     ));
                     echo json_encode(basename(($filterRaname->filter($httpadapter->getFileName()))));
-
+                    exit;
 
                 }else{
 

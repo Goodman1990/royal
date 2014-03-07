@@ -24,13 +24,18 @@
                 </select>
             </div>
             <div class="wrapper-input manufacturers" >
+
                 <label for="page">Выбрать производителя</label>
+
                 <select name="id_manufacturers"  id="manufacturers">
+
                     <option value="">Выберете категорию</option>
                     <?php foreach ($manufacturersData as $key ) { ?>
                         <option value="<?php echo $key['id'] ?>"><?php echo $key['title'] ?></option>
                     <?php }  ?>
+
                 </select>
+
             </div>
             <div class="wrapper-input" >
                 <label>Поиск</label>
@@ -54,12 +59,12 @@
                 <?php foreach ($productData as $key ) { ?>
                 <tr>
                     <td class="title"><?php echo $key['title'] ;  ?></td >
-                    <td><?php $img =  explode(',',$key['image']); ?>
-                        <img width="100" height="100" class="prewiew" src="/siteDir/product/<?php echo $img[0]; ?>" >
+                    <td>
+                        <img width="100" height="100" class="prewiew" src="<?php echo $key['main_image']; ?>" >
                     </td >
                     <td><?php  echo $key['price']; ?> </td >
-                    <td><a href="/admin/editProduct/<?php echo $key['id']; ?>"><img width="40" height="40" src="/image/edit.jpg" alt="редактировать"/></a></td >
-                    <td><a href="/admin/deletedProduct/<?php echo $key['id']; ?>"><img class="deleted" width="40" height="40" src="/image/deleted.jpg" alt="удалить"/></a></td >
+                    <td><a href="/admin/editProduct/<?php echo $key['id']; ?>"><img width="40" height="40" src="/image/edit.jpg" alt="редактировать"/></a>
+                    <a href="/admin/deletedProduct/<?php echo $key['id']; ?>"><img class="deleted" width="40" height="40" src="/image/deleted.jpg" alt="удалить"/></a></td >
                 </tr>
                 <?php }  ?>
             </table>

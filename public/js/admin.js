@@ -1,8 +1,9 @@
 
 $(document).ready(function() {
+    active= $('#nav ul.tab.active');
     $('#nav ul.tab').hover(
         function() {
-            active= $('#nav ul.tab.active');
+
             $('#nav ul.tab').removeClass('active');
             $(this).addClass('active');
             $(this).find('.sub').addClass('active');

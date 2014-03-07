@@ -13,6 +13,7 @@
 defined('TMP_DIR') or define('TMP_DIR', 'public/tmp/');
 defined('USER_DIR') or define('USER_DIR', 'public/userData/');
 defined('SITE_DIR') or define('SITE_DIR', 'public/siteDir/');
+error_reporting(0);
 return array(
     'service_manager' => array(
         'factories' => array(

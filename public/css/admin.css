@@ -493,6 +493,22 @@ all-product.title{
     cursor: pointer;
 }
 
+.admin-product tr td {
+
+    text-align: center;
+
+}
+.admin-product img {
+
+    margin: 5px;
+
+}
+.admin-product tr {
+
+    margin: 5px;
+
+}
+
 
 
 
