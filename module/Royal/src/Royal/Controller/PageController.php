@@ -86,7 +86,7 @@ class PageController extends AbstractActionController
             'id_categories_product'=> $this->id_page
         ));
 
-        $this->Page->setActivePage(array('bottom'=>$this->id_page));
+        $this->Page->setActivePage(array('bottom'=>$this->id_page,'page'=>$this->id_page));
         $generalHelper = new generalHelper();
 
         return new ViewModel(array(
@@ -113,7 +113,11 @@ class PageController extends AbstractActionController
             'id_subcategories_product'=> $this->id_page
         ));
 
-        $this->Page->setActivePage(array('bottom'=>$SubcategoriesProductModel->id_categories_product,'right'=>$SubcategoriesProductModel->id));
+        $this->Page->setActivePage(
+            array(
+                'bottom'=>$SubcategoriesProductModel->id_categories_product,
+                'right'=>$SubcategoriesProductModel->id,
+                'page'=>$SubcategoriesProductModel->id_categories_product));
         $generalHelper = new generalHelper();
         return new ViewModel(array(
             'page'=>$this->Page,
@@ -146,6 +150,7 @@ class PageController extends AbstractActionController
             array(
                 'bottom'=>$SubcategoriesProductModel->id_categories_product,
                 'right'=>$ManufacturersModel->id_subcategories_product,
+                'page'=>$SubcategoriesProductModel->id_categories_product,
                 'right_manufacturers'=>$ManufacturersModel->id.'_manufacturers'
             ));
         $generalHelper = new generalHelper();
@@ -174,9 +179,16 @@ class PageController extends AbstractActionController
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model()->findByAttributes(array(
             'id'=> $ProductModel->id_manufacturers
         ));
+        $videoData = explode(',',$ProductModel->video);
+        for($i=0;$i<count($videoData);$i++){
+            preg_match('/v=((.*)&|.*)/',$videoData[$i],$matches);
+            $video [] = str_replace('&','',$matches[1]);
+        }
+
 
         $this->Page->setActivePage(
             array(
+                'page'=>$SubcategoriesProductModel->id_categories_product,
                 'bottom'=>$SubcategoriesProductModel->id_categories_product,
                 'right'=>$ManufacturersModel->id_subcategories_product,
                 'right_manufacturers'=>$ManufacturersModel->id.'_manufacturers'
@@ -185,6 +197,7 @@ class PageController extends AbstractActionController
 
         return new ViewModel(array(
             'page'=>$this->Page,
+            'video'=>$video,
             'generalHelper'=>$generalHelper,
             'ProductModel'=>$ProductModel,
             'colorData'=>$colorData

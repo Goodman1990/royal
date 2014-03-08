@@ -15,7 +15,7 @@
 <?php echo $this->render('template/hit_pay.phtml') ?>
     <?php
     if(isset($page->activePage['right'])) {
-        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']),true)
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['page'],$page->activePage['right']),true)
             ->findOneByResource($page->activePage['right'])->setActive(true);
     }else{
         $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']));

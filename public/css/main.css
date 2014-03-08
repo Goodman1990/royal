@@ -80,6 +80,7 @@ p,span{
 		.container-slider{
 			padding: 1%;
 			outline: solid 1pt #0e1a3e;
+            position: relative;
 		}
 		.border-slyder{
 
@@ -186,6 +187,9 @@ p,span{
 			height: auto;
 			overflow: auto;
 		}
+        .portfolio-blok{
+
+        }
 			.warpper-content{
 				overflow: auto;
 				height: auto;
@@ -300,8 +304,21 @@ p,span{
              }
 
             .manufacturers-image{
+                min-width: 87px;
                 max-width: 150px;
                 max-height: 110px;
+            }
+
+            .desk-slider{
+
+                font-family: 'alegreto';
+                display: block;
+                position: absolute;
+                right: 10px;
+                bottom: 10px;
+                font-size: 40px;
+                color: #ffffff;
+                z-index: 10000000;
             }
 
             .warpper-manufacturers{
@@ -500,7 +517,7 @@ p,span{
 			.right-content{
 				float: left;
 				line-height: 1.2;
-				width: 23%;
+				width: 28%;
 				min-height: 500px;
 				height: inherit;
                 overflow: hidden;

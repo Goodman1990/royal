@@ -42,24 +42,22 @@
             </div>
         </div>
 
-
         <div class="wrap-tab-content technical-information">
-            <a href="/page/download/?file=<?php echo $ProductModel->file ?>">Скачать</a>
+            <?php $file = explode(',',$ProductModel->file);
+           if($file[0]){
+            for($i=0;$i<count($file);$i++){ ?>
+                <a href="/page/download/?file=<?php echo $file[$i] ?>">Скачать</a>
+            <?php }} ?>
+
+
             <?php echo $ProductModel->technical_description ?>
         </div>
-
-
         <div class="wrap-tab-content video">
             <?php $videoData = explode(',',$ProductModel->video);
-
-            if(!empty($videoData[0])){
-
-                for($i=0;$i<count($videoData);$i++){ ?>
-                <iframe class="video-frame" src="//www.youtube.com/embed/<?php echo $videoData[$i] ?>" frameborder="0" allowfullscreen></iframe>
-            <?php }} ?>
+                for($i=0;$i<count($video);$i++){ ?>
+                <iframe class="video-frame" src="//www.youtube.com/embed/<?php echo $video[$i] ?>" frameborder="0" allowfullscreen></iframe>
+            <?php } ?>
         </div>
-
-
         <div class="wrap-tab-content project">
             <div class="popup-gallery-project">
                <div class="wrap-img-color-product">
@@ -94,7 +92,7 @@
 
     <?php
     if(isset($page->activePage['right'])){
-        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']),true)
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['page'],$page->activePage['right']),true)
             ->findOneByResource($page->activePage['right'])->setActive(true)
             ->findOneByResource($page->activePage['right_manufacturers'])->setActive(true);
     }else{

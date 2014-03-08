@@ -32,7 +32,7 @@
 <!--    </div>-->
     <?php
     if(isset($page->activePage['right'])){
-        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']),true)
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['page'],$page->activePage['right']),true)
             ->findOneByResource($page->activePage['right'])->setActive(true)
             ->findOneByResource($page->activePage['right_manufacturers'])->setActive(true);
     }else{

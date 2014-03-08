@@ -15,7 +15,8 @@ class PaginationHelpers
                 $this->$key = $value;
             if (!is_int($this->page) && $this->page <= 0) $this->page = 1;
             if (!is_int($this->limit) && $this->limit <= 0) $this->limit = 10;
-            if (!in_array($this->order,array('ASC','asc','DESC','desc'))) $this->order = 'ASC';
+
+//            if (!in_array($this->order,array('ASC','asc','DESC','desc'))) $this->order = 'ASC';
         }
 //        echo $this->search;
 //        exit;

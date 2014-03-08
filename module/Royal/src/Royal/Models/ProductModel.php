@@ -41,12 +41,27 @@ class ProductModel extends ProductModelEntity {
     }
 
 
-    public function getProduct($options) {
+    public function getProduct($options,$post) {
 
+        if($options->search){
         $this->setCriteria(array(
-            'where'=>array("title LIKE '".mysql_real_escape_string($options->search)."'")));
+            'where'=>array("title LIKE '%".mysql_real_escape_string($options->search)."%'")));
+        }else{
+            $this->setCriteria(array(
+                'where'=>array(array())));
+        }
 
-        return $this->findByCriteria();
+
+        $paginatorAdapter = new \Zend\Paginator\Adapter\DbSelect($this->getSelectByCriteria(), $this->adapter);
+
+        $statement = $this->sql->getSqlStringForSqlObject($this->getSelectByCriteria());
+        $paginator = new \Zend\Paginator\Paginator($paginatorAdapter);
+        $paginator->setDefaultItemCountPerPage($options->limit);
+        $paginator->setPageRange(10);
+        $paginator->setCurrentPageNumber($options->page);
+
+
+        return $paginator;
 
     }
 

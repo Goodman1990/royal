@@ -1,0 +1,35 @@
+<?php   if ($this->pageCount): ?>
+    <div class="pager-links">
+                            
+         <?php if (isset($this->previous)): ?>
+         <div class="prev">
+                     <a class ='pagination' href="<?php echo $this->route; ?><?php echo $this->previous; ?>" data-page="<?php echo $this->previous; ?>">раньше</a>
+                     </div>
+             <?php else: ?>
+                     <div class="prev inactive">
+                     <a href="#">раньше</a>
+                     </div>
+             <?php endif; ?>
+             
+                            <div class="pages">
+                                <?php foreach ($this->pagesInRange as $page): ?>
+                 <?php if ($page != $this->current): ?>
+                     
+                         <a class ='pagination' href="<?php echo $this->route; ?><?php echo $page; ?>" data-page="<?php echo $page; ?>">
+                             <?php echo $page; ?>
+                         </a>
+                 <?php else: ?>
+                         <a class="current" href="#" data-page="<?php echo $page; ?>"><?php echo $page; ?></a>
+                    
+                 <?php endif; ?>
+             <?php endforeach; ?>
+                            
+                        </div>
+             <?php if (isset($this->next)): ?>
+             <div class="next"><a class ='pagination' href="<?php echo $this->route; ?><?php echo $this->next; ?>" data-page="<?php echo $this->next; ?>">позже</a></div>
+                 
+             <?php else: ?>
+                <div class="next inactive"><a href="#">позже</a></div>
+             <?php endif; ?>
+         </div>
+ <?php endif; ?>

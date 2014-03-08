@@ -63,8 +63,8 @@ class generalHelper {
 
         $str2 = str_replace($arr_replace_utf, $arr_replace_cyr, $str);
 
-        $pattern = "/([^A-Za-z1-9\_])/";
-        $str2= preg_replace($pattern,'', $str2);
+//        $pattern = "/([^A-Za-z1-9\_])/";
+//        $str2= preg_replace($pattern,'', $str2);
 
         return $str2;
 

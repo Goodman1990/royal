@@ -13,7 +13,7 @@ use Zend\Navigation\Navigation;
 
 class GetNavigationHelper extends AbstractHelper {
 
-    public function __invoke($navigationType,$subcategories=null,$manifatories=null){
+    public function __invoke($navigationType,$categories=null,$subcategories=null){
         $navigation = array();
         $generalHelper = new generalHelper();
         if($navigationType=='top'){
@@ -23,12 +23,15 @@ class GetNavigationHelper extends AbstractHelper {
 
         }else if($navigationType=='bottom'){
 
+
             $navigationInfo = \Royal\Models\CategoriesProductModel::model()->findAllOrder('number DESK ');
             $page='/page/categories';
 
         }else if($navigationType=='right'){
 
-            $navigationInfo = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
+            $navigationInfo = \Royal\Models\SubcategoriesProductModel::model()->findByAttributes(array(
+                'id_categories_product'=> $categories
+            ));
             $page='/page/manufacturers';
             if($subcategories){
                 $manufacturersData =  \Royal\Models\ManufacturersModel::model(array('asArray'=>true))->findByAttributes(array(

@@ -14,12 +14,16 @@
         <!-- Le styles -->
         <?php
             echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                      ->prependStylesheet($this->basePath() . '/css/main.css');
+                      ->prependStylesheet($this->basePath() . '/css/main.css')
+                      ->prependStylesheet($this->basePath() . '/css/animate.css');
         ?>
         <!-- Scripts -->
         <?php
             echo $this->headScript()
             ->prependFile($this->basePath() . '/js/jquery.slides.min.js',   'text/javascript')
+            ->prependFile($this->basePath() . '/js/jquery.textillate.js',   'text/javascript')
+            ->prependFile($this->basePath() . '/js/jquery.fittext.js',   'text/javascript')
+            ->prependFile($this->basePath() . '/js/jquery.lettering.js',   'text/javascript')
             ->prependFile($this->basePath() . '/js/jquery.min.js','text/javascript');
         ?>
 <!--        <script type="text/javascript">-->
@@ -59,13 +63,13 @@
                         <div class="border-slyder">
                             <div class="wrapper-slider">
                                 <div class="container-slider">
-                                    <div id="slides">
-                                        <img src="/image/image-slider-3.jpg" />
-                                        <img src="/image/image-slider-3.jpg" />
-                                        <img src="/image/image-slider-4.jpg" />
-                                        <img src="/image/image-slider-5.jpg" />
+                                        <div id="slides">
+                                        <img src="/siteDir/slider/royal.png" />
+                                        <img src="/siteDir/slider/slider.jpg" />
                                     </div>
+                                    <span class="desk-slider">Окружая Себя Прекрасным...</span>
                                 </div>
+
                             </div>
                         </div>
                         <div class="menu-content ">

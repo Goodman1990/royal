@@ -36,7 +36,8 @@
         $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']))
             ->findOneByResource($page->activePage['right'])->setActive(true);
     }else{
-        $this->navigation($this->GetNavigationHelper('right',$page->activePage['right']));
+
+        $this->navigation($this->GetNavigationHelper('right',$page->activePage['page']));
     }
     echo $this->navigation()->menu()->setPartial('template/navigation_right')->render();
     ?>

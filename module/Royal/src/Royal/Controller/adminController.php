@@ -128,6 +128,38 @@ class adminController extends AbstractActionController
 
     }
 
+    public function factoriesAction(){
+        exit;
+        $general = new generalHelper();
+        $dir = "public/siteData/dor/";   //задаём имя директории
+        if(is_dir($dir)) {   //проверяем наличие директории
+            echo $dir.' - директория существует;<br>';
+            $files = scandir($dir);    //сканируем (получаем массив файлов)
+            array_shift($files); // удаляем из массива '.'
+            array_shift($files); // удаляем из массива '..'
+            for($i=0; $i<sizeof($files); $i++){
+                $nameManu =    explode('.',$files[$i]);
+                $newFileName = $general->transliteration($files[$i]);
+                rename($dir.$files[$i],$dir.$newFileName);
+                rename($dir.$newFileName,SITE_DIR.'categories/'.$newFileName);
+                $model=  \Royal\Models\ManufacturersModel::model();
+                $model::model()
+                    ->setAttributes(array(
+                        'id_subcategories_product' =>6,
+                        'title' => $nameManu[0],
+                        'number'=>1,
+                        'visible'=>1,
+                        'image'=>$newFileName
+                    ))->save();
+
+            }
+        }
+        else echo $dir.' -такой директории нет;<br>';
+        exit;
+
+    }
+
+
     public function editCategoryAction()
     {
 
@@ -450,20 +482,25 @@ class adminController extends AbstractActionController
 
                 if($this->validData['main_image']==''){
 
-                    rename('public'.$image[0],SITE_DIR.'/product/'.basename($image[0]));
+                    rename('public'.$image[0],SITE_DIR.'product/'.basename($image[0]));
                     rename('public/tmp/large/'.basename($image[0]),SITE_DIR.'product/large/'.basename($image[0]));
                     $this->validData['main_image']= '/siteDir/product/'.basename($image[0]);
                     unset($image[0]);
                     $image = array_values($image);
 
+                }else{
+
+                    rename('public'.$this->validData['main_image'],SITE_DIR.'product/'.basename($this->validData['main_image']));
+                    rename('public/tmp/large/'.basename($this->validData['main_image']),SITE_DIR.'product/large/'.basename($this->validData['main_image']));
                 }
 
                 if($image!=Null){
 
                     for($i = 0;$i<count($image);$i++){
 
-                        rename('public'.$image[$i],SITE_DIR.'/product/'.basename($image[$i]));
-                        rename('public/tmp/large/'.basename($image[$i]),SITE_DIR.'product/large/'.basename($image[0]));
+
+                        rename('public'.$image[$i],SITE_DIR.'product/'.basename($image[$i]));
+                        rename('public/tmp/large/'.basename($image[$i]),SITE_DIR.'product/large/'.basename($image[$i]));
                         $arrImage[] = '/siteDir/product/'.basename($image[$i]);
                     }
 
@@ -474,24 +511,24 @@ class adminController extends AbstractActionController
                     $this->validData['image'] ='';
 
                 }
+                if($this->validData['file']!=''){
+                    $file =explode(',',$this->validData['file']);
+                    $arrFile = '';
 
-                $file =explode(',',$this->validData['file']);
-                $arrFile = '';
-
-                for($i = 0;$i<count($file);$i++){
-                    rename(TMP_DIR.$file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
-                    $arrFile[] = '/siteDir/product/file/'.basename($file[$i]);
+                    for($i = 0;$i<count($file);$i++){
+                        rename(TMP_DIR.$file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
+                        $arrFile[] = '/siteDir/product/file/'.basename($file[$i]);
                 }
 
                 $this->validData['file'] = implode(',',$arrFile);
-
+                }
                 $video = explode(',',$this->validData['video']);
                 $hashVideo ='';
 
                 for($i = 0;$i<count($video);$i++){
 
                     $buf = explode('=',$video[$i]);
-                    $hashVideo[] = array_pop($buf);
+                    $hashVideo[] = array_shift($buf);
                 }
 
                 $this->validData['video'] = implode(',',$hashVideo);
@@ -693,7 +730,7 @@ class adminController extends AbstractActionController
                     $this->validData['image'] ='';
 
                 }
-
+                if($this->validData['file']!=''){
                 $file =explode(',',$this->validData['file']);
                 $arrFile = '';
 
@@ -705,18 +742,14 @@ class adminController extends AbstractActionController
 
                     $arrFile[] = '/siteDir/product/file/'.basename($file[$i]);
                 }
-
                 $this->validData['file'] = implode(',',$arrFile);
-                $video = explode(',',$this->validData['video']);
-                $hashVideo ='';
-
-                for($i = 0;$i<count($video);$i++){
-
-                    $buf = explode('=',$this->validData['video']);
-                    $hashVideo[] = end($buf);
                 }
 
-                $this->validData['video'] = implode(',',$hashVideo);
+
+
+
+
+
                 $this->validData['id']=$id_product;
                 $ProductModel->setAttributes($this->validData)->save();
 //                $id_product = $ProductModel->getLastInsertValue();
@@ -772,52 +805,27 @@ class adminController extends AbstractActionController
             'id_categories_product'=> $id_categories_product
         ));
 
-//        var_dump($subcategoriesData);
-//        exit;
-
         $this->Page->addTab($categoryProduct,$id_categories_product,true);
         $paginationHelper = new PaginationHelpers($this->request->getPost());
 
         if($this->request->isPost()){
 
             $post  = $this->request->getPost();
-
-            if($paginationHelper->search){
-
-                $productData = \Royal\Models\ProductModel::model(array('asArray'=>true))
-                    ->getProduct($paginationHelper);
-
-                $manufacturersData = \Royal\Models\ManufacturersModel::model(array('asArray'=>true))
-                    ->findByAttributes($post);
-
-            }else{
-
-                if($post['name']=='id_subcategories_product'){
-                  
-                    $manufacturersData = \Royal\Models\ManufacturersModel::model(array('asArray'=>true))
-                        ->findByAttributes(array(
-                            $post['name']=> $post['value']
-                        ));
-                }
-                    $productData = \Royal\Models\ProductModel::model(array('asArray'=>true))
-                        ->findByAttributes(array( $post['name']=> $post['value']));
-
-
-            }
-
-        }else{
-
+            $productData = \Royal\Models\ProductModel::model(array('asArray'=>true))
+                ->getProduct($paginationHelper,$post);
 
             $manufacturersData = \Royal\Models\ManufacturersModel::model(array('asArray'=>true))
-                ->findByAttributes(array(
-                    'id_subcategories_product'=> $subcategoriesData[0]['id']
-                ));
+                ->findByAttributes($post);
+        }else{
+
             $productData = \Royal\Models\ProductModel::model(array('asArray'=>true))
-                ->findByAttributes(array('id_categories_product'=> $id_categories_product));
+                ->setAttributes(array('id_subcategories_product'=>$subcategoriesData[0]['id']))
+                ->getProduct($paginationHelper);
+
+            $manufacturersData = \Royal\Models\ManufacturersModel::model(array('asArray'=>true))
+                ->findByAttributes(array('id_subcategories_product'=>$subcategoriesData[0]['id']));
 
         }
-
-
         return new ViewModel(array(
             'productData'=>$productData,
             'manufacturersData'=>$manufacturersData,
@@ -827,8 +835,6 @@ class adminController extends AbstractActionController
     }
 
 
-
-
     public function cropAction() {
 
 
@@ -836,11 +842,14 @@ class adminController extends AbstractActionController
         $imageHelper  = new imageHelper(TMP_DIR.$dataImage['imageName']);
 
         if(isset($dataImage['large']) && $dataImage['large']=='1')
+
             $imageHelper->save(TMP_DIR.'large/'.$dataImage['imageName']);
 
         if($dataImage['w']!=0 && $dataImage['h']!=0){
+
             $imageHelper->resize($dataImage['width'],$dataImage['height']);
             $imageHelper->cut($dataImage['x1'],$dataImage['y1'],$dataImage['w'],$dataImage['h']);
+
         }
 
         $imageHelper->save();
