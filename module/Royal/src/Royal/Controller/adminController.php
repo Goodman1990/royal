@@ -405,6 +405,126 @@ class adminController extends AbstractActionController
 
     }
 
+
+    public function editGroupAction() {
+
+        $this->Page->setActivePage(array('admin'=>array(
+            'tab'=>'1',
+            'sub'=>'1.4'
+        )));
+
+        $id_page = $this->params()->fromRoute('param1', 0);
+
+        $categoryData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
+        $groupProductModel = \Royal\Models\GroupProductModel::model(array('asArray'=>true));
+        $manufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
+        if($id_page==0){
+            $id_page = $categoryData[0]['id'];
+        }
+
+        $this->Page->addTab($categoryData,$id_page,true);
+        $subcategoriesProductModel =  \Royal\Models\SubcategoriesProductModel::model()->findByPk($id_page);
+        $groupProductData = $groupProductModel
+            ->findByAttributes(array('id_subcategories_product'=>$id_page));
+        $manufacturersData = $manufacturersModel ->findByAttributes(array('id_subcategories_product'=>$id_page));
+//        echo'<pre>';
+//        var_dump($manufacturersData);
+//        exit;
+        $rules = $groupProductModel->rules();
+        $rules['id_manufacturers']['selectInfo'] = $manufacturersData;
+        $formEdit = new formGenerate('editSubCategory', 'category');
+
+        $formEdit->setMultiFormEdit($rules, $groupProductData);
+        $formAdd = new formGenerate('addSubCategory', 'category');
+        $formAdd->setDataForm($rules);
+
+
+        if ($this->request->isPost()) {
+
+            $Post = $this->request->getPost()->toArray();
+
+            if (isset($Post['edit'])) {
+
+                $formEdit->setData($Post);
+                if ($formEdit->isValid()) {
+
+                    $this->validData = $formEdit->getData();
+
+
+
+
+
+
+
+
+
+
+
+                    for ($i = 0; $i < $formEdit->countInput; $i++) {
+
+                        if(file_exists( TMP_DIR.$this->validData['image_' . $i])){
+                            rename(TMP_DIR.$this->validData['image_' . $i],SITE_DIR.'categories/'.$this->validData['image_' . $i]);
+                            unlink(SITE_DIR.'categories/'.$oldData['image_' . $i]);
+                        }
+
+                        $groupProductModel::model()
+                            ->setAttributes(array(
+                                'id' => $this->validData['id_' . $i],
+                                'id_subcategories_product'=>$id_page,
+                                'id_manufacturers'=>$this->validData['id_manufacturers_' . $i],
+                                'title' => $this->validData['title_' . $i],
+                                'number'=>$this->validData['number_' . $i],
+                                'image'=>$this->validData['image_' . $i]
+                            ))->save();
+
+                    }
+
+                    $groupProductData = $groupProductModel::model(array('asArray'=>true))
+                        ->findByAttributes(array('id_subcategories_product'=>$id_page));
+                    $formEdit->setDataForSet($groupProductData);
+                }
+
+            } else {
+
+                $formAdd->setData($Post);
+
+                if ($formAdd->isValid()) {
+
+                    $this->validData = $formAdd->getData();
+                    unset($this->validData['id']);
+
+                    rename(TMP_DIR.$this->validData['image'],SITE_DIR.'categories/'.$this->validData['image']);
+
+                    $id = $groupProductModel::model()
+                        ->setAttributes($this->validData)->save();
+                    $formEdit->addInputForm($Post, $id);
+                    $formEdit->CustomSetData();
+                    $formAdd->clearElements();
+
+                } else {
+
+                    $formEdit->CustomSetData();
+
+                }
+            }
+        } else {
+
+            $formEdit->CustomSetData();
+
+        }
+
+        return new ViewModel(array(
+            'id_categories_product'=>$subcategoriesProductModel->id_categories_product,
+            'formEdit' => $formEdit,
+            'formAdd' => $formAdd,
+            'categoryPageData' => $categoryData,
+            'id_page'=>$id_page,
+
+        ));
+
+
+    }
+
     public function addProductAction() {
 
         $id_categories_product = $this->params()->fromRoute('param1', 0);
@@ -417,6 +537,7 @@ class adminController extends AbstractActionController
         $SubcategoriesProductModel =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true));
         $CategoriesProductModel =  \Royal\Models\CategoriesProductModel::model(array('asArray'=>true));
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
+        $GroupProductModel = \Royal\Models\GroupProductModel::model(array('asArray'=>true));
         $ProductModel =  \Royal\Models\ProductModel::model();
         $colorsModel = \Royal\Models\ColorsModel::model();
 
@@ -438,6 +559,10 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>(int)$this->request->getPost()->id_subcategories_product,
             ));
+            $GroupProductData = $GroupProductModel->findByAttributes(array(
+                'id_manufacturers'=>(int)$this->request->getPost()->id_manufacturers,
+            ));
+
 
         }else{
 
@@ -448,12 +573,19 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>$SubcategoriesProductData['id']
             ));
+
+            $GroupProductData = $GroupProductModel->findByAttributes(array(
+                'id_manufacturers'=>$manufacturers['id']
+            ));
+
+
         }
 
 
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
         $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
         $rules['id_categories_product']['selectInfo'] = $categoriesData;
+        $rules['id_group_product']['selectInfo'] = $GroupProductData;
         $rules['id_manufacturers']['typeInput'] = 'select';
         $rules['id_categories_product']['typeInput'] = 'select';
         $rules['id_subcategories_product']['typeInput'] = 'select';
@@ -629,6 +761,7 @@ class adminController extends AbstractActionController
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
         $ProductModel =  \Royal\Models\ProductModel::model()->findByPk($id_product);
         $colorsModel = \Royal\Models\ColorsModel::model(array('asArray'=>true));
+        $GroupProductModel = \Royal\Models\GroupProductModel::model(array('asArray'=>true));
 
         $colorData = $colorsModel
             ->findByAttributes(array('id_product'=>$id_product));
@@ -648,6 +781,9 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>(int)$this->request->getPost()->id_subcategories_product,
             ));
+            $GroupProductData = $GroupProductModel->findByAttributes(array(
+                'id_manufacturers'=>(int)$this->request->getPost()->id_manufacturers,
+            ));
 
         }else{
 
@@ -657,12 +793,17 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>$ProductModel->id_subcategories_product
             ));
+            $GroupProductData = $GroupProductModel->findByAttributes(array(
+                'id_manufacturers'=>$ProductModel->id_group_product
+            ));
+
         }
 
 
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
         $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
         $rules['id_categories_product']['selectInfo'] = $categories;
+        $rules['id_group_product']['selectInfo'] = $GroupProductData;
         $rules['id_manufacturers']['typeInput'] = 'select';
         $rules['id_categories_product']['typeInput'] = 'select';
         $rules['id_subcategories_product']['typeInput'] = 'select';
@@ -684,6 +825,9 @@ class adminController extends AbstractActionController
 
         $formAddColor->setData($colorForm);
         $formAddProduct->setData($ProductModel->getAttributes());
+//        echo'<pre>';
+//        var_dump($ProductModel->getAttributes());
+//        exit;
 
         if ($this->request->isPost()) {
 
@@ -744,11 +888,6 @@ class adminController extends AbstractActionController
                 }
                 $this->validData['file'] = implode(',',$arrFile);
                 }
-
-
-
-
-
 
                 $this->validData['id']=$id_product;
                 $ProductModel->setAttributes($this->validData)->save();
@@ -1000,15 +1139,16 @@ class adminController extends AbstractActionController
 
     }
 
-    public function getSubcategoriesAction(){
+
+    public function getGroupProductAction(){
 
         if($this->request->isPost() &&$this->request->isXmlHttpRequest()){
             $post = $this->request->getPost();
-            $ManufacturersData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
+            $groupProductData = \Royal\Models\GroupProductModel::model(array('asArray'=>true))
                 ->findByAttributes(array(
                     $post['name']=>$post['value']
                 ));
-            echo json_encode($ManufacturersData);
+            echo json_encode($groupProductData);
             exit;
         }
 

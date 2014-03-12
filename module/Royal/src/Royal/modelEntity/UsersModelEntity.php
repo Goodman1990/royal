@@ -32,6 +32,7 @@ class UsersModelEntity extends ActiveRecordModel {
 "username",
 "email",
 "password",
+"role",
 
         );
     }

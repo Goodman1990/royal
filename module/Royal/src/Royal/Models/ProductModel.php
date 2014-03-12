@@ -37,6 +37,12 @@ class ProductModel extends ProductModelEntity {
                 'validators' =>false,
                 'filters' => array('trim','int'),'setLabel' => 'Выберете производителя',
                 'empty_option'=>'Выберете производителя'),
+            "id_group_product"=>array(
+                'required' => true,
+                'typeInput' => 'select',
+                'validators' =>false,
+                'filters' => array('trim','int'),'setLabel' => 'Выберете группу',
+                'empty_option'=>'Выберете группу'),
         );
     }
 

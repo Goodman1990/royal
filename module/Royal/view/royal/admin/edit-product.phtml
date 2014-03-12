@@ -32,6 +32,9 @@
     <div class="wrapper-input id_manufacturers">
         <?php echo $this->formRow($formAdd->get('id_manufacturers')) ?>
     </div>
+    <div class="wrapper-input id_group_product">
+        <?php echo $this->formRow($formAdd->get('id_group_product')) ?>
+    </div>
     <div class="wrapper-input price">
         <?php echo $this->formRow($formAdd->get('price')) ?>
     </div>
@@ -148,6 +151,22 @@ $(document).on('change','select[name="id_subcategories_product"]',function() {
                 options += '<option value="' + data[i].id + '">' + data[i].title + '</option>';
             }
             $('select[name="id_manufacturers"]').html(options);
+
+        });
+});
+
+
+$(document).on('change','select[name="id_manufacturers"]',function() {
+    var name = $(this).attr('name');
+    var value = $(this).val();
+    $.post('/admin/getGroupProduct',{name : name,value : value})
+        .done(function(data) {
+            data = JSON.parse(data);
+            var options = "<option value>Выберете группу</option>";
+            for(var i=0;i<data.length;i++){
+                options += '<option value="' + data[i].id + '">' + data[i].title + '</option>';
+            }
+            $('select[name="id_group_product"]').html(options);
 
         });
 });
@@ -394,7 +413,7 @@ $(document).on('click', '#crop-image', function () {
     $.post('/admin/crop', sendData)
         .done(function (e, data) {
             e =JSON.parse(e);
-           alert(e);
+
             if(globalType == 'image'){
 
                 var cloneElement = $(".prewiew-defult").clone();
@@ -646,7 +665,7 @@ $(document).on('click','.deleted-color',function(e) {
         var valColor = $('#input-color').val();
         var serchIndex = valImage.split(',').indexOf(imaageName);
         var colorName = valColor.split(',')[serchIndex];
-        alert(imaageName);
+
         var arrImage =  valImage.split(',');
         var arrColor =  valColor.split(',');
 

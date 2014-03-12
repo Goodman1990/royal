@@ -11,7 +11,7 @@ namespace Royal\modelEntity;
 
 use ActiveRecord\ActiveRecordModel;
 
-class ColorsModelEntity extends ActiveRecordModel {
+class GroupProductModelEntity extends ActiveRecordModel {
 
     
 
@@ -22,16 +22,19 @@ class ColorsModelEntity extends ActiveRecordModel {
 
     public function getTableName()
     {
-        return "colors";
+        return "group_product";
     }
 
     public function attributeNames()
     {
         return array(
             "id",
-"color",
-"image_color",
-"id_product",
+            "id_manufacturers",
+            "id_categories_product",
+            "id_subcategories_product",
+            "title",
+            "image",
+            "number",
 
         );
     }

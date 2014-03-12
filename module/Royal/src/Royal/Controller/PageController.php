@@ -134,7 +134,7 @@ class PageController extends AbstractActionController
         $ManufacturersModel =  \Royal\Models\ManufacturersModel::model()->findByPk($this->id_page);
         $ProductModel =  \Royal\Models\ProductModel::model(array('asArray'=>true));
         $productData = $ProductModel->findByAttributes(array(
-            'id_manufacturers'=> $this->id_page
+            'id_group_product'=> $this->id_page
         ));
 
         if($this->id_page==0){
@@ -162,6 +162,45 @@ class PageController extends AbstractActionController
         ));
 
     }
+
+
+    public function groupAction() {
+
+        $this->getHitProduct();
+        $this->id_page = $this->parseParam($this->params()->fromRoute('param1', 0));
+        $ManufacturersModel =  \Royal\Models\ManufacturersModel::model()->findByPk($this->id_page);
+        $GroupProductModel =  \Royal\Models\GroupProductModel::model(array('asArray'=>true));
+        $GroupProductdata = $GroupProductModel->findByAttributes(array(
+            'id_manufacturers'=> $this->id_page
+        ));
+
+        if($this->id_page==0){
+            $elementCategory =  array_shift( \Royal\Models\ManufacturersModel::model()->findAll());
+            $this->id_page = $elementCategory['id'];
+        }
+
+        $SubcategoriesProductModel = \Royal\Models\SubcategoriesProductModel::model()->findByAttributes(array(
+            'id'=> $ManufacturersModel->id_subcategories_product
+        ));
+
+        $this->Page->setActivePage(
+            array(
+                'bottom'=>$SubcategoriesProductModel->id_categories_product,
+                'right'=>$ManufacturersModel->id_subcategories_product,
+                'page'=>$SubcategoriesProductModel->id_categories_product,
+                'right_manufacturers'=>$ManufacturersModel->id.'_manufacturers'
+            ));
+        $generalHelper = new generalHelper();
+        return new ViewModel(array(
+            'page'=>$this->Page,
+            'generalHelper'=>$generalHelper,
+            'productData'=>$GroupProductdata
+
+        ));
+
+    }
+
+
 
 
 

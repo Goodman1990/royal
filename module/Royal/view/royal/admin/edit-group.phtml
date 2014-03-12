@@ -1,0 +1,296 @@
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/css/jInputFile.css"/>
+
+<div class="left-content">
+
+    <span class="toggle-edit">Редактировать категории</span>
+    <hr>
+    <div class="wrap-edit-block" style="display: none">
+    <?php echo $this->form()->openTag($formEdit);?>
+    <div id="sort-form">
+        <?php  for($i=0;$i<$formEdit->countInput;$i++){ ?>
+            <div class="ech">
+                <div class="group-form">
+
+                    <div class="wrapper-input title">
+                        <?php echo $this->formRow($formEdit->get('title_'.$i)) ?>
+                    </div>
+
+                    <div class="wrapper-input number">
+                        <?php echo $this->formRow($formEdit->get('number_'.$i)) ?>
+                    </div>
+
+                    <div class="wrapper-input id">
+                        <?php echo $this->formRow($formEdit->get('id_'.$i)) ?>
+                    </div>
+
+                    <div class="wrapper-input <?php echo 'id_subcategories_product' ?>">
+                        <?php echo $this->formRow($formEdit->get('id_subcategories_product_'.$i)); ?>
+                    </div>
+                    <div class="wrapper-input <?php echo 'id_categories_product' ?>">
+                        <?php echo $this->formRow($formEdit->get('id_categories_product_'.$i)); ?>
+                    </div>
+                    <div class="wrapper-input <?php echo 'id_manufacturers' ?>">
+                        <?php echo $this->formRow($formEdit->get('id_manufacturers_'.$i)); ?>
+                    </div>
+                    <div class="wrapper-input image">
+                        <?php echo $this->formRow($formEdit->get('image_'.$i)) ?>
+                    </div>
+                    <div class="wrapper-input group-file">
+                        <img  width="100" height="100" class="prewiew_<?php echo $i; ?> group-product" src="/siteDir/categories/<?php  echo $formEdit->dataForSetForm['image_'.$i]; ?>" alt=""/>
+                        <input  class="image-file-multi" data-iterator="<?php echo $i; ?>" type="file" name="image-file_<?php echo $i; ?>" id="image-file_<?php echo $i; ?>" >
+                    </div>
+                    <?php echo $this->formElementErrors($formEdit->get('image_'.$i)); ?>
+
+                </div>
+            </div>
+        <?php } ?>
+
+
+    <button form="editSubCategory" name="edit">Редактировать</button>
+    <?php echo $this->form()->closeTag($formEdit);?>
+        </div>
+    </div>
+    <br />
+    <p>Добавить категорию</p>
+    <hr>
+    <?php echo $this->form()->openTag($formAdd);?>
+
+            <div class="wrapper-input title">
+                <?php echo $this->formRow($formAdd->get('title')) ?>
+            </div>
+
+            <div class="wrapper-input number">
+                <?php echo $this->formRow($formAdd->get('number')) ?>
+            </div>
+
+            <div class="wrapper-input id_subcategories_product">
+                <?php echo $this->formRow($formAdd->get('id_subcategories_product')->setValue($id_page)); ?>
+            </div>
+            <div class="wrapper-input id_subcategories_product">
+                <?php echo $this->formRow($formAdd->get('id_categories_product')->setValue($id_categories_product)); ?>
+            </div>
+            <div class="wrapper-input image">
+                <?php echo $this->formRow($formAdd->get('image')) ?>
+            </div>
+            <div class="wrapper-input <?php echo 'id_manufacturers' ?>">
+                <?php echo $this->formRow($formAdd->get('id_manufacturers')); ?>
+            </div>
+            <div class="wrapper-input">
+
+            </div>
+            <div class="wrapper-input group-file">
+                <img  width="100" height="100" class="prewiew group" src="" alt=""/>
+                <?php echo $this->formElementErrors($formAdd->get('image')); ?>
+                <input class="group-image-file" type="file"  name="image-file" id="image-file" >
+            </div>
+
+
+
+    <button form="addSubCategory" name="add" >Добавить</button>
+    <?php echo $this->form()->closeTag($formAdd);?>
+</div>
+
+<div class="container-crop" style="display:none;">
+    <div class="row">
+        <div class="span12">
+            <div class="jc-demo-box">
+                <img src="" id="target" alt="crop wait" />
+                <div class="clearfix"></div>
+                <form id="coords" class="coords" onsubmit="return false;" >
+                    <div class="inline-labels">
+                        <input  type="hidden" size="4" id="x1" name="x1" />
+                        <input  type="hidden" size="4" id="y1" name="y1" />
+                        <input  type="hidden" size="4" id="x2" name="x2" />
+                        <input  type="hidden" size="4" id="y2" name="y2" />
+                        <input  type="hidden" size="4" id="w" name="w" />
+                        <input  type="hidden" size="4" id="h" name="h" />
+                    </div>
+                    <button id="crop-image"  class="green">загрузить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.image-file-multi').jInputFile();
+        $('#image-file').jInputFile();
+    });
+
+
+    $(document).on('click','.toggle-edit',function(){
+        $('.wrap-edit-block').toggle();
+    });
+
+
+    $(function() {
+        $( "#sort-form " ).sortable({
+            stop: function( event, ui) {
+
+                $('#sort-form .ech').each(function(i, elm){
+                    $(elm).find('.number').val(i+1);
+                });
+
+            }
+        });
+        $( "#sort-form" ).disableSelection();
+    });
+
+    $(function () {
+
+        var image = $('input[type="file"]').fileupload({
+            url: '/admin/uploadImage',
+            dataType: 'json',
+            done: function (e, data) {
+
+                var i  = $(e.target).attr('data-iterator');
+                if(typeof i=='undefined'){
+
+                    $('input').removeClass('active-input');
+                    $('.image').val(data.result);
+                    $('.image').addClass('active-input');
+
+                }else{
+
+                    $('input').removeClass('active-input');
+                    $('input[name="image_'+i+'"]').addClass('active-input');
+                    $('input[name="image_'+i+'"]').val(data.result);
+                    globalNameInput = i;
+
+                }
+                var newimage = new Image();
+                newimage.src = '\\tmp\\'+data.result;
+                newimage.onload = function(){
+
+                    var width  =   this.naturalWidth;
+                    var height =   this.naturalHeight;
+                    var flag = false;
+                    var heightScreen;
+                    var widthScreen;
+                    var n1;
+                    var n2;
+                    var cof;
+                    heightScreen = screen.width;
+                    widthScreen = screen.height;
+                    if ((heightScreen < height) || (widthScreen < width)) {
+                        flag = 1;
+                        var  i = 0;
+                        while (1) {
+                            n1 =  width /  height;
+                            n2 =  height /  width;
+                            if ( n1 > 1) {
+                                cof =  n1;
+                            } else {
+                                cof =  n2;
+                            }
+
+                            if (( heightScreen <  height) || ( widthScreen <  width)) {
+                                width =  width /  cof;
+                                height =  height /  cof;
+
+                            } else {
+
+                                break;
+                            }
+                        }
+                    }
+
+                    $('#target').css({'width':width,'height':height});
+                    $('#target').attr('src',this.src);
+                    $('#target').attr('data-cof', i+' '+cof);
+
+                };
+
+                $(".container-crop").dialog(({
+                    height: "auto",
+                    width: 'auto',
+                    dialogClass:'uploader',
+                    closeOnEscape: false, draggable: false, zIndex: "10", position: "left top"
+                }));
+
+                $('#target').imgAreaSelect({
+                    x1: 0, y1: 0, x2: 0, y2: 0,
+//                aspectRatio: '1:1',
+                    handles: true,
+                    zIndex: 1000000,
+                    minHeight: 50,
+                    minWidth: 50,
+                    onInit: function(img, selection) {
+
+                        $("#x1").val(0);
+                        $("#y1").val(0);
+                        $("#x2").val(0);
+                        $("#y2").val(0);
+                        $("#w").val(0);
+                        $("#h").val(0);
+                    },
+                    onSelectEnd: function(img, selection) {
+
+                        $("#x1").val(selection.x1);
+                        $("#y1").val(selection.y1);
+                        $("#x2").val(selection.x2);
+                        $("#y2").val(selection.y2);
+                        $("#w").val(selection.width);
+                        $("#h").val(selection.height);
+
+                    }
+                });
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress').css(
+                    'width',
+                    progress + '%'
+                );
+            },
+            complete: function (e, data) {
+
+            }
+
+        });
+    });
+    $(document).on('click','#crop-image',function(){
+        console.log($('.active-input').val());
+        var sendData = {};
+        sendData.x1 =  $('#x1').val();
+        sendData.x2 =  $('#x2').val();
+        sendData.y2 =  $('#y2').val();
+        sendData.y1 =  $('#y1').val();
+        sendData.w =  $('#w').val();
+        sendData.h =  $('#h').val();
+        sendData.width  = $('#target').width();
+        sendData.height  = $('#target').height();
+        sendData.imageName  = $('.active-input').val();
+        sendData.data  = $('#target').attr('data-cof');
+        sendData.marker = 0;
+        sendData.large =0;
+        sendData.mainColor = 0;
+
+        $.post('/admin/crop',sendData)
+
+            .done(function(e,data){
+                e = JSON.parse(e);
+                console.log(e);
+                if(typeof globalNameInput=="undefined"){
+                    $('.prewiew').attr('src',"/tmp/"+ e.imageName);
+                }else{
+                    $('.prewiew_'+globalNameInput).attr('src',"/tmp/"+ e.imageName);
+                }
+                $('#target').imgAreaSelect({remove: true});
+                $('.container-crop').bind('dialogclose', function(event) {
+                    $('#target').imgAreaSelect({
+                        'remove':true
+                    });
+                });
+            });
+    });
+
+
+</script>
+
+
+

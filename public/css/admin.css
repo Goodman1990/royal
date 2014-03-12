@@ -508,7 +508,14 @@ all-product.title{
     margin: 5px;
 
 }
-
+.group-file{
+    position: relative;
+    left: 10%
+}
+.group-product{
+    margin-top: 30px;
+    padding-bottom: 10px;
+}
 
 
 
