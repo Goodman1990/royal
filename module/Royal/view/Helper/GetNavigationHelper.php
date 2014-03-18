@@ -134,13 +134,6 @@ class GetNavigationHelper extends AbstractHelper {
                         'visible' =>1,
                     ),
 
-                    array(
-                        'label' => 'Группу',
-                        'uri'=>'/admin/editGroup',
-                        'resource'=>'1.4',
-                        'visible' =>1,
-                    ),
-
                 ),
             ),
             array(

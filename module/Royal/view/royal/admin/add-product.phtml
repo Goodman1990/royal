@@ -30,9 +30,6 @@
     <div class="wrapper-input id_manufacturers">
         <?php echo $this->formRow($formAdd->get('id_manufacturers')) ?>
     </div>
-    <div class="wrapper-input id_group_product">
-        <?php echo $this->formRow($formAdd->get('id_group_product')) ?>
-    </div>
     <div class="wrapper-input price">
         <?php echo $this->formRow($formAdd->get('price')) ?>
     </div>
@@ -164,20 +161,20 @@ $(document).on('change','select[name="id_subcategories_product"]',function() {
         });
 });
 
-$(document).on('change','select[name="id_manufacturers"]',function() {
-    var name = $(this).attr('name');
-    var value = $(this).val();
-    $.post('/admin/getGroupProduct',{name : name,value : value})
-        .done(function(data) {
-            data = JSON.parse(data);
-            var options = "<option value>Выберете группу</option>";
-            for(var i=0;i<data.length;i++){
-                options += '<option value="' + data[i].id + '">' + data[i].title + '</option>';
-            }
-            $('select[name="id_group_product"]').html(options);
-
-        });
-});
+//$(document).on('change','select[name="id_manufacturers"]',function() {
+//    var name = $(this).attr('name');
+//    var value = $(this).val();
+//    $.post('/admin/getGroupProduct',{name : name,value : value})
+//        .done(function(data) {
+//            data = JSON.parse(data);
+//            var options = "<option value>Выберете группу</option>";
+//            for(var i=0;i<data.length;i++){
+//                options += '<option value="' + data[i].id + '">' + data[i].title + '</option>';
+//            }
+//            $('select[name="id_group_product"]').html(options);
+//
+//        });
+//});
 
 
 $(document).on('click','.deleted-image',function(e) {
@@ -243,7 +240,7 @@ $(document).on('click','.deleted-image',function(e) {
 
 
 
-$(document).on('click','.deleted-color',function(e) {
+$(document).on('click','.deleted-image-color',function(e) {
 
     var imaageName =  $(this).attr('src').split('/');
     imaageName =  imaageName[imaageName.length-1];
@@ -252,7 +249,35 @@ $(document).on('click','.deleted-color',function(e) {
         $('.prompt').dialog('close');
     };
 
-    var yesCollback = function(e){
+
+    var mainImageCollback = function(e){
+
+        var imaageName = $(e.currentTarget).attr('src');
+        var val = $('#image-color').val();
+        var serchIndex = val.split(',').indexOf(imaageName);
+        var arr =  val.split(',');
+        if(arr.length==1){
+            $('#image-color').val('');
+        }else{
+            var buf =   arr.splice(serchIndex,1);
+            $('#image-color').val(arr.join(','));
+        }
+
+        if($('#main_image').val()!=''){
+            if(arr.join(',')==''){
+                $('#image-color').val($('#image-color').val($('#main_image').val()));
+            }else{
+                $('#image-color').val($('#main_image').val()+','+arr.join(','));
+            }
+        }
+        $('#main_image').val($(e.currentTarget).attr('src'));
+        $('.main-image').removeClass('main-image');
+        $(e.currentTarget).addClass('main-image');
+
+    };
+
+
+    var deleteCollback = function(e){
 
         var imaageName = $(e.currentTarget).attr('src');
         var valImage = $('#image-color').val();
@@ -277,8 +302,9 @@ $(document).on('click','.deleted-color',function(e) {
                 $('.prompt').dialog('close');
             });
     };
+    var  noCollback =
 
-    PopUp('Выберете действее', 'сообщение',e , yesCollback,noCollback);
+        PopUpMain('Выберете действее', 'сообщение',e , deleteCollback,mainImageCollback);
 
 });
 
@@ -286,21 +312,34 @@ $(document).on('click','.deleted-color',function(e) {
 
 $(document).on('click','.deleted-file',function(e) {
 
-    var yesCollback = function(e){
+
+    var imaageName =  $(e.currentTarget).find('.pdf-title').text();
+    var val = $('input[name="file"]').val();
+    var serchIndex = val.split(',').indexOf(imaageName);
+
+    alert(val.split(',')[serchIndex]);
+    if(val.split(',')[serchIndex].search(':c') != -1) {
+        action = 'Добавить в описание';
+    }else{
+        action = 'Добавить в цвета';
+    }
+
+
+    var action;
+    var deletedCollback = function(e){
 
         var imaageName =  $(e.currentTarget).find('.pdf-title').text();
-
         var val = $('input[name="file"]').val();
-
         var serchIndex = val.split(',').indexOf(imaageName);
-
         var arr =  val.split(',');
+
         if(arr.length==1){
+
             $('input[name="file"]').val('');
+
         }else{
-            console.log(arr,serchIndex);
+
             var buf =   arr.splice(serchIndex,1);
-            console.log(arr);
             $('input[name="file"]').val(arr.join(','));
         }
         $(e.currentTarget).remove();
@@ -310,8 +349,40 @@ $(document).on('click','.deleted-file',function(e) {
             });
 
     };
+    var colorCallback = function () {
 
-    PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
+        var action;
+        var imaageName =  $(e.currentTarget).find('.pdf-title').text();
+
+        var val = $('input[name="file"]').val();
+
+        var serchIndex = val.split(',').indexOf(imaageName);
+
+        var arr =  val.split(',');
+
+        if(imaageName.search(':c') == -1){
+            imaageName = imaageName.replace(/:d/,'');
+            action = ':c';
+        }else{
+            imaageName = imaageName.replace(/:c/,'');
+            action = ':d';
+        }
+
+        if(arr.length==1){
+
+            arr[serchIndex] = action+imaageName;
+            $('input[name="file"]').val(arr[serchIndex]);
+
+        }else{
+            arr[serchIndex] = action+imaageName;
+            $('input[name="file"]').val(arr.join(','));
+        }
+
+    };
+
+    PopUpFile('выберете действие', 'сообщение', e, deletedCollback, colorCallback,'удалить',action);
+
+//    PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
 
 });
 
@@ -451,7 +522,6 @@ $(function () {
         multipart: true,
         formAcceptCharset: 'utf-8',
         done: function (e, data) {
-
             globalNamePdf.push(data.result);
 
             if (data.originalFiles.length == globalNamePdf.length) {
@@ -472,6 +542,8 @@ $(function () {
 
                 }
             }
+
+
         },
         progressall: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -485,7 +557,6 @@ $(function () {
 });
 
 $(document).ready(function () {
-
 
     createPreviewImage();
     createPreviewFile();
@@ -539,6 +610,7 @@ $(document).ready(function () {
 //
 //            });
 });
+
 function cropImage(name) {
 
     globalLength = name.length;

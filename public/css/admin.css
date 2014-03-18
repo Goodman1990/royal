@@ -465,10 +465,7 @@ all-product.title{
     display: block;
     margin: 0 auto;
 }
-.main-image{
-    border: 2px solid lime;
-    margin: 5px;
-}
+
 .prewiew.deleted-image{
     margin: 5px;
     border: solid 2px black;
@@ -477,7 +474,7 @@ all-product.title{
 
 .prewiew.deleted-image-color{
     margin: 5px;
-    border: solid 2px black;
+
     cursor: pointer;
 }
 
@@ -515,6 +512,10 @@ all-product.title{
 .group-product{
     margin-top: 30px;
     padding-bottom: 10px;
+}
+
+.main-image{
+    border: solid 2px lime;
 }
 
 

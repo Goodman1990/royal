@@ -20,8 +20,8 @@ class ProductModel extends ProductModelEntity {
     {
         return array(
             "title"=>array('required' => true, 'validators' => array('regex' => 'numbers_letters',), 'setLabel' => 'Название продукта'),
-            "description"=>array('required' => true,'typeInput'=>'textarea','validators' => false, 'setLabel' => 'Описание','filters' => false),
-            "technical_description"=>array('required' => true,'typeInput'=>'textarea','validators' => false,'filters' => false, 'setLabel' => 'Техническое описание'),
+            "description"=>array('typeInput'=>'textarea','validators' => false, 'setLabel' => 'Описание','filters' => false),
+            "technical_description"=>array('typeInput'=>'textarea','validators' => false,'filters' => false, 'setLabel' => 'Техническое описание'),
             "video"=>array('typeInput'=>'textarea','validators' => false, 'class'=>'video','setLabel' => 'Добавить ссылки на видео'),
             "addres_buy"=>array('typeInput'=>'textarea','validators' => array('regex' => 'numbers_letters',),'class'=>'addres_buy','setLabel' => 'Где купить'),
             "price"=>array('required' => true,'validators' => array('regex' => 'numbers',), 'setLabel' => 'Цена'),
@@ -37,12 +37,7 @@ class ProductModel extends ProductModelEntity {
                 'validators' =>false,
                 'filters' => array('trim','int'),'setLabel' => 'Выберете производителя',
                 'empty_option'=>'Выберете производителя'),
-            "id_group_product"=>array(
-                'required' => true,
-                'typeInput' => 'select',
-                'validators' =>false,
-                'filters' => array('trim','int'),'setLabel' => 'Выберете группу',
-                'empty_option'=>'Выберете группу'),
+
         );
     }
 
@@ -54,7 +49,11 @@ class ProductModel extends ProductModelEntity {
             'where'=>array("title LIKE '%".mysql_real_escape_string($options->search)."%'")));
         }else{
             $this->setCriteria(array(
-                'where'=>array(array())));
+                    'where'=>array(
+                        array()
+                    )
+                )
+            );
         }
 
 

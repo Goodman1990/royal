@@ -32,7 +32,6 @@ class ProductModelEntity extends ActiveRecordModel {
 "id_subcategories_product",
 "id_categories_product",
 "id_manufacturers",
-"id_group_product",
 "title",
 "description",
 "technical_description",

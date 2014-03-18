@@ -348,8 +348,6 @@ class adminController extends AbstractActionController
                             unlink(SITE_DIR.'categories/'.$oldData['image_' . $i]);
                         }
 
-
-
                         $model::model()
                             ->setAttributes(array(
                                 'id' => $this->validData['id_' . $i],
@@ -405,129 +403,9 @@ class adminController extends AbstractActionController
 
     }
 
-
-    public function editGroupAction() {
-
-        $this->Page->setActivePage(array('admin'=>array(
-            'tab'=>'1',
-            'sub'=>'1.4'
-        )));
-
-        $id_page = $this->params()->fromRoute('param1', 0);
-
-        $categoryData = \Royal\Models\SubcategoriesProductModel::model()->findAllOrder('number DESK ');
-        $groupProductModel = \Royal\Models\GroupProductModel::model(array('asArray'=>true));
-        $manufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
-        if($id_page==0){
-            $id_page = $categoryData[0]['id'];
-        }
-
-        $this->Page->addTab($categoryData,$id_page,true);
-        $subcategoriesProductModel =  \Royal\Models\SubcategoriesProductModel::model()->findByPk($id_page);
-        $groupProductData = $groupProductModel
-            ->findByAttributes(array('id_subcategories_product'=>$id_page));
-        $manufacturersData = $manufacturersModel ->findByAttributes(array('id_subcategories_product'=>$id_page));
-//        echo'<pre>';
-//        var_dump($manufacturersData);
-//        exit;
-        $rules = $groupProductModel->rules();
-        $rules['id_manufacturers']['selectInfo'] = $manufacturersData;
-        $formEdit = new formGenerate('editSubCategory', 'category');
-
-        $formEdit->setMultiFormEdit($rules, $groupProductData);
-        $formAdd = new formGenerate('addSubCategory', 'category');
-        $formAdd->setDataForm($rules);
-
-
-        if ($this->request->isPost()) {
-
-            $Post = $this->request->getPost()->toArray();
-
-            if (isset($Post['edit'])) {
-
-                $formEdit->setData($Post);
-                if ($formEdit->isValid()) {
-
-                    $this->validData = $formEdit->getData();
-
-
-
-
-
-
-
-
-
-
-
-                    for ($i = 0; $i < $formEdit->countInput; $i++) {
-
-                        if(file_exists( TMP_DIR.$this->validData['image_' . $i])){
-                            rename(TMP_DIR.$this->validData['image_' . $i],SITE_DIR.'categories/'.$this->validData['image_' . $i]);
-                            unlink(SITE_DIR.'categories/'.$oldData['image_' . $i]);
-                        }
-
-                        $groupProductModel::model()
-                            ->setAttributes(array(
-                                'id' => $this->validData['id_' . $i],
-                                'id_subcategories_product'=>$id_page,
-                                'id_manufacturers'=>$this->validData['id_manufacturers_' . $i],
-                                'title' => $this->validData['title_' . $i],
-                                'number'=>$this->validData['number_' . $i],
-                                'image'=>$this->validData['image_' . $i]
-                            ))->save();
-
-                    }
-
-                    $groupProductData = $groupProductModel::model(array('asArray'=>true))
-                        ->findByAttributes(array('id_subcategories_product'=>$id_page));
-                    $formEdit->setDataForSet($groupProductData);
-                }
-
-            } else {
-
-                $formAdd->setData($Post);
-
-                if ($formAdd->isValid()) {
-
-                    $this->validData = $formAdd->getData();
-                    unset($this->validData['id']);
-
-                    rename(TMP_DIR.$this->validData['image'],SITE_DIR.'categories/'.$this->validData['image']);
-
-                    $id = $groupProductModel::model()
-                        ->setAttributes($this->validData)->save();
-                    $formEdit->addInputForm($Post, $id);
-                    $formEdit->CustomSetData();
-                    $formAdd->clearElements();
-
-                } else {
-
-                    $formEdit->CustomSetData();
-
-                }
-            }
-        } else {
-
-            $formEdit->CustomSetData();
-
-        }
-
-        return new ViewModel(array(
-            'id_categories_product'=>$subcategoriesProductModel->id_categories_product,
-            'formEdit' => $formEdit,
-            'formAdd' => $formAdd,
-            'categoryPageData' => $categoryData,
-            'id_page'=>$id_page,
-
-        ));
-
-
-    }
-
     public function addProductAction() {
 
-        $id_categories_product = $this->params()->fromRoute('param1', 0);
+
 
         $this->Page->setActivePage(array('admin'=>array(
             'tab'=>'2',
@@ -537,10 +415,8 @@ class adminController extends AbstractActionController
         $SubcategoriesProductModel =  \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true));
         $CategoriesProductModel =  \Royal\Models\CategoriesProductModel::model(array('asArray'=>true));
         $ManufacturersModel = \Royal\Models\ManufacturersModel::model(array('asArray'=>true));
-        $GroupProductModel = \Royal\Models\GroupProductModel::model(array('asArray'=>true));
         $ProductModel =  \Royal\Models\ProductModel::model();
         $colorsModel = \Royal\Models\ColorsModel::model();
-
         $CategoriesProductData =  $CategoriesProductModel->findAllOrder('number DESK ');
 
         $formAddProduct= new formGenerate('addProduct', 'category addProduct');
@@ -559,10 +435,6 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>(int)$this->request->getPost()->id_subcategories_product,
             ));
-            $GroupProductData = $GroupProductModel->findByAttributes(array(
-                'id_manufacturers'=>(int)$this->request->getPost()->id_manufacturers,
-            ));
-
 
         }else{
 
@@ -573,19 +445,13 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>$SubcategoriesProductData['id']
             ));
-
-            $GroupProductData = $GroupProductModel->findByAttributes(array(
-                'id_manufacturers'=>$manufacturers['id']
-            ));
-
-
         }
 
 
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
         $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
         $rules['id_categories_product']['selectInfo'] = $categoriesData;
-        $rules['id_group_product']['selectInfo'] = $GroupProductData;
+
         $rules['id_manufacturers']['typeInput'] = 'select';
         $rules['id_categories_product']['typeInput'] = 'select';
         $rules['id_subcategories_product']['typeInput'] = 'select';
@@ -624,16 +490,17 @@ class adminController extends AbstractActionController
 
                     rename('public'.$this->validData['main_image'],SITE_DIR.'product/'.basename($this->validData['main_image']));
                     rename('public/tmp/large/'.basename($this->validData['main_image']),SITE_DIR.'product/large/'.basename($this->validData['main_image']));
+                    $this->validData['main_image'] = '/siteDir/product/'.basename($this->validData['main_image']);
                 }
 
-                if($image!=Null){
+                if(empty($image)){
 
                     for($i = 0;$i<count($image);$i++){
-
 
                         rename('public'.$image[$i],SITE_DIR.'product/'.basename($image[$i]));
                         rename('public/tmp/large/'.basename($image[$i]),SITE_DIR.'product/large/'.basename($image[$i]));
                         $arrImage[] = '/siteDir/product/'.basename($image[$i]);
+
                     }
 
                     $this->validData['image'] = implode(',',$arrImage);
@@ -643,6 +510,7 @@ class adminController extends AbstractActionController
                     $this->validData['image'] ='';
 
                 }
+
                 if($this->validData['file']!=''){
                     $file =explode(',',$this->validData['file']);
                     $arrFile = '';
@@ -650,35 +518,29 @@ class adminController extends AbstractActionController
                     for($i = 0;$i<count($file);$i++){
                         rename(TMP_DIR.$file[$i],SITE_DIR.'/product/file/'.basename($file[$i]));
                         $arrFile[] = '/siteDir/product/file/'.basename($file[$i]);
-                }
-
+                    }
                 $this->validData['file'] = implode(',',$arrFile);
                 }
-                $video = explode(',',$this->validData['video']);
-                $hashVideo ='';
-
-                for($i = 0;$i<count($video);$i++){
-
-                    $buf = explode('=',$video[$i]);
-                    $hashVideo[] = array_shift($buf);
-                }
-
-                $this->validData['video'] = implode(',',$hashVideo);
                 unset($this->validData['id']);
+//                echo'<pre>';
+//                var_dump( $colorValue = explode(',',$color['color']));
+//                exit;
                 $ProductModel->setAttributes($this->validData)->save();
                 $id_product = $ProductModel->getLastInsertValue();
+
 
                 $colorValue = explode(',',$color['color']);
                 $colorImageValue = explode(',',$color['image_color']);
 
-                for($i = 0;$i<count($colorImageValue);$i++){
 
-                    rename('public'.$colorImageValue[$i],SITE_DIR.'product/color/'.basename($colorImageValue[$i]));
-
-                    $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
-                    $colorsModel->setAttributes(
-                        array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
-                    )->save();
+                if($colorImageValue[0]!=''){
+                    for($i = 0;$i<count($colorImageValue);$i++){
+                        rename('public'.$colorImageValue[$i],SITE_DIR.'product/color/'.basename($colorImageValue[$i]));
+                        $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
+                        $colorsModel->setAttributes(
+                            array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
+                        )->save();
+                    }
                 }
 
                 $this->redirect()->toRoute('Royal',array(
@@ -688,6 +550,7 @@ class adminController extends AbstractActionController
 
             }
         }
+
         return new ViewModel(array(
             'formAdd'=>$formAddProduct,
             'formAddColor'=>$formAddColor,
@@ -781,9 +644,7 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>(int)$this->request->getPost()->id_subcategories_product,
             ));
-            $GroupProductData = $GroupProductModel->findByAttributes(array(
-                'id_manufacturers'=>(int)$this->request->getPost()->id_manufacturers,
-            ));
+
 
         }else{
 
@@ -793,9 +654,7 @@ class adminController extends AbstractActionController
             $manufacturers = $ManufacturersModel->findByAttributes(array(
                 'id_subcategories_product'=>$ProductModel->id_subcategories_product
             ));
-            $GroupProductData = $GroupProductModel->findByAttributes(array(
-                'id_manufacturers'=>$ProductModel->id_group_product
-            ));
+
 
         }
 
@@ -803,7 +662,6 @@ class adminController extends AbstractActionController
         $rules['id_manufacturers']['selectInfo'] = $manufacturers;
         $rules['id_subcategories_product']['selectInfo'] = $SubcategoriesProductData;
         $rules['id_categories_product']['selectInfo'] = $categories;
-        $rules['id_group_product']['selectInfo'] = $GroupProductData;
         $rules['id_manufacturers']['typeInput'] = 'select';
         $rules['id_categories_product']['typeInput'] = 'select';
         $rules['id_subcategories_product']['typeInput'] = 'select';
@@ -892,28 +750,30 @@ class adminController extends AbstractActionController
                 $this->validData['id']=$id_product;
                 $ProductModel->setAttributes($this->validData)->save();
 //                $id_product = $ProductModel->getLastInsertValue();
+                if($color['image_color']!=''){
 
-                $colorValue = explode(',',$color['color']);
-                $colorImageValue = explode(',',$color['image_color']);
-                $arrImageValue='';
-                for($i = 0;$i<count($colorImageValue);$i++){
+                    $colorValue = explode(',',$color['color']);
+                    $colorImageValue = explode(',',$color['image_color']);
+                    $arrImageValue='';
+                    for($i = 0;$i<count($colorImageValue);$i++){
 
-                    if(file_exists('public/tmp/'.basename($colorImageValue[$i]))){
+                        if(file_exists('public/tmp/'.basename($colorImageValue[$i]))){
 
-                        rename('public/tmp/'.basename($colorImageValue[$i]),SITE_DIR.'product/color/'.basename($colorImageValue[$i]));
-                        $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
-                        $colorsModel->setAttributes(
-                            array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
-                        )->save();
+                            rename('public/tmp/'.basename($colorImageValue[$i]),SITE_DIR.'product/color/'.basename($colorImageValue[$i]));
+                            $arrImageValue[$i] = '/siteDir/product/color/'.basename($colorImageValue[$i]);
+                            $colorsModel->setAttributes(
+                                array('color'=>$colorValue[$i],'image_color'=>$arrImageValue[$i],'id_product'=>$id_product)
+                            )->save();
 
-                    }else{
-                        $arrImageValue[$i] = $colorImageValue[$i];
+                        }else{
+                            $arrImageValue[$i] = $colorImageValue[$i];
+                        }
+
                     }
+                    $formAddColor->get('image_color')->setValue(implode(',',$arrImageValue));
 
                 }
-
                 $formAddProduct->get('image')->setValue($this->validData['image']);
-                $formAddColor->get('image_color')->setValue(implode(',',$arrImageValue));
 
             }
         }
@@ -955,6 +815,7 @@ class adminController extends AbstractActionController
 
             $manufacturersData = \Royal\Models\ManufacturersModel::model(array('asArray'=>true))
                 ->findByAttributes($post);
+
         }else{
 
             $productData = \Royal\Models\ProductModel::model(array('asArray'=>true))
@@ -1012,7 +873,12 @@ class adminController extends AbstractActionController
     public function deletedProductAction() {
 
         $id_product = $this->params()->fromRoute('param1', 0);
+        $dataProduct   =   array_shift(\Royal\Models\ProductModel::model(array('asArray'=>true))->findByAttributes(array('id'=>$id_product)));
+        $dataColor   =   \Royal\Models\ColorsModel::model(array('asArray'=>true))->findByAttributes(array('id_product'=>$id_product));
+        $dataProduct['color'] =  $dataColor;
+        $this->deletedImage($dataProduct);
         \Royal\Models\ProductModel::model(array('asArray'=>true))->delete(array('id'=>$id_product));
+        \Royal\Models\ColorsModel::model(array('asArray'=>true))->delete(array('id_product'=>$id_product));
         echo 1;
         exit;
 
@@ -1140,11 +1006,11 @@ class adminController extends AbstractActionController
     }
 
 
-    public function getGroupProductAction(){
+    public function getSubcategoriesAction(){
 
         if($this->request->isPost() &&$this->request->isXmlHttpRequest()){
             $post = $this->request->getPost();
-            $groupProductData = \Royal\Models\GroupProductModel::model(array('asArray'=>true))
+            $groupProductData = \Royal\Models\SubcategoriesProductModel::model(array('asArray'=>true))
                 ->findByAttributes(array(
                     $post['name']=>$post['value']
                 ));
@@ -1191,6 +1057,40 @@ class adminController extends AbstractActionController
         //$config->getCookieSecure(),
         //$config->getCookieHttpOnly()
         );
+    }
+    private function deletedImage($image){
+
+        if(isset($image['image'])){
+
+            $data =  explode(',', $image['image']);
+            for($i = 0 ; $i<count($data) ; $i++){
+                unlink(SITE_DIR.'product/'.basename($data[$i]));
+                unlink('public/siteDir/product/large/'.basename($data[$i]));
+            }
+
+        }
+        if(isset($image['main_image'])){
+
+            unlink(SITE_DIR.'product/'.basename($image['main_image']));
+            unlink('public/siteDir/product/large/'.basename($image['main_image']));
+
+        }
+        if(isset($image['file'])){
+
+            $data =  explode(',', $image['file']);
+            for($i = 0 ; $i<count($data) ; $i++){
+                unlink(SITE_DIR.'product/file/'.basename($data[$i]));
+            }
+
+        }if(isset($image['color'])){
+//                var_dump($image['color']);
+//            exit;
+            foreach ($image['color'] as $key) {
+                unlink(SITE_DIR.'product/color/'.basename($key['image_color']));
+            }
+
+        }
+
     }
 
 }

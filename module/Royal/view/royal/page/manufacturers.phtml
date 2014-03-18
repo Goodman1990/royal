@@ -1,7 +1,7 @@
 <div class="left-content manufacturers">
 <?php foreach($manufacturersData as $key){
     if($key['visible']==0) continue ?>
-    <a href="/page/group/<?php echo $key['id'].'_'.$generalHelper->transliteration($key['title']); ?>"><div class="warpper-manufacturers">
+    <a href="/page/product/<?php echo $key['id'].'_'.$generalHelper->transliteration($key['title']); ?>"><div class="warpper-manufacturers">
             <div class="warpper-manufacturers-img">
                 <div class="calibration-center">
                     <img  class="manufacturers-image" src="/siteDir/categories/<?php  echo $key['image'] ?>" alt=""/>

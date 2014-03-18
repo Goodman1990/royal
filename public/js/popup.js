@@ -57,6 +57,38 @@ function PopUpMain(text, title, elementEvent, yesCallback, noCallback){
     });
 }
 
+
+function PopUpFile(text, title, elementEvent, yesCallback, noCallback,yes,no){
+    elementEvent.preventDefault();
+    var yesText = yes;
+    var noText = no;
+    //if(typeof )
+    $('<div class="prompt">'+text+'</div>').dialog({
+        dialogClass:'prompt-wrap',
+        title: title,
+        buttons:[
+            {
+                text:noText,
+                class:'red',
+                click:function(e){
+                    noCallback(elementEvent);
+                    $('.prompt').dialog('close');
+                }},
+            {
+                text:yesText,
+                class:'green',
+                click:function(e){
+                    yesCallback(elementEvent);
+                    $('.prompt').dialog('close');
+                }}],
+        resizable:false,
+        draggable:false,
+        width:280,
+        modal:true
+    });
+}
+
+
 function SinglePopUp(text, title, elementEvent, yesCallback,withs){
     if(typeof withs =='undefined')withs = 280;
     successCallback = yesCallback || function(){};
