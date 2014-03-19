@@ -27,7 +27,9 @@
 
 
         <div class="wrap-tab-content color active">
+
             <div class="popup-gallery">
+
                 <?php  foreach($colorData as $key) { ?>
                     <div class="wrap-img-color-product">
                         <a   href="<?php  echo $key['image_color'] ?>">
@@ -35,7 +37,14 @@
                         </a>
                     </div>
                 <?php } ?>
+
             </div>
+
+            <?php if(!empty($colorFile)){ ?>
+                <?php  for($i = 0 ; $i<count($colorFile); $i++) { ?>
+                    <a href=<?php  echo "/page/download/?file=".$colorFile[$i] ?>""><div class="color-file-pdf"></div></a>
+                <?php } ?>
+            <?php } ?>
 
             <div class="page-circle">
                 <span class="circle active">&nbsp;</span>
@@ -45,8 +54,8 @@
         <div class="wrap-tab-content technical-information">
             <?php $file = explode(',',$ProductModel->file);
            if($file[0]){
-            for($i=0;$i<count($file);$i++){ ?>
-                <a href="/page/download/?file=<?php echo $file[$i] ?>">Скачать</a>
+            for($i=0;$i<count($descriptionFile);$i++){ ?>
+                <a href=<?php  echo "/page/download/?file=".$descriptionFile[$i] ?>""><div class="description-file-pdf"></div></a>
             <?php }} ?>
 
 
@@ -60,21 +69,19 @@
         </div>
         <div class="wrap-tab-content project">
             <div class="popup-gallery-project">
-<!--               <div class="wrap-img-color-product">-->
-<!--                    <a   href="--><?php // echo '/siteDir/product/large/'.basename($ProductModel->main_image) ?><!--">-->
-<!--                        <img class="img-color-product" src="--><?php // echo $ProductModel->main_image ?><!--" alt=""/>-->
-<!--                    </a>-->
-<!--                </div>-->
 
                 <?php $imageData =explode(',',$ProductModel->image);
                 if(!empty($imageData[0])){
                 foreach($imageData as $key=>$value) {?>
+
                     <div class="wrap-img-color-product">
                         <a   href="<?php  echo '/siteDir/product/large/'.basename($value) ?>">
                             <img class="img-color-product" src="<?php  echo $value ?>" alt=""/>
                         </a>
                     </div>
+
                 <?php }} ?>
+
             </div>
         </div>
 

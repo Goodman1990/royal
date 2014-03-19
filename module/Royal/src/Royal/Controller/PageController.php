@@ -187,6 +187,22 @@ class PageController extends AbstractActionController
             $video [] = str_replace('&','',$matches[1]);
         }
 
+//        echo'<pre>';
+//        var_dump($ProductModel->file);
+//        exit;
+        
+        if($ProductModel!=''){
+          $file =   explode(',',$ProductModel->file);
+
+
+            for($i = 0; $i<count($file); $i++){
+                if(strpos($file[$i], ':c')){
+                    $colorFile[] = str_replace(':c','',$file[$i]);
+                }else{
+                    $descriptionFile[] = str_replace(':d','',$file[$i]);
+                }
+            }
+        }
 
         $this->Page->setActivePage(
             array(
@@ -202,7 +218,9 @@ class PageController extends AbstractActionController
             'video'=>$video,
             'generalHelper'=>$generalHelper,
             'ProductModel'=>$ProductModel,
-            'colorData'=>$colorData
+            'colorData'=>$colorData,
+            'colorFile'=>$colorFile,
+            'descriptionFile'=>$descriptionFile,
 
         ));
 

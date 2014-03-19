@@ -62,6 +62,7 @@
         <div class="wrapper-image inner">
             <div class="wrapper-image file-defoult" style="display: none">
                 <span class="pdf-title"></span>
+                <span class="pdf-title-fake" style="display: none"></span>
                 <div class="prewiew-defult-pdf "></div>
             </div>
         </div>
@@ -302,7 +303,7 @@ $(document).on('click','.deleted-image-color',function(e) {
                 $('.prompt').dialog('close');
             });
     };
-    var  noCollback =
+
 
         PopUpMain('Выберете действее', 'сообщение',e , deleteCollback,mainImageCollback);
 
@@ -313,19 +314,17 @@ $(document).on('click','.deleted-image-color',function(e) {
 $(document).on('click','.deleted-file',function(e) {
 
 
-    var imaageName =  $(e.currentTarget).find('.pdf-title').text();
+    var imaageName =  $(e.currentTarget).find('.pdf-title-fake').text();
     var val = $('input[name="file"]').val();
     var serchIndex = val.split(',').indexOf(imaageName);
 
-    alert(val.split(',')[serchIndex]);
     if(val.split(',')[serchIndex].search(':c') != -1) {
         action = 'Добавить в описание';
     }else{
         action = 'Добавить в цвета';
     }
-
-
     var action;
+
     var deletedCollback = function(e){
 
         var imaageName =  $(e.currentTarget).find('.pdf-title').text();
@@ -349,32 +348,33 @@ $(document).on('click','.deleted-file',function(e) {
             });
 
     };
-    var colorCallback = function () {
+    var colorCallback = function (e) {
 
         var action;
-        var imaageName =  $(e.currentTarget).find('.pdf-title').text();
-
+        var imaageName =  $(e.currentTarget).find('.pdf-title-fake').text();
         var val = $('input[name="file"]').val();
-
         var serchIndex = val.split(',').indexOf(imaageName);
-
         var arr =  val.split(',');
-
         if(imaageName.search(':c') == -1){
-            imaageName = imaageName.replace(/:d/,'');
+            imaageName = imaageName.replace(/(:d)/,'');
             action = ':c';
         }else{
-            imaageName = imaageName.replace(/:c/,'');
+            imaageName = imaageName.replace(/(:c)/,'');
             action = ':d';
         }
 
         if(arr.length==1){
 
             arr[serchIndex] = action+imaageName;
+            $(e.currentTarget).find('.pdf-title-fake').text(action+imaageName);
+            alert(action+imaageName);
             $('input[name="file"]').val(arr[serchIndex]);
 
         }else{
+
             arr[serchIndex] = action+imaageName;
+            $(e.currentTarget).find('.pdf-title-fake').text(action+imaageName);
+            alert(action+imaageName);
             $('input[name="file"]').val(arr.join(','));
         }
 
@@ -382,7 +382,6 @@ $(document).on('click','.deleted-file',function(e) {
 
     PopUpFile('выберете действие', 'сообщение', e, deletedCollback, colorCallback,'удалить',action);
 
-//    PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
 
 });
 
@@ -399,9 +398,10 @@ function createPreviewFile() {
 
                 var cloneElement = $(".wrapper-image.file-defoult").clone();
                 $(cloneElement).find('.pdf-title').text(arrfile[i]);
+                $(cloneElement).find('.pdf-title-fake').text(arrfile[i]);
                 $(cloneElement).attr('class', 'pdf-fake deleted-file');
                 $(cloneElement).css({'display': 'inline-block'});
-//                $(cloneElement).addClass('deleted-file-image');
+
                 var extFile = arrfile[i].split('.')[arrfile[i].split('.').length - 1];
                 if (extFile == 'xls' || extFile == 'xlsx') {
                     url = '/image/xls.jpg';

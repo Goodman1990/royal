@@ -1037,3 +1037,16 @@ only screen and (min-device-pixel-ratio : 1.5) {
 /* YOUR STYLE GOES HERE */
 }
 
+.description-file-pdf {
+    background-image: url(../image/image-pdf-ico.jpg);
+    background-size:  100% 100%;
+    width: 50px;
+    height: 50px;
+}
+.color-file-pdf{
+    background-image: url(../image/image-pdf-ico.jpg);
+    background-size:  100% 100%;
+    width: 101px;
+    height: 100px;
+}
+

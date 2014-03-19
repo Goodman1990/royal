@@ -171,6 +171,7 @@ $(document).on('change','select[name="id_manufacturers"]',function() {
 
 
 function createPreviewFile() {
+
     $('.pdf-fake').remove();
     var fileView = $('#file-pdf-input').val();
     var url;
@@ -181,8 +182,10 @@ function createPreviewFile() {
 
                 var cloneElement = $(".wrapper-image.file-defoult").clone();
                 $(cloneElement).find('.pdf-title').text(arrfile[i]);
+                $(cloneElement).find('.pdf-title-fake').text(arrfile[i]);
                 $(cloneElement).attr('class', 'pdf-fake deleted-file');
                 $(cloneElement).css({'display': 'inline-block'});
+
                 var extFile = arrfile[i].split('.')[arrfile[i].split('.').length - 1];
                 if (extFile == 'xls' || extFile == 'xlsx') {
                     url = '/image/xls.jpg';
@@ -228,6 +231,26 @@ function createPreviewImage(){
     }
 
 }
+
+function createPreviewImageColor(){
+
+    var imgView = $('#image-color').val();
+    if (imgView != '') {
+
+        var arrImg = [];
+        arrImg = imgView.split(',');
+        for (var i = 0; i < arrImg.length; i++) {
+            var cloneElement = $(".image-warrper-color").clone();
+            $(cloneElement).find('.prewiew-defult-color').attr('src',arrImg[i]);
+            $(cloneElement).find('.prewiew-defult-color').attr('class', "prewiew deleted-color");
+            $(cloneElement).attr('class','fake-color');
+            $(cloneElement).css({margin: '5px'})
+            $(cloneElement).css({display:'inline-block'});
+            $('.wrapper-input.color').append(cloneElement);
+        }
+    }
+}
+
 
 
 $(function () {
@@ -468,24 +491,7 @@ $(document).on('click', '#crop-image', function () {
 
 });
 
-function createPreviewImageColor(){
 
-    var imgView = $('#image-color').val();
-    if (imgView != '') {
-
-        var arrImg = [];
-        arrImg = imgView.split(',');
-        for (var i = 0; i < arrImg.length; i++) {
-            var cloneElement = $(".image-warrper-color").clone();
-            $(cloneElement).find('.prewiew-defult-color').attr('src',arrImg[i]);
-            $(cloneElement).find('.prewiew-defult-color').attr('class', "prewiew deleted-color");
-            $(cloneElement).attr('class','fake-color');
-            $(cloneElement).css({margin: '5px'})
-            $(cloneElement).css({display:'inline-block'});
-            $('.wrapper-input.color').append(cloneElement);
-        }
-    }
-}
 
 function cropImage(name) {
 
@@ -646,7 +652,7 @@ $(document).on('click','.deleted-image',function(e) {
 });
 
 
-$(document).on('click','.deleted-color',function(e) {
+$(document).on('click','.deleted-image-color',function(e) {
 
     var imaageName =  $(this).attr('src').split('/');
     imaageName =  imaageName[imaageName.length-1];
@@ -655,67 +661,135 @@ $(document).on('click','.deleted-color',function(e) {
         $('.prompt').dialog('close');
     };
 
-    var yesCollback = function(e){
+
+    var mainImageCollback = function(e){
+
+        var imaageName = $(e.currentTarget).attr('src');
+        var val = $('#image-color').val();
+        var serchIndex = val.split(',').indexOf(imaageName);
+        var arr =  val.split(',');
+        if(arr.length==1){
+            $('#image-color').val('');
+        }else{
+            var buf =   arr.splice(serchIndex,1);
+            $('#image-color').val(arr.join(','));
+        }
+
+        if($('#main_image').val()!=''){
+            if(arr.join(',')==''){
+                $('#image-color').val($('#image-color').val($('#main_image').val()));
+            }else{
+                $('#image-color').val($('#main_image').val()+','+arr.join(','));
+            }
+        }
+        $('#main_image').val($(e.currentTarget).attr('src'));
+        $('.main-image').removeClass('main-image');
+        $(e.currentTarget).addClass('main-image');
+
+    };
+
+
+    var deleteCollback = function(e){
 
         var imaageName = $(e.currentTarget).attr('src');
         var valImage = $('#image-color').val();
         var valColor = $('#input-color').val();
         var serchIndex = valImage.split(',').indexOf(imaageName);
-        var colorName = valColor.split(',')[serchIndex];
-
         var arrImage =  valImage.split(',');
         var arrColor =  valColor.split(',');
 
         if(arrImage.length==1){
             $('#image-color').val('');
             $('#input-color').val('');
-
         }else{
             arrImage.splice(serchIndex,1);
             arrColor.splice(serchIndex,1);
             $('#image-color').val(arrImage.join(','));
             $('#input-color').val(arrColor.join(','));
+
         }
-
         $(e.currentTarget).remove();
-
-        $.post('/admin/deletedFiles',{src :imaageName , table : 'Colors' , row:'image_color' , id_product:$('#id_product').val(),color:colorName})
+        $.post('/admin/deletedFiles',{src : imaageName})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });
     };
 
-    PopUp('Удалить цвет', 'сообщение',e , yesCollback,noCollback);
+
+    PopUpMain('Выберете действее', 'сообщение',e , deleteCollback,mainImageCollback);
 
 });
 
 
 $(document).on('click','.deleted-file',function(e) {
 
-    var yesCollback = function(e){
+    var imaageName =  $(e.currentTarget).find('.pdf-title-fake').text();
+    var val = $('input[name="file"]').val();
+    var serchIndex = val.split(',').indexOf(imaageName);
+
+    if(val.split(',')[serchIndex].search(':c') != -1) {
+        action = 'Добавить в описание';
+    }else{
+        action = 'Добавить в цвета';
+    }
+    var action;
+
+    var deletedCollback = function(e){
 
         var imaageName =  $(e.currentTarget).find('.pdf-title').text();
-
         var val = $('input[name="file"]').val();
-
         var serchIndex = val.split(',').indexOf(imaageName);
-
         var arr =  val.split(',');
+
         if(arr.length==1){
+
             $('input[name="file"]').val('');
-            arr=[];
+
         }else{
+
             var buf =   arr.splice(serchIndex,1);
             $('input[name="file"]').val(arr.join(','));
         }
         $(e.currentTarget).remove();
-        $.post('/admin/deletedFiles',{src : imaageName,id_product:$('#id_product').val(),table:'Product',row:'file',data:arr.join(',')})
+        $.post('/admin/deletedFiles',{src : '/tmp/'+imaageName})
             .done(function(data) {
                 $('.prompt').dialog('close');
             });
 
     };
-    PopUp('вы хотите удалить этот фаил', 'сообщение',e , yesCollback);
+    var colorCallback = function (e) {
+
+        var action;
+        var imaageName =  $(e.currentTarget).find('.pdf-title-fake').text();
+        var val = $('input[name="file"]').val();
+        var serchIndex = val.split(',').indexOf(imaageName);
+        var arr =  val.split(',');
+        if(imaageName.search(':c') == -1){
+            imaageName = imaageName.replace(/(:d)/,'');
+            action = ':c';
+        }else{
+            imaageName = imaageName.replace(/(:c)/,'');
+            action = ':d';
+        }
+
+        if(arr.length==1){
+
+            arr[serchIndex] = action+imaageName;
+            $(e.currentTarget).find('.pdf-title-fake').text(action+imaageName);
+            alert(action+imaageName);
+            $('input[name="file"]').val(arr[serchIndex]);
+
+        }else{
+
+            arr[serchIndex] = action+imaageName;
+            $(e.currentTarget).find('.pdf-title-fake').text(action+imaageName);
+            alert(action+imaageName);
+            $('input[name="file"]').val(arr.join(','));
+        }
+
+    };
+
+    PopUpFile('выберете действие', 'сообщение', e, deletedCollback, colorCallback,'удалить',action);
 
 });
 
